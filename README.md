@@ -50,19 +50,19 @@ require('sync-directory')(srcDir, targetDir[, config]);
 
     description: sync type
 
-    default: `hardlink`
-
     type: `String`
 
-    available values: `hardlink`、`copy`
+    default: `'hardlink'`
+
+    available values: `'hardlink'`、`'copy'`
 
 +   `config.ignored`
 
     description: files that should not sync to target directory.
 
-    default: null
-
     type: `RegExp`
+
+    default: null
 
 ## Examples
 
