@@ -1,0 +1,24 @@
+{
+  "name": "sync-directory",
+  "version": "1.0.0",
+  "description": "sync two directories by copying or creating hardlink or creating symlink",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hoperyy/sync-directory.git"
+  },
+  "author": "https://github.com/hoperyy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hoperyy/sync-directory/issues"
+  },
+  "homepage": "https://github.com/hoperyy/sync-directory#readme",
+  "dependencies": {
+    "chokidar": "^1.7.0",
+    "fs-extra": "^4.0.1",
+    "readdir-enhanced": "^1.5.2"
+  }
+}
