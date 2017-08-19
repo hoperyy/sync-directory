@@ -36,9 +36,17 @@ require('sync-directory')(srcDir, targetDir[, config]);
 
     type: `String`
 
++   `config.watch`
+
+    description: watch files change and sync files from src to target.
+
+    type: `Boolean`
+
+    default: `false`
+
 +   `config.type`
 
-    desciption: sync type
+    description: sync type
 
     default: `hardlink`
 
@@ -48,7 +56,7 @@ require('sync-directory')(srcDir, targetDir[, config]);
 
 +   `config.ignored`
 
-    desciption: files that should not sync to target directory.
+    description: files that should not sync to target directory.
 
     default: null
 
