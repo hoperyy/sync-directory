@@ -1,7 +1,7 @@
 {
   "name": "sync-directory",
   "version": "1.0.0",
-  "description": "sync two directories by copying or creating hardlink or creating symlink",
+  "description": "sync two directories by copying or creating hardlink",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
