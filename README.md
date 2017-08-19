@@ -44,6 +44,8 @@ require('sync-directory')(srcDir, targetDir[, config]);
 
     default: `false`
 
+    other info: `sync-directory` will return watcher object, which has method `close` to close watcher.
+
 +   `config.type`
 
     description: sync type
@@ -84,4 +86,14 @@ require('sync-directory')(srcDir, targetDir[, config]);
     require('sync-directory')(A, B, {
         ignored: /node\_modules/i
     })
+    ```
+
++   watch files change
+
+    ```
+    const watcher = require('sync-directory')(A, B, {
+        watch: true
+    });
+
+    // watcher.close();
     ```
