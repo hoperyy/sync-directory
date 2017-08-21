@@ -32,7 +32,7 @@ require('sync-directory')(srcDir, targetDir[, config]);
     `targetDir` | target directory | String | absolute path | -
     `config.watch` | watch files change | Boolean | - | false
     `config.type` | way to sync files | String | `'copy' / 'hardlink'` | `'hardlink'`
-    `config.ignored` | files that should not sync to target directory. | RegExp | - | null
+    `config.exclude` | files that should not sync to target directory. | RegExp / String / Array (item is RegExp / String) | - | null
 
 +   return
 
@@ -49,3 +49,63 @@ require('sync-directory')(srcDir, targetDir[, config]);
     ```
 
     `watcher` is a [chokidar watcher](https://github.com/paulmillr/chokidar).
+
+## Examples
+
++   `watch`
+
+    ```
+    require('sync-directory')(srcDir, targetDir, {
+        watch: true
+    });
+    ```
+
++   `type`
+
+    copy
+
+    ```
+    require('sync-directory')(srcDir, targetDir, {
+        type: 'copy'
+    });
+    ```
+
+    hardlink (default)
+
+    ```
+    require('sync-directory')(srcDir, targetDir);
+    ```
+
++   `exclude`
+
+    exclude `node_modules`
+
+    +   String
+
+        ```
+        require('sync-directory')(srcDir, targetDir, {
+            exclude: 'node_modules'
+        });
+        ```
+
+    +   RegExp
+
+        ```
+        require('sync-directory')(srcDir, targetDir, {
+            exclude: /node\_modules/
+        });
+        ```
+
+    +   RegExp
+
+        ```
+        require('sync-directory')(srcDir, targetDir, {
+            exclude: [/node\_modules/]
+        });
+        ```
+
+        ```
+        require('sync-directory')(srcDir, targetDir, {
+            exclude: ['node_modules']
+        });
+        ```
