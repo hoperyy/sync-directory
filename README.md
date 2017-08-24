@@ -96,7 +96,7 @@ require('sync-directory')(srcDir, targetDir[, config]);
         });
         ```
 
-    +   RegExp
+    +   Array
 
         ```
         require('sync-directory')(srcDir, targetDir, {
