@@ -32,6 +32,7 @@ require('sync-directory')(srcDir, targetDir[, config]);
     `targetDir` | target directory | String | absolute path | -
     `config.watch` | watch files change | Boolean | - | false
     `config.type` | way to sync files | String | `'copy' / 'hardlink'` | `'hardlink'`
+    `config.cb` | callback function when files change | Function | - | blank function
     `config.exclude` | files that should not sync to target directory. | RegExp / String / Array (item is RegExp / String) | - | null
 
 +   return
