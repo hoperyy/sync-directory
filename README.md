@@ -61,6 +61,18 @@ require('sync-directory')(srcDir, targetDir[, config]);
     });
     ```
 
++   `cb`
+
+    ```
+    require('sync-directory')(srcDir, targetDir, {
+        watch: true,
+        cb({ type, path }) {
+            // type: add / remove / unlink / unlinkDir
+            // path: file path
+        }
+    });
+    ```
+
 +   `type`
 
     copy
