@@ -1,13 +1,5 @@
 ## Description
 
-该模块实现目录间同步，从 `dir A` 目录同步到 `dir B` 目录
-
-支持两种方式的同步：`copy` 和 `hardlink`
-
-如果是 `copy`，就是从 `dir A` 目录直接复制文件到 `dir A` 目录
-
-如果是 `hardlink`，就是在 `dir B` 目录生成 `dir A` 目录内文件的硬连接。相对于复制，这种操作轻量，因此是默认同步方式。
-
 `sync-directory` can sync files form src directory to target directory.
 
 We have two ways to sync files: `hardlink` and `copy`.
