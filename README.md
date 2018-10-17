@@ -24,7 +24,7 @@ require('sync-directory')(srcDir, targetDir[, config]);
     `targetDir` | target directory | String | absolute path | -
     `config.watch` | watch files change | Boolean | - | false
     `config.type` | way to sync files | String | `'copy' / 'hardlink'` | `'hardlink'`
-    `config.afterSync` | callback function when files synced | Function | - | blank function
+    `config.cb` | callback function when files synced | Function | - | blank function
     `config.exclude` | files that should not sync to target directory. | RegExp / String / Array (item is RegExp / String) | - | null
 
 +   return
@@ -53,14 +53,14 @@ require('sync-directory')(srcDir, targetDir[, config]);
     });
     ```
 
-+   `afterSync`
++   `cb`
 
     ```
     require('sync-directory')(srcDir, targetDir, {
         watch: true,
-        afterSync({ type, relativePath }) {
+        cb({ type, path }) {
             // type: add / remove / unlink / unlinkDir
-            // relativePath: relative file path
+            // path: file path
         }
     });
     ```
