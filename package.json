@@ -18,7 +18,7 @@
   "homepage": "https://github.com/hoperyy/sync-directory#readme",
   "dependencies": {
     "chokidar": "^1.7.0",
-    "fs-extra": "^4.0.1",
+    "fs-extra": "^7.0.1",
     "readdir-enhanced": "^1.5.2"
   }
 }
