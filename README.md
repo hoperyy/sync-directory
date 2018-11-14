@@ -24,7 +24,7 @@ require('sync-directory')(srcDir, targetDir[, config]);
     `targetDir` | target directory | String | absolute path | -
     `config.watch` | watch files change | Boolean | - | false
     `config.type` | way to sync files | String | `'copy' / 'hardlink'` | `'hardlink'`
-    `config.deleteOrphaned` | Decide if you want to delete other files in targetDir | Boolean | - | true
+    `config.deleteOrphaned` | Decide if you want to delete other files in targetDir when srcDir files are removed | Boolean | - | true
     `config.cb` | callback function when files synced | Function | - | blank function
     `config.exclude` | files that should not sync to target directory. | RegExp / String / Array (item is RegExp / String) | - | null
 
