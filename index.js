@@ -5,7 +5,7 @@ module.exports = (srcDir, targetDir, { type = 'hardlink', exclude = null, watch 
 	syncLocalFiles(srcDir, targetDir, { type, exclude, afterSync, deleteOrphaned });
 
     if (watch) {
-		const watcher = watchLocalFiles(srcDir, targetDir, { type, exclude, cb, afterSync });
+		const watcher = watchLocalFiles(srcDir, targetDir, { type, exclude, cb, afterSync, deleteOrphaned });
         return watcher;
     }
 
