@@ -27,6 +27,7 @@ require('sync-directory')(srcDir, targetDir[, config]);
     `config.deleteOrphaned` | Decide if you want to delete other files in targetDir when srcDir files are removed | Boolean | - | true
     `config.cb` | callback function when files synced | Function | - | blank function
     `config.exclude` | files that should not sync to target directory. | RegExp / String / Array (item is RegExp / String) | - | null
+    `config.filter` | callback function to filter synced files. Sync file when returning `true` | Function | - | `filepath => true`
 
 +   return
 
