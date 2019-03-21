@@ -32,9 +32,9 @@ module.exports = (srcDir, targetDir, { type = 'hardlink', exclude = null, watch 
     // test if support hardlink mode
     fse.ensureDirSync(targetDir);
 
-    if (!testHardlinkSupport(targetDir)) {
-        type = 'copy';
-    }
+    // if (!testHardlinkSupport(targetDir)) {
+    //     type = 'copy';
+    // }
 
     syncLocalFiles(srcDir, targetDir, { type, exclude, afterSync, deleteOrphaned, filter });
 
