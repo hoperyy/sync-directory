@@ -10,7 +10,10 @@ syncDirectory(srcDir, targetDir, {
     watch: true,
     deleteOrphaned: true,
     cb({ type, path }) {
-        console.log('type: ', type);
+        console.log('type: ', type1);
         console.log('path: ', path);
-    }
+    },
+    // onError(e) {
+    //     console.log('in onError: ', e);
+    // }
 });
