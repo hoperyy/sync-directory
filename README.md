@@ -28,6 +28,7 @@ require('sync-directory')(srcDir, targetDir[, config]);
     `config.cb` | callback function when files synced | Function | - | blank function
     `config.exclude` | files that should not sync to target directory. | RegExp / String / Array (item is RegExp / String) | - | null
     `config.filter` | callback function to filter synced files. Sync file when returning `true` | Function | - | `filepath => true`
+    `config.onError` | callback function when something wrong | Function | - | `(err) => { throw new Error(err) }`
 
 +   return
 
@@ -45,7 +46,7 @@ require('sync-directory')(srcDir, targetDir[, config]);
 
     `watcher` is a [chokidar watcher](https://github.com/paulmillr/chokidar).
 
-## Examples
+## Params & Examples
 
 +   `watch`
 
