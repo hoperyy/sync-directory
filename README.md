@@ -125,7 +125,8 @@ require('sync-directory')(srcDir, targetDir[, config]);
     require('sync-directory')(srcDir, targetDir, {
         exclude: 'node_modules',
         forceSync(file) {
-            return /node_modules/.test(file) // all files in "node_modules" will be synced event though "exclude" is configed
+            // all files in "node_modules" will be synced event though "exclude" is configed
+            return /node_modules/.test(file);
         }
     });
     ```
