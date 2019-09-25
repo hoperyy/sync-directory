@@ -9,8 +9,12 @@ const targetDir = path.join(__dirname, 'targetDir');
 syncDirectory(srcDir, targetDir, {
     watch: true,
     deleteOrphaned: true,
+    exclude: [ 'c.js' ],
+    forceSync(file) {
+        return /c\.js/.test(file)
+    },
     cb({ type, path }) {
-        console.log('type: ', type1);
+        console.log('type: ', type);
         console.log('path: ', path);
     },
     // onError(e) {
