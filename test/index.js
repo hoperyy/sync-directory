@@ -13,9 +13,9 @@ syncDirectory(srcDir, targetDir, {
     forceSync(file) {
         return /c\.js/.test(file)
     },
-    cb({ type, path }) {
+    afterSync({ type, relativePath }) {
         console.log('type: ', type);
-        console.log('path: ', path);
+        console.log('path: ', relativePath);
     },
     // onError(e) {
     //     console.log('in onError: ', e);
