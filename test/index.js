@@ -13,17 +13,22 @@ if (fs.existsSync(toSymlink)) {
     fse.removeSync(toSymlink);
 }
 
+if (fs.existsSync(targetDir)) {
+    fse.removeSync(targetDir);
+}
+
 fse.ensureSymlinkSync(srcSymlink, toSymlink);
 
 syncDirectory(srcDir, targetDir, {
     watch: true,
     deleteOrphaned: true,
+    supportSymlink: true,
     exclude: [ 'c.js' ],
     forceSync(file) {
         return /c\.js/.test(file)
     },
     afterSync({ type, relativePath }) {
-        console.log(type, relativePath);
+        // console.log(type, relativePath);
     },
     // onError(e) {
     //     console.log('in onError: ', e);

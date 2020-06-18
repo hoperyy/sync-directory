@@ -1,6 +1,6 @@
 {
   "name": "sync-directory",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "sync two directories by copying or creating hardlink",
   "main": "index.js",
   "scripts": {
