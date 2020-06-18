@@ -11,7 +11,7 @@ module.exports = (
         exclude = null,
         watch = false,
         deleteOrphaned = true,
-        supportSymlink = true,
+        supportSymlink = false,
         cb = () => { }, 
         afterSync = () => {}, 
         filter = () => true,

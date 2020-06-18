@@ -26,7 +26,7 @@ require('sync-directory')(srcDir, targetDir[, config]);
     `config.type` | way to sync files | String | `'copy' / 'hardlink'` | `'hardlink'`
     `config.deleteOrphaned` | Decide if you want to delete other files in targetDir when srcDir files are removed | Boolean | - | true
     `config.afterSync` | callback function when files synced | Function | - | blank function
-    `config.supportSymlink` | ensure symlink in target if src has symlinks | Boolean | - | true
+    `config.supportSymlink` | ensure symlink in target if src has symlinks | Boolean | - | false
     `config.exclude` | files that should not sync to target directory. | RegExp / String / Array (item is RegExp / String) | - | null
     `config.forceSync` | some files must be synced even though 'excluded' | Function | - | `(file) => { return false }`
     `config.filter` | callback function to filter synced files. Sync file when returning `true` | Function | - | `filepath => true`
