@@ -21,7 +21,7 @@ module.exports = (
 ) => {
     // check absolute path
     if (!isAbsoluteUrl(srcDir) || !isAbsoluteUrl(targetDir)) {
-        console.log(srcDir, targetDir, '[sync-directory] "srcDir/targetDir" must be absolute path.');
+        console.log('[sync-directory] "srcDir/targetDir" must be absolute path.');
         return;
     }
 
