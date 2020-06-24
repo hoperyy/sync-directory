@@ -1,6 +1,6 @@
 ## Description
 
-`sync-directory` can sync files form src directory to target directory.
+`sync-directory` can sync files from src directory to target directory.
 
 We have two ways to sync files: `hardlink` and `copy`.
 
