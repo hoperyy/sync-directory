@@ -1,6 +1,6 @@
 {
   "name": "sync-directory",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "sync two directories by copying or creating hardlink",
   "main": "index.js",
   "scripts": {
@@ -19,6 +19,7 @@
   "dependencies": {
     "chokidar": "^3.3.1",
     "fs-extra": "^7.0.1",
+    "is-absolute": "^1.0.0",
     "readdir-enhanced": "^1.5.2"
   }
 }

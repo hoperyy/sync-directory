@@ -1,5 +1,6 @@
 const syncLocalFiles = require('./lib/local-syncfiles');
 const watchLocalFiles = require('./lib/local-watch');
+const isAbsoluteUrl = require('is-absolute');
 const fse = require('fs-extra');
 
 module.exports = (
@@ -18,7 +19,12 @@ module.exports = (
         onError = (err) => { throw new Error(err) }
     } = {}
 ) => {
-    
+    // check absolute path
+    if (!isAbsoluteUrl(srcDir) || !isAbsoluteUrl(targetDir)) {
+        console.log(srcDir, targetDir, '[sync-directory] "srcDir/targetDir" must be absolute path.');
+        return;
+    }
+
     fse.ensureDirSync(targetDir);
 
     syncLocalFiles(srcDir, targetDir, { type, exclude, forceSync, afterSync, deleteOrphaned, supportSymlink, filter, onError });

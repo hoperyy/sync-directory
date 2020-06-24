@@ -21,6 +21,7 @@ fse.ensureSymlinkSync(srcSymlink, toSymlink);
 
 syncDirectory(srcDir, targetDir, {
     watch: true,
+    type: 'copy',
     deleteOrphaned: true,
     supportSymlink: true,
     exclude: [ 'c.js' ],
