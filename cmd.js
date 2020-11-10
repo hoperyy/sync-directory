@@ -21,6 +21,17 @@ const parseArgs = (args) => {
                 case '--watch':
                     options.watch = true;
                     break;
+                case '-do':
+                case '--deleteOrphaned':
+                    options.deleteOrphaned = true;
+                    break;
+                case '-symlink':
+                case '--symlink':
+                    options.supportSymlink = true;
+                    break;
+                case '-c':
+                case '--copy':
+                    options.copy = true;
             }
         } else {
             if (!from) {
@@ -35,12 +46,15 @@ const parseArgs = (args) => {
         from,
         to,
         watch: !!options.watch,
+        deleteOrphaned: !!options.deleteOrphaned,
+        supportSymlink: !!options.supportSymlink,
+        type: options.copy ? 'copy' : 'hardlink',
     };
 };
 
 // error on unknown commands
 commander.on('command:*', function () {
-    let { from, to, watch } = parseArgs(commander.args);
+    let { from, to, watch, deleteOrphaned, supportSymlink, type } = parseArgs(commander.args);
     const cwd = process.cwd();
 
     if (!from) {
@@ -66,8 +80,19 @@ commander.on('command:*', function () {
         process.exit(1);
     }
 
+    console.log('');
+    console.log('sync-directory cli options: ');
+    console.log('   - from: ', from);
+    console.log('   - to:   ', to);
+    console.log('   - watch:', watch);
+    console.log('   - deleteOrphaned:', deleteOrphaned);
+    console.log('   - type: ', type);
+    console.log('   - supportSymlink: ', supportSymlink);
+    console.log('');
+
     run(from, to, {
         watch,
+        deleteOrphaned,
         afterSync({ type, relativePath }) {
             console.log(`${type}: `, relativePath);
         }

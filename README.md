@@ -20,6 +20,30 @@ npm i sync-directory -g
 syncdir <from> <to> [options = -w,--watch]
 ```
 
+options:
+
++   `-w, --watch`
+
+    Watch changes. `false` as default.
+    
+    Same as api `watch`.
+
++   `-do, --deleteOrphaned`
+
+    Delete orphaned files/folders. `false` as default.
+
+    Same as api `deleteOrphaned`.
+
++   `-c, --copy`
+
+    Sync with type `copy`, `hardlink` as default.
+
+    Same as api `type: 'copy'`.
+
++   `-symlink, --symlink`: support symlink while sync running. `false` as default.
+
+    Same as api `supportSymlink`.
+
 Example: `syncdir aaa bbb -w`
 
 ## API
