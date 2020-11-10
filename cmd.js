@@ -92,6 +92,7 @@ commander.on('command:*', function () {
 
     run(from, to, {
         watch,
+        type,
         deleteOrphaned,
         afterSync({ type, relativePath }) {
             console.log(`${type}: `, relativePath);

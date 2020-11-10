@@ -17,8 +17,10 @@ npm i sync-directory -g
 ```
 
 ```bash
-syncdir <from> <to> [options = -w,--watch]
+syncdir <from> <to> [options]
 ```
+
+Example: `syncdir aaa bbb -w`
 
 options:
 
@@ -43,8 +45,6 @@ options:
 +   `-symlink, --symlink`: support symlink while sync running. `false` as default.
 
     Same as api `supportSymlink`.
-
-Example: `syncdir aaa bbb -w`
 
 ## API
 
