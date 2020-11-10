@@ -10,6 +10,18 @@ If type is `hardlink`, `sync-directory` can create hardlink files in target dire
 
 Apparently, the type `hardlink` is quicker than type `copy`, and `sync-directory` uses `hardlink` by default.
 
+## Cli
+
+```bash
+npm i sync-directory -g
+```
+
+```bash
+syncdir <from> <to> [options = -w,--watch]
+```
+
+Example: `syncdir aaa bbb -w`
+
 ## API
 
 ```js
