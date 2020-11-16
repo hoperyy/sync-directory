@@ -24,7 +24,7 @@ module.exports = (
         forceSync = () => { },
         exclude = null,
         watch = false,
-        deleteOrphaned = undefined,
+        deleteOrphaned = true,
         supportSymlink = false,
         cb = () => { },
         afterSync = () => { },
@@ -34,15 +34,9 @@ module.exports = (
 ) => {
     if (typeof srcDirs === 'string') {
         srcDirs = [srcDirs];
-        deleteOrphaned = true;
-    } else {
-        deleteOrphaned = false;
     }
     if (typeof targetDirs === 'string') {
         targetDirs = [targetDirs];
-        deleteOrphaned = true;
-    } else {
-        deleteOrphaned = false;
     }
     if (srcDirs.length !== targetDirs.length) {
         throw new Error('[sync-directory] the number of source folder paths must match the number of target folder paths');
