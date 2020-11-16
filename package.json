@@ -3,6 +3,7 @@
   "version": "2.2.10",
   "description": "sync two directories by copying or creating hardlink",
   "main": "index.js",
+  "types": "./types.d.ts",
   "scripts": {
     "test": "npx mocha"
   },
