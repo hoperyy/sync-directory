@@ -17,17 +17,33 @@ npm i sync-directory -g
 ```
 
 ```bash
-syncdir <from> <to> [options]
+syncdir [<from> <to>] [options]
 ```
 
-Example: `syncdir aaa bbb -w`
+Example:
+
+Sync from `aaa` to `bbb`: `syncdir aaa bbb -w`
+
+Sync from `aaa` to `bbb` and `ccc` to `ddd`: `syncdir -i aaa -o bbb -i ccc -o ddd -w`
 
 options:
+
++   `-i, --source`
+
+    Source directory. Can be specified multiple times to sync several source directories.
+
+    Same as api `srcDirs`.
+
++   `-o, --target`
+
+    Target directory. Can be specified multiple times to sync several target directories. The target directories are paired with source directories in order.
+
+    Same as api `targetDirs`.
 
 +   `-w, --watch`
 
     Watch changes. `false` as default.
-    
+
     Same as api `watch`.
 
 +   `-do, --deleteOrphaned`
@@ -56,8 +72,8 @@ require('sync-directory')(srcDir, targetDir[, config]);
 
     name | description | type | values | default
     ---- | ---- | ---- | ---- | ----
-    `srcDir` | src directory | String | absolute path | -
-    `targetDir` | target directory | String | absolute path | -
+    `srcDirs` | src directory(s) | String/String[] | absolute path(s) | -
+    `targetDirs` | target directory(s) | String/String[] | absolute path(s) | -
     `config.watch` | watch files change | Boolean | - | false
     `config.type` | way to sync files | String | `'copy' / 'hardlink'` | `'hardlink'`
     `config.deleteOrphaned` | Decide if you want to delete other files in targetDir when srcDir files are removed | Boolean | - | true
