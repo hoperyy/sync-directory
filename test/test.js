@@ -32,12 +32,26 @@ describe('sync-directory', function () {
     });
 
     describe('sync-copy', function () {
+        afterEach(function () {
+            fs.rmSync('test-srcDir', { recursive: true, force: true });
+            fs.rmSync('test-targetDir', { recursive: true, force: true });
+        });
+
         it('should copy files', function () {
             const watcher = syncDirectory('test-srcDir', 'test-targetDir', {
                 type: 'copy'
             });
             assert.strictEqual(watcher, undefined);
-            assertFile(testFile, 'test data');
+            assertFile(targetFile, 'test data');
+            assert.notStrictEqual(fs.lstatSync(targetFile).ino, fs.lstatSync(testFile).ino, 'file is a symbolic link');
+        });
+
+        it('should copy single file', function () {
+            const watcher = syncDirectory(testFile, targetFile, {
+                type: 'copy'
+            });
+            assert.strictEqual(watcher, undefined);
+            assertFile(targetFile, 'test data');
             assert.notStrictEqual(fs.lstatSync(targetFile).ino, fs.lstatSync(testFile).ino, 'file is a symbolic link');
         });
 
@@ -50,9 +64,9 @@ describe('sync-directory', function () {
                     type: 'copy'
                 });
                 assert.strictEqual(watcher, undefined);
-                assertFile(testFile, 'test data');
+                assertFile(targetFile, 'test data');
                 assert.notStrictEqual(fs.lstatSync(targetFile).ino, fs.lstatSync(testFile).ino, 'file is a symbolic link');
-                assertFile(testFile2, 'test data2');
+                assertFile(targetFile2, 'test data2');
                 assert.notStrictEqual(fs.lstatSync(targetFile2).ino, fs.lstatSync(testFile2).ino, 'file is a symbolic link');
             } finally {
                 fs.rmSync('test-srcDir2', { recursive: true, force: true });
@@ -69,7 +83,7 @@ describe('sync-directory', function () {
                     type: 'copy'
                 });
                 assert.strictEqual(watcher, undefined);
-                assertFile(testFile, 'test data');
+                assertFile(targetFile, 'test data');
                 assert.notStrictEqual(fs.lstatSync(targetFile).ino, fs.lstatSync(testFile).ino, 'file is a symbolic link');
                 assertFile(path.join('test-targetDir', 'test2.txt'), 'test data2');
                 assert.notStrictEqual(fs.lstatSync(path.join('test-targetDir', 'test2.txt')).ino, fs.lstatSync(path.join('test-srcDir2', 'test2.txt')).ino, 'file is a symbolic link');
@@ -81,18 +95,41 @@ describe('sync-directory', function () {
 
     describe('watch-copy', function () {
         it('should copy files', async function () {
-            const watcher = syncDirectory('test-srcDir', 'test-targetDir', {
-                type: 'copy',
-                watch: true,
-            });
-            assertFile(testFile, 'test data');
-            assert.notStrictEqual(fs.lstatSync(targetFile).ino, fs.lstatSync(testFile).ino, 'file is a symbolic link');
-            await delay(100);
-            fs.writeFileSync(testFile, 'new data');
-            await delay(100);
-            assertFile(testFile, 'new data');
-            assert.notStrictEqual(fs.lstatSync(targetFile).ino, fs.lstatSync(testFile).ino, 'file is a symbolic link');
-            await watcher.close();
+            let watcher;
+            try {
+                watcher = syncDirectory('test-srcDir', 'test-targetDir', {
+                    type: 'copy',
+                    watch: true,
+                });
+                assertFile(targetFile, 'test data');
+                assert.notStrictEqual(fs.lstatSync(targetFile).ino, fs.lstatSync(testFile).ino, 'file is a symbolic link');
+                await delay(100);
+                fs.writeFileSync(targetFile, 'new data');
+                await delay(100);
+                assertFile(targetFile, 'new data');
+                assert.notStrictEqual(fs.lstatSync(targetFile).ino, fs.lstatSync(testFile).ino, 'file is a symbolic link');
+            } finally {
+                await watcher.close();
+            };
+        });
+
+        it('should copy single file', async function () {
+            let watcher;
+            try {
+                watcher = syncDirectory(testFile, targetFile, {
+                    type: 'copy',
+                    watch: true,
+                });
+                assertFile(targetFile, 'test data');
+                assert.notStrictEqual(fs.lstatSync(targetFile).ino, fs.lstatSync(testFile).ino, 'file is a symbolic link');
+                await delay(100);
+                fs.writeFileSync(targetFile, 'new data');
+                await delay(100);
+                assertFile(targetFile, 'new data');
+                assert.notStrictEqual(fs.lstatSync(targetFile).ino, fs.lstatSync(testFile).ino, 'file is a symbolic link');
+            } finally {
+                await watcher.close();
+            };
         });
     });
 
@@ -109,18 +146,22 @@ describe('sync-directory', function () {
 
     describe('watch-hardlink', function () {
         it('should copy files', async function () {
-            const watcher = syncDirectory('test-srcDir', 'test-targetDir', {
-                watch: true,
-                supportSymlink: true,
-            });
-            assertFile(testFile, 'test data');
-            assert.strictEqual(fs.lstatSync(targetFile).ino, fs.lstatSync(testFile).ino, 'file is not a symbolic link');
-            await delay(100);
-            fs.writeFileSync(testFile, 'new data');
-            await delay(100);
-            assertFile(testFile, 'new data');
-            assert.strictEqual(fs.lstatSync(targetFile).ino, fs.lstatSync(testFile).ino, 'file is not a symbolic link');
-            await watcher.close();
+            let watcher;
+            try {
+                watcher = syncDirectory('test-srcDir', 'test-targetDir', {
+                    watch: true,
+                    supportSymlink: true,
+                });
+                assertFile(targetFile, 'test data');
+                assert.strictEqual(fs.lstatSync(targetFile).ino, fs.lstatSync(testFile).ino, 'file is not a symbolic link');
+                await delay(100);
+                fs.writeFileSync(targetFile, 'new data');
+                await delay(100);
+                assertFile(targetFile, 'new data');
+                assert.strictEqual(fs.lstatSync(targetFile).ino, fs.lstatSync(testFile).ino, 'file is not a symbolic link');
+            } finally {
+                await watcher.close();
+            };
         });
     });
 });
