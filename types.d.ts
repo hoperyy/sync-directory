@@ -28,5 +28,7 @@ export interface Configuration {
 }
 
 declare module 'sync-directory' {
-    export default function syncDirectory(srcDirs: string | string[], targetDirs: string | string[], config?: Configuration): FSWatcher | undefined;
+    export default function syncDirectory(srcDirs: string | string[], targetDirs: string | string[], config: { watch: true } & Configuration): typeof FSWatcher;
+    export default function syncDirectory(srcDirs: string | string[], targetDirs: string | string[], config?: Configuration): undefined;
+    export default function syncDirectory(srcDirs: string | string[], targetDirs: string | string[], config?: Configuration): typeof FSWatcher | undefined;
 }
