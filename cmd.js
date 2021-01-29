@@ -52,14 +52,15 @@ const parseArgs = (args) => {
     };
 };
 
-// error on unknown commands
-commander.on('command:*', function () {
+const actor = function () {
     let { from, to, watch, deleteOrphaned, supportSymlink, type } = parseArgs(commander.args);
+
+    console.log({ from, to, watch, deleteOrphaned, supportSymlink, type });
     const cwd = process.cwd();
 
     if (!from) {
         console.error(`missing source folder path`);
-        process.exit(1); 
+        process.exit(1);
     }
 
     if (!to) {
@@ -98,7 +99,12 @@ commander.on('command:*', function () {
             console.log(`${type}: `, relativePath);
         }
     });
-});
+};
+
+// error on unknown commands
+// commander.on('command:*', actor);
 
 commander.allowUnknownOption();
 commander.parse(process.argv);
+
+actor();

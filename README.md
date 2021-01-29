@@ -42,7 +42,9 @@ options:
 
     Same as api `type: 'copy'`.
 
-+   `-symlink, --symlink`: support symlink while sync running. `false` as default.
++   `-symlink, --symlink`
+
+    support symlink while sync running. `false` as default.
 
     Same as api `supportSymlink`.
 
