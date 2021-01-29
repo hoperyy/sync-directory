@@ -32,7 +32,7 @@ options:
 
 +   `-do, --deleteOrphaned`
 
-    Delete orphaned files/folders. `false` as default.
+    Delete orphaned files/folders in target folder. `false` as default.
 
     Same as api `deleteOrphaned`.
 

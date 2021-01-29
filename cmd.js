@@ -55,7 +55,18 @@ const parseArgs = (args) => {
 const actor = function () {
     let { from, to, watch, deleteOrphaned, supportSymlink, type } = parseArgs(commander.args);
 
-    console.log({ from, to, watch, deleteOrphaned, supportSymlink, type });
+    // if (showHelp) {
+    //     console.log('syncdir help:');
+    //     console.log('');
+    //     console.log('Usage: syncdir <from> <to> [options]');
+    //     console.log('');
+    //     console.log('Options: ');
+    //     console.log(' -w, --watch   watch changes');
+    //     console.log(' -do, --deleteOrphaned  Delete orphaned files/folders in target folder');
+    //     console.log(' -c, --copy   Sync with type "copy"');
+    //     console.log(' -symlink, --symlink   support symlink while sync running');
+    // }
+
     const cwd = process.cwd();
 
     if (!from) {
