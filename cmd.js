@@ -70,12 +70,12 @@ const actor = function () {
     const cwd = process.cwd();
 
     if (!from) {
-        console.error(`missing source folder path`);
+        console.error(`[sync-directory] missing source "from" folder path: syncdir <from> <to> [options]`);
         process.exit(1);
     }
 
     if (!to) {
-        console.error(`missing target folder path`);
+        console.error(`[sync-directory] missing target "to" folder path: syncdir <from> <to> [options]`);
         process.exit(1);
     }
 
@@ -88,7 +88,7 @@ const actor = function () {
     }
 
     if (!fs.existsSync(from)) {
-        console.error('source folder does not exist.');
+        console.error(`[sync-directory] source folder does not exist: "${from}"`);
         process.exit(1);
     }
 
