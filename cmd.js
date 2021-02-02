@@ -7,66 +7,7 @@ const commander = require('commander');
 const isAbsoluteUrl = require('is-absolute');
 const run = require('./index');
 
-const parseArgs = (args) => {
-    const options = {};
-    let from = '';
-    let to = '';
-
-    for (let i = 0, len = args.length; i < len; i++) {
-        const item = args[i];
-
-        if (/^\-/.test(item)) {
-            switch(item) {
-                case '-w':
-                case '--watch':
-                    options.watch = true;
-                    break;
-                case '-do':
-                case '--deleteOrphaned':
-                    options.deleteOrphaned = true;
-                    break;
-                case '-symlink':
-                case '--symlink':
-                    options.supportSymlink = true;
-                    break;
-                case '-c':
-                case '--copy':
-                    options.copy = true;
-            }
-        } else {
-            if (!from) {
-                from = item;
-            } else if (!to) {
-                to = item;
-            }
-        }
-    }
-
-    return {
-        from,
-        to,
-        watch: !!options.watch,
-        deleteOrphaned: !!options.deleteOrphaned,
-        supportSymlink: !!options.supportSymlink,
-        type: options.copy ? 'copy' : 'hardlink',
-    };
-};
-
-const actor = function () {
-    let { from, to, watch, deleteOrphaned, supportSymlink, type } = parseArgs(commander.args);
-
-    // if (showHelp) {
-    //     console.log('syncdir help:');
-    //     console.log('');
-    //     console.log('Usage: syncdir <from> <to> [options]');
-    //     console.log('');
-    //     console.log('Options: ');
-    //     console.log(' -w, --watch   watch changes');
-    //     console.log(' -do, --deleteOrphaned  Delete orphaned files/folders in target folder');
-    //     console.log(' -c, --copy   Sync with type "copy"');
-    //     console.log(' -symlink, --symlink   support symlink while sync running');
-    // }
-
+const actor = function ({ from, to, watch, deleteOrphaned, supportSymlink, type }) {
     const cwd = process.cwd();
 
     if (!from) {
@@ -88,12 +29,12 @@ const actor = function () {
     }
 
     if (!fs.existsSync(from)) {
-        console.error(`[sync-directory] source folder does not exist: "${from}"`);
+        console.error(`[sync-directory] "from" folder does not exist: "${from}"`);
         process.exit(1);
     }
 
     console.log('');
-    console.log('sync-directory cli options: ');
+    console.log('sync-directory cli: syncdir <from> <to> [options]');
     console.log('   - from: ', from);
     console.log('   - to:   ', to);
     console.log('   - watch:', watch);
@@ -112,10 +53,26 @@ const actor = function () {
     });
 };
 
-// error on unknown commands
-// commander.on('command:*', actor);
+commander
+    .version(require('./package.json').version)
+    .arguments('[from] [to]')
+    .option('-w, --watch', 'Watch changes')
+    .option('-do, --deleteOrphaned', 'delete orphaned files/folders in target folder')
+    .option('-symlink, --symlink', 'support symlink while sync running')
+    .option('-c, --copy', 'Sync with type `copy`, `hardlink` as default')
+    .action((from, to, options) => {
+        const { watch, deleteOrphaned, symlink, copy } = options;
 
-commander.allowUnknownOption();
-commander.parse(process.argv);
+        const params = {
+            from,
+            to,
+            watch: !!watch,
+            deleteOrphaned: !!deleteOrphaned,
+            supportSymlink: !!symlink,
+            type: copy ? 'copy' : 'hardlink',
+        };
 
-actor();
+        actor(params);
+    });
+
+commander.parse(process.argv)
