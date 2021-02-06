@@ -54,8 +54,8 @@ const actor = function ({ from, to, watch, deleteOrphaned, supportSymlink, type 
 };
 
 commander
-    .version(require('./package.json').version)
-    .arguments('[from] [to]')
+    .version(require('./package.json').version, '-v, --version')
+    .arguments('<from> <to>')
     .option('-w, --watch', 'Watch changes')
     .option('-do, --deleteOrphaned', 'delete orphaned files/folders in target folder')
     .option('-symlink, --symlink', 'support symlink while sync running')
