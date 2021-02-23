@@ -65,7 +65,6 @@ require('sync-directory')(srcDir, targetDir[, config]);
     `srcDir` | src directory | String | absolute path | -
     `targetDir` | target directory | String | absolute path | -
     `config.watch` | watch files change | Boolean | - | false
-    `config.quiet` | Disable unnecessary logs | Boolean | - | false
     `config.type` | way to sync files | String | `'copy' / 'hardlink'` | `'hardlink'`
     `config.deleteOrphaned` | Decide if you want to delete other files in targetDir when srcDir files are removed | Boolean | - | true
     `config.afterSync` | callback function when files synced | Function | - | blank function
