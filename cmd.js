@@ -7,7 +7,7 @@ const commander = require('commander');
 const isAbsoluteUrl = require('is-absolute');
 const run = require('./index');
 
-const actor = function ({ from, to, watch, deleteOrphaned, supportSymlink, type }) {
+const actor = function ({ from, to, watch, deleteOrphaned, supportSymlink, type, quiet }) {
     const cwd = process.cwd();
 
     if (!from) {
@@ -33,22 +33,26 @@ const actor = function ({ from, to, watch, deleteOrphaned, supportSymlink, type 
         process.exit(1);
     }
 
-    console.log('');
-    console.log('sync-directory cli: syncdir <from> <to> [options]');
-    console.log('   - from: ', from);
-    console.log('   - to:   ', to);
-    console.log('   - watch:', watch);
-    console.log('   - deleteOrphaned:', deleteOrphaned);
-    console.log('   - type: ', type);
-    console.log('   - supportSymlink: ', supportSymlink);
-    console.log('');
+    if (!quiet) {
+        console.log('');
+        console.log('sync-directory cli: syncdir <from> <to> [options]');
+        console.log('   - from: ', from);
+        console.log('   - to:   ', to);
+        console.log('   - watch:', watch);
+        console.log('   - deleteOrphaned:', deleteOrphaned);
+        console.log('   - type: ', type);
+        console.log('   - supportSymlink: ', supportSymlink);
+        console.log('');
+    }
 
     run(from, to, {
         watch,
         type,
         deleteOrphaned,
         afterSync({ type, relativePath }) {
-            console.log(`${type}: `, relativePath);
+            if (!quiet) {
+                console.log(`${type}: `, relativePath);
+            }
         }
     });
 };
@@ -57,11 +61,12 @@ commander
     .version(require('./package.json').version, '-v, --version')
     .arguments('<from> <to>')
     .option('-w, --watch', 'Watch changes')
+    .option('--quiet', 'disable logs')
     .option('-do, --deleteOrphaned', 'delete orphaned files/folders in target folder')
     .option('-symlink, --symlink', 'support symlink while sync running')
     .option('-c, --copy', 'Sync with type `copy`, `hardlink` as default')
     .action((from, to, options) => {
-        const { watch, deleteOrphaned, symlink, copy } = options;
+        const { watch, deleteOrphaned, symlink, copy, quiet } = options;
 
         const params = {
             from,
@@ -69,6 +74,7 @@ commander
             watch: !!watch,
             deleteOrphaned: !!deleteOrphaned,
             supportSymlink: !!symlink,
+            quiet,
             type: copy ? 'copy' : 'hardlink',
         };
 
