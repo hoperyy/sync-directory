@@ -65,6 +65,7 @@ require('sync-directory')(srcDir, targetDir[, config]);
     `srcDir` | src directory | String | absolute path | -
     `targetDir` | target directory | String | absolute path | -
     `config.watch` | watch files change | Boolean | - | false
+    `config.chokidarWatchOptions` | watch options ([chokidar](https://github.com/paulmillr/chokidar) is used for watching) | Object | - | `{}`
     `config.type` | way to sync files | String | `'copy' / 'hardlink'` | `'hardlink'`
     `config.deleteOrphaned` | Decide if you want to delete other files in targetDir when srcDir files are removed | Boolean | - | true
     `config.afterSync` | callback function when files synced | Function | - | blank function
@@ -73,6 +74,7 @@ require('sync-directory')(srcDir, targetDir[, config]);
     `config.forceSync` | some files must be synced even though 'excluded' | Function | - | `(file) => { return false }`
     `config.filter` | callback function to filter synced files. Sync file when returning `true` | Function | - | `filepath => true`
     `config.onError` | callback function when something wrong | Function | - | `(err) => { throw new Error(err) }`
+    
 
 +   return
 
@@ -100,12 +102,25 @@ require('sync-directory')(srcDir, targetDir[, config]);
     });
     ```
 
++   `chokidarWatchOptions`
+
+    ```js
+    require('sync-directory')(srcDir, targetDir, {
+        chokidarWatchOptions: {
+            awaitWriteFinish: {
+                stabilityThreshold: 2000,
+                pollInterval: 100
+            }
+        },
+    });
+    ```
+
 +   `afterSync`
 
     ```js
     require('sync-directory')(srcDir, targetDir, {
         afterSync({ type, relativePath }) {
-            // type: add / change / unlink / unlinkDir
+            // type: init:hardlink / init:copy / add / change / unlink / unlinkDir
             // relativePath: relative file path
         }
     });
@@ -172,7 +187,6 @@ require('sync-directory')(srcDir, targetDir[, config]);
         }
     });
     ```
-
 
 +   `supportSymlink`
 

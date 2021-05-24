@@ -8,4 +8,5 @@ export default function syncDirectory(srcDir: string, targetDir: string, options
     afterSync?(params?: { type: string; relativePath: string }): any;
     filter?(filePath?: string): boolean;
     onError?(err?: object): any;
+    chokidarWatchOptions?: Object;
 }): object | void

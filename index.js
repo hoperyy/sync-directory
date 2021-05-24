@@ -16,6 +16,7 @@ module.exports = (
         cb = () => { }, 
         afterSync = () => {}, 
         filter = () => true,
+        chokidarWatchOptions = {},
         onError = (err) => { throw new Error(err) }
     } = {}
 ) => {
@@ -30,7 +31,7 @@ module.exports = (
     syncLocalFiles(srcDir, targetDir, { type, exclude, forceSync, afterSync, deleteOrphaned, supportSymlink, filter, onError });
 
     if (watch) {
-        const watcher = watchLocalFiles(srcDir, targetDir, { type, exclude, forceSync, cb, afterSync, deleteOrphaned, filter, onError });
+        const watcher = watchLocalFiles(srcDir, targetDir, { type, exclude, forceSync, cb, afterSync, deleteOrphaned, filter, onError, chokidarWatchOptions });
         return watcher;
     }
 

@@ -17,7 +17,7 @@ if (fs.existsSync(targetDir)) {
     fse.removeSync(targetDir);
 }
 
-fse.ensureSymlinkSync(srcSymlink, toSymlink);
+// fse.ensureSymlinkSync(srcSymlink, toSymlink);
 
 syncDirectory(srcDir, targetDir, {
     watch: true,
@@ -29,7 +29,13 @@ syncDirectory(srcDir, targetDir, {
         return /c\.js/.test(file)
     },
     afterSync({ type, relativePath }) {
-        // console.log(type, relativePath);
+        console.log(type, relativePath);
+    },
+    chokidarWatchOptions: {
+        awaitWriteFinish: {
+            stabilityThreshold: 2000,
+            pollInterval: 100
+        }
     },
     // onError(e) {
     //     console.log('in onError: ', e);
