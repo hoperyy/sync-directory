@@ -52,7 +52,7 @@ options:
 
     Same as api `supportSymlink`.
 
-## Example
+## API Example
 
 ### sync
 
