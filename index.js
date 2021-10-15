@@ -3,36 +3,90 @@ const watchLocalFiles = require('./lib/local-watch');
 const isAbsoluteUrl = require('is-absolute');
 const fse = require('fs-extra');
 
-module.exports = (
+const synced = (
     srcDir, 
     targetDir, 
     { 
         type = 'hardlink',
-        forceSync = () => {},
         exclude = null,
         watch = false,
         deleteOrphaned = true,
         supportSymlink = false,
-        cb = () => { }, 
-        afterSync = () => {}, 
-        filter = () => true,
         chokidarWatchOptions = {},
+        promised = false,
+        forceSync = () => {},
+        afterEachSync = () => {},
+        filter = () => true,
         onError = (err) => { throw new Error(err) }
     } = {}
 ) => {
-    // check absolute path
-    if (!isAbsoluteUrl(srcDir) || !isAbsoluteUrl(targetDir)) {
-        console.log('[sync-directory] "srcDir/targetDir" must be absolute path.');
-        return;
+    try {
+        afterSync = afterEachSync;
+        const options = { type, exclude, forceSync, afterSync, deleteOrphaned, supportSymlink, filter, onError, promised };
+
+        // check absolute path
+        if (!isAbsoluteUrl(srcDir) || !isAbsoluteUrl(targetDir)) {
+            onError({ message: '[sync-directory] "srcDir/targetDir" must be absolute path.' });
+            return;
+        }
+
+        fse.ensureDirSync(targetDir);
+
+        syncLocalFiles.sync(srcDir, targetDir, options);
+
+        if (watch) {
+            return watchLocalFiles(srcDir, targetDir, { ...options, chokidarWatchOptions });
+        }
+    } catch(err) {
+        onError(err); // never throw error
     }
-
-    fse.ensureDirSync(targetDir);
-
-    syncLocalFiles(srcDir, targetDir, { type, exclude, forceSync, afterSync, deleteOrphaned, supportSymlink, filter, onError });
-
-    if (watch) {
-        const watcher = watchLocalFiles(srcDir, targetDir, { type, exclude, forceSync, cb, afterSync, deleteOrphaned, filter, onError, chokidarWatchOptions });
-        return watcher;
-    }
-
 };
+
+const asynced = (
+    srcDir, 
+    targetDir, 
+    { 
+        type = 'hardlink',
+        exclude = null,
+        watch = false,
+        deleteOrphaned = true,
+        supportSymlink = false,
+        chokidarWatchOptions = {},
+        promised = false,
+        forceSync = () => {},
+        afterEachSync = () => {},
+        filter = () => true,
+        onError = (err) => { throw new Error(err) }
+    } = {}
+) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            afterSync = afterEachSync;
+            const options = { type, exclude, forceSync, afterSync, deleteOrphaned, supportSymlink, filter, onError, promised };
+
+            // check absolute path
+            if (!isAbsoluteUrl(srcDir) || !isAbsoluteUrl(targetDir)) {
+                onError({ message: '[sync-directory] "srcDir/targetDir" must be absolute path.' });
+                resolve(); // never throw error
+                return;
+            }
+
+            fse.ensureDirSync(targetDir);
+
+            await syncLocalFiles.async(srcDir, targetDir, options);
+
+            if (watch) {
+                resolve(watchLocalFiles(srcDir, targetDir, { ...options, chokidarWatchOptions }));
+                return;
+            }
+        } catch(err) {
+            onError(err);
+        }
+
+        resolve();
+    });
+};
+
+module.exports = asynced;
+module.exports.sync = synced;
+module.exports.async = asynced;

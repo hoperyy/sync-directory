@@ -1,12 +1,13 @@
 {
   "name": "sync-directory",
-  "version": "2.2.23",
+  "version": "3.0.0",
   "description": "sync two directories by copying or creating hardlink",
   "main": "index.js",
   "types": "./index.d.ts",
   "scripts": {
     "test": "node test/index.js"
   },
+  "keywords": ["fs", "sync", "async", "promise", "event", "walk", "absolute"],
   "bin": {
     "syncdir": "./cmd.js"
   },

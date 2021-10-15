@@ -19,25 +19,33 @@ if (fs.existsSync(targetDir)) {
 
 // fse.ensureSymlinkSync(srcSymlink, toSymlink);
 
-syncDirectory(srcDir, targetDir, {
-    watch: true,
-    type: 'copy',
-    deleteOrphaned: true,
-    supportSymlink: true,
-    exclude: [ 'c.js' ],
-    forceSync(file) {
-        return /c\.js/.test(file)
-    },
-    afterSync({ type, relativePath }) {
-        console.log(type, relativePath);
-    },
-    chokidarWatchOptions: {
-        awaitWriteFinish: {
-            stabilityThreshold: 2000,
-            pollInterval: 100
+const delay = () => new Promise(r => setTimeout(r, 2000))
+
+console.log(111);
+(async () => {
+    console.log(1);
+    await syncDirectory.async(srcDir, targetDir, {
+        watch: false,
+        type: 'copy',
+        deleteOrphaned: true,
+        supportSymlink: true,
+        exclude: [ 'b' ],
+        forceSync(file) {
+            return /b/.test(file)
+        },
+        async afterEachSync({ type, relativePath }) {
+            console.log(type, relativePath);
+            await delay();
+        },
+        chokidarWatchOptions: {
+            awaitWriteFinish: {
+                stabilityThreshold: 2000,
+                pollInterval: 100
+            }
+        },
+        onError(e) {
+            console.log('in onError: ', e);
         }
-    },
-    // onError(e) {
-    //     console.log('in onError: ', e);
-    // }
-});
+    });
+    console.log(2);
+})()
