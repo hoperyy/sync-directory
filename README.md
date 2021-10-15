@@ -120,156 +120,152 @@ const watcher = syncDirectory(A, B, {
 
 ### Params
 
-+   list
+name | description | type | values | default | can be `async`
+---- | ---- | ---- | ---- | ---- | ----
+`srcDir` | src directory | String | absolute path | - | -
+`targetDir` | target directory | String | absolute path | - | -
+`config.watch` | watch files change | Boolean | - | false | -
+`config.chokidarWatchOptions` | watch options ([chokidar](https://github.com/paulmillr/chokidar) is used for watching) | Object | - | `{}` | -
+`config.type` | way to sync files | String | `'copy' / 'hardlink'` | `'hardlink'` | -
+`config.deleteOrphaned` | Decide if you want to delete other files in targetDir when srcDir files are removed | Boolean | - | true | -
+`config.afterEachSync` | callback function when every file synced | Function | - | blank function | Yes when `syncDirectory.async()`
+`config.supportSymlink` | ensure symlink in target if src has symlinks | Boolean | - | false | -
+`config.exclude` | files that should not sync to target directory. | RegExp / String / Array (item is RegExp / String) | - | null | -
+`config.forceSync` | some files must be synced even though 'excluded' | Function | - | `(file) => { return false }` | No
+`config.filter` | callback function to filter synced files. Sync file when returning `true` | Function | - | `filepath => true` | No
+`config.onError` | callback function when something wrong | Function | - | `(err) => { throw new Error(err) }` | Yes when `syncDirectory.async()`
 
-    name | description | type | values | default | can be `async`
-    ---- | ---- | ---- | ---- | ---- | ----
-    `srcDir` | src directory | String | absolute path | - | -
-    `targetDir` | target directory | String | absolute path | - | -
-    `config.watch` | watch files change | Boolean | - | false | -
-    `config.chokidarWatchOptions` | watch options ([chokidar](https://github.com/paulmillr/chokidar) is used for watching) | Object | - | `{}` | -
-    `config.type` | way to sync files | String | `'copy' / 'hardlink'` | `'hardlink'` | -
-    `config.deleteOrphaned` | Decide if you want to delete other files in targetDir when srcDir files are removed | Boolean | - | true | -
-    `config.afterEachSync` | callback function when every file synced | Function | - | blank function | Yes when `syncDirectory.async()`
-    `config.supportSymlink` | ensure symlink in target if src has symlinks | Boolean | - | false | -
-    `config.exclude` | files that should not sync to target directory. | RegExp / String / Array (item is RegExp / String) | - | null | -
-    `config.forceSync` | some files must be synced even though 'excluded' | Function | - | `(file) => { return false }` | No
-    `config.filter` | callback function to filter synced files. Sync file when returning `true` | Function | - | `filepath => true` | No
-    `config.onError` | callback function when something wrong | Function | - | `(err) => { throw new Error(err) }` | Yes when `syncDirectory.async()`
++   `watch`
 
-+   Example
+    ```js
+    syncDirectory(srcDir, targetDir, {
+        watch: true
+    });
+    ```
 
-    +   `watch`
++   `chokidarWatchOptions`
 
-        ```js
-        syncDirectory(srcDir, targetDir, {
-            watch: true
-        });
-        ```
-
-    +   `chokidarWatchOptions`
-
-        ```js
-        syncDirectory(srcDir, targetDir, {
-            chokidarWatchOptions: {
-                awaitWriteFinish: {
-                    stabilityThreshold: 2000,
-                    pollInterval: 100
-                }
-            },
-        });
-        ```
-
-    +   `afterEachSync`
-
-        ```js
-        syncDirectory.sync(srcDir, targetDir, {
-            afterEachSync({ type, relativePath, absolutePath }) {
-                // type: init:hardlink / init:copy / add / change / unlink / unlinkDir
-                // - init type: "init:hardlink" / "init:copy"
-                // - watch type: "add" / "change" / "unlink" / "unlinkDir"
-
-                // relativePath: relative file path
+    ```js
+    syncDirectory(srcDir, targetDir, {
+        chokidarWatchOptions: {
+            awaitWriteFinish: {
+                stabilityThreshold: 2000,
+                pollInterval: 100
             }
-        });
+        },
+    });
+    ```
 
-        await syncDirectory.async(srcDir, targetDir, {
-            async afterEachSync({ type, relativePath, absolutePath }) {
-                // type: init:hardlink / init:copy / add / change / unlink / unlinkDir
-                // - init type: "init:hardlink" / "init:copy"
-                // - watch type: "add" / "change" / "unlink" / "unlinkDir"
++   `afterEachSync`
 
-                // relativePath: relative file path
-            }
-        });
-        ```
+    ```js
+    syncDirectory.sync(srcDir, targetDir, {
+        afterEachSync({ type, relativePath, absolutePath }) {
+            // type: init:hardlink / init:copy / add / change / unlink / unlinkDir
+            // - init type: "init:hardlink" / "init:copy"
+            // - watch type: "add" / "change" / "unlink" / "unlinkDir"
 
-    +   `type`
+            // relativePath: relative file path
+        }
+    });
 
-        +   `copy`
+    await syncDirectory.async(srcDir, targetDir, {
+        async afterEachSync({ type, relativePath, absolutePath }) {
+            // type: init:hardlink / init:copy / add / change / unlink / unlinkDir
+            // - init type: "init:hardlink" / "init:copy"
+            // - watch type: "add" / "change" / "unlink" / "unlinkDir"
 
-            ```js
-            syncDirectory(srcDir, targetDir, {
-                type: 'copy'
-            });
-            ```
+            // relativePath: relative file path
+        }
+    });
+    ```
 
-        +   `hardlink` (default)
++   `type`
 
-            ```js
-            syncDirectory(srcDir, targetDir);
-            ```
-
-    +   `exclude`
-
-        exclude `node_modules`
-
-        +   String
-
-            ```js
-            syncDirectory(srcDir, targetDir, {
-                exclude: 'node_modules'
-            });
-            ```
-
-        +   RegExp
-
-            ```js
-            syncDirectory(srcDir, targetDir, {
-                exclude: /node\_modules/
-            });
-            ```
-
-        +   Array
-
-            ```js
-            syncDirectory(srcDir, targetDir, {
-                exclude: [/node\_modules/]
-            });
-            ```
-
-            ```js
-            syncDirectory(srcDir, targetDir, {
-                exclude: ['node_modules']
-            });
-            ```
-
-    +   `forceSync`
+    +   `copy`
 
         ```js
         syncDirectory(srcDir, targetDir, {
-            exclude: 'node_modules',
-            forceSync(file) {
-                // all files in "node_modules" will be synced event though "exclude" is configed
-                return /node_modules/.test(file);
-            }
+            type: 'copy'
         });
         ```
 
-    +   `supportSymlink`
+    +   `hardlink` (default)
 
         ```js
-        // srcFolder:
-        //     a/     a is symlink
-        //      1.js
+        syncDirectory(srcDir, targetDir);
+        ```
 
-        // targetFolder:
-        //     a/     a is not symlink
-        //      1.js
++   `exclude`
+
+    exclude `node_modules`
+
+    +   String
+
+        ```js
         syncDirectory(srcDir, targetDir, {
-            supportSymlink: false,
+            exclude: 'node_modules'
+        });
+        ```
+
+    +   RegExp
+
+        ```js
+        syncDirectory(srcDir, targetDir, {
+            exclude: /node\_modules/
+        });
+        ```
+
+    +   Array
+
+        ```js
+        syncDirectory(srcDir, targetDir, {
+            exclude: [/node\_modules/]
         });
         ```
 
         ```js
-        // srcFolder:
-        //     a/     a is symlink
-        //      1.js
-
-        // targetFolder:
-        //     a/     a is the same symlink
-        //      1.js
         syncDirectory(srcDir, targetDir, {
-            supportSymlink: true,
+            exclude: ['node_modules']
         });
         ```
+
++   `forceSync`
+
+    ```js
+    syncDirectory(srcDir, targetDir, {
+        exclude: 'node_modules',
+        forceSync(file) {
+            // all files in "node_modules" will be synced event though "exclude" is configed
+            return /node_modules/.test(file);
+        }
+    });
+    ```
+
++   `supportSymlink`
+
+    ```js
+    // srcFolder:
+    //     a/     a is symlink
+    //      1.js
+
+    // targetFolder:
+    //     a/     a is not symlink
+    //      1.js
+    syncDirectory(srcDir, targetDir, {
+        supportSymlink: false,
+    });
+    ```
+
+    ```js
+    // srcFolder:
+    //     a/     a is symlink
+    //      1.js
+
+    // targetFolder:
+    //     a/     a is the same symlink
+    //      1.js
+    syncDirectory(srcDir, targetDir, {
+        supportSymlink: true,
+    });
+    ```
