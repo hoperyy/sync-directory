@@ -118,7 +118,7 @@ const watcher = syncDirectory(A, B, {
 
 ### Params
 
-name | description | type | values | default | can be `async`
+name | description | type | values | default | can be `async` ?
 ---- | ---- | ---- | ---- | ---- | ----
 `srcDir` | src directory | String | absolute path | - | -
 `targetDir` | target directory | String | absolute path | - | -
