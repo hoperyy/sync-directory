@@ -59,8 +59,6 @@ options:
 ```js
 const syncDirectory = require('sync-directory');
 
-const delay = () => new Promise(r => setTimeout(r, 2000))
-
 syncDirectory.sync(srcDir, targetDir, {
     afterEachSync({ type, relativePath, absolutePath }) {
         console.log(type, relativePath, absolutePath);
@@ -73,7 +71,7 @@ syncDirectory.sync(srcDir, targetDir, {
 ```js
 const syncDirectory = require('sync-directory');
 
-const delay = (time = 2000) => new Promise(r => setTimeout(r, time))
+const delay = (time = 2000) => new Promise(r => setTimeout(r, time));
 
 console.log('start'); // time a
 
