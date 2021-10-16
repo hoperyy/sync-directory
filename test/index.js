@@ -19,33 +19,29 @@ if (fs.existsSync(targetDir)) {
 
 // fse.ensureSymlinkSync(srcSymlink, toSymlink);
 
-const delay = () => new Promise(r => setTimeout(r, 2000))
+const delay = () => new Promise(r => setTimeout(r, 200))
 
-console.log(111);
-(async () => {
-    console.log(1);
-    await syncDirectory.async(srcDir, targetDir, {
-        watch: false,
-        type: 'copy',
-        deleteOrphaned: true,
-        supportSymlink: true,
-        exclude: [ 'b' ],
-        forceSync(file) {
-            return /b/.test(file)
-        },
-        async afterEachSync({ type, relativePath }) {
-            console.log(type, relativePath);
-            await delay();
-        },
-        chokidarWatchOptions: {
-            awaitWriteFinish: {
-                stabilityThreshold: 2000,
-                pollInterval: 100
-            }
-        },
-        onError(e) {
-            console.log('in onError: ', e);
+syncDirectory.sync(srcDir, targetDir, {
+    watch: true,
+    // type: 'copy',
+    deleteOrphaned: true,
+    supportSymlink: true,
+    exclude: [ 'b' ],
+    forceSync(file) {
+        return /b/.test(file);
+    },
+    afterEachSync({ eventType, relativePath, srcPath, targetPath, nodeType }) {
+        // console.log({ eventType, relativePath, srcPath, targetPath, nodeType });
+        console.log(eventType, nodeType, targetPath);
+        // await delay();
+    },
+    chokidarWatchOptions: {
+        awaitWriteFinish: {
+            stabilityThreshold: 2000,
+            pollInterval: 100
         }
-    });
-    console.log(2);
-})()
+    },
+    onError(e) {
+        console.log('in onError: ', e);
+    }
+});
