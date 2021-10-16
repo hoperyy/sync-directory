@@ -5,7 +5,7 @@ const path = require('path');
 const fs = require('fs');
 const commander = require('commander');
 const isAbsoluteUrl = require('is-absolute');
-const run = require('./index');
+const run = require('./index').sync;
 
 const actor = function ({ from, to, watch, deleteOrphaned, supportSymlink, type, quiet }) {
     const cwd = process.cwd();
