@@ -69,21 +69,23 @@ syncDirectory.sync(srcDir, targetDir, {
 ### async
 
 ```js
-const syncDirectory = require('sync-directory');
+(async () => {
+    const syncDirectory = require('sync-directory');
 
-const delay = (time = 2000) => new Promise(r => setTimeout(r, time));
+    const delay = (time = 2000) => new Promise(r => setTimeout(r, time));
 
-console.log('start'); // time a
+    console.log('start'); // time a
 
-// wait several 2s: 2 * file number
-syncDirectory.async(srcDir, targetDir, {
-    async afterEachSync({ type, relativePath, absolutePath }) {
-        console.log(type, relativePath, absolutePath);
-        await delay(2000); // delay 2s after one file was synced
-    },
-});
+    // wait several 2s: 2 * file number
+    await syncDirectory.async(srcDir, targetDir, {
+        async afterEachSync({ type, relativePath, absolutePath }) {
+            console.log(type, relativePath, absolutePath);
+            await delay(2000); // delay 2s after one file was synced
+        },
+    });
 
-console.log('end'); // time a + 2 * (file number)
+    console.log('end'); // time a + 2 * (file number)
+})()
 ```
 
 ## Pick Your API
