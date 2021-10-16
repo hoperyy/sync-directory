@@ -80,7 +80,7 @@ syncDirectory.sync(srcDir, targetDir, {
     await syncDirectory.async(srcDir, targetDir, {
         async afterEachSync({ type, relativePath, absolutePath }) {
             console.log(type, relativePath, absolutePath);
-            await delay(2000); // delay 2s after one file was synced
+            await delay(2000); // delay 2s after one file/folder was synced
         },
     });
 
