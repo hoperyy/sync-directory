@@ -49,7 +49,7 @@ const actor = function ({ from, to, watch, deleteOrphaned, supportSymlink, type,
         watch,
         type,
         deleteOrphaned,
-        afterSync({ type, relativePath }) {
+        afterEachSync({ type, relativePath }) {
             if (!quiet) {
                 console.log(`${type}: `, relativePath);
             }
