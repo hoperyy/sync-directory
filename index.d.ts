@@ -5,7 +5,7 @@ export default function syncDirectory(srcDir: string, targetDir: string, options
     watch?: boolean;
     deleteOrphaned?: boolean;
     supportSymlink?: boolean;
-    afterEachSync?(params?: { type: string; relativePath: string, absolutePath: string }): any;
+    afterEachSync?(params?: { eventType: string; nodeType: string; relativePath: string, srcPath: string; targetPath: string }): any;
     filter?(filePath?: string): boolean;
     onError?(err?: object): any;
     chokidarWatchOptions?: Object;
