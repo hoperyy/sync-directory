@@ -161,27 +161,23 @@ name | description | type | values | default | can be `async` ?
     ```js
     syncDirectory.sync(srcDir, targetDir, {
         afterEachSync({ eventType, nodeType, relativePath, srcPath, targetPath }) {
-            // eventType: "init:hardlink" / "init:copy" / "add" / "change" / "unlink" / "unlinkDir" / "addDir"
-            //          - init type: "init:hardlink" / "init:copy"
-            //          - watch type: "add" / "change" / "unlink" / "unlinkDir" / "addDir"
-            // nodeType: "file" / "dir"
-            // relativePath: relative file/folder path
-            // srcPath: absolute src file/folder path
-            // targetPath: absolute target file/folder path
+
         }
     });
 
     await syncDirectory.async(srcDir, targetDir, {
         async afterEachSync({ eventType, nodeType, relativePath, srcPath, targetPath }) {
-            // eventType: "init:hardlink" / "init:copy" / "add" / "change" / "unlink" / "unlinkDir"
-            //          - init type: "init:hardlink" / "init:copy"
-            //          - watch type: "add" / "change" / "unlink" / "unlinkDir"
-            // nodeType: "file" / "dir"
-            // relativePath: relative file/folder path
-            // srcPath: absolute src file/folder path
-            // targetPath: absolute target file/folder path
+            
         }
     });
+
+    // "eventType": "init:hardlink" / "init:copy" / "add" / "change" / "unlink" / "unlinkDir" / "addDir"
+    //          - init type: "init:hardlink" / "init:copy"
+    //          - watch type: "add" / "change" / "unlink" / "unlinkDir" / "addDir"
+    // "nodeType": "file" / "dir"
+    // "relativePath": relative file/folder path
+    // "srcPath": absolute src file/folder path
+    // "targetPath": absolute target file/folder path
     ```
 
 +   `type`
