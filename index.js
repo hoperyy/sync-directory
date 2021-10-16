@@ -87,6 +87,6 @@ const asynced = (
     });
 };
 
-module.exports = asynced;
+module.exports = synced;
 module.exports.sync = synced;
 module.exports.async = asynced;
