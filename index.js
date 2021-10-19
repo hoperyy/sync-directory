@@ -1,7 +1,6 @@
 const syncLocalFiles = require('./lib/local-syncfiles');
 const watchLocalFiles = require('./lib/local-watch');
 const isAbsoluteUrl = require('is-absolute');
-const fse = require('fs-extra');
 
 const synced = (
     srcDir, 
@@ -29,8 +28,6 @@ const synced = (
             onError({ message: '[sync-directory] "srcDir/targetDir" must be absolute path.' });
             return;
         }
-
-        fse.ensureDirSync(targetDir);
 
         syncLocalFiles.sync(srcDir, targetDir, options);
 
@@ -70,8 +67,6 @@ const asynced = (
                 resolve(); // never throw error
                 return;
             }
-
-            fse.ensureDirSync(targetDir);
 
             await syncLocalFiles.async(srcDir, targetDir, options);
 
