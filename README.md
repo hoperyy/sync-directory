@@ -60,8 +60,8 @@ options:
 const syncDirectory = require('sync-directory');
 
 syncDirectory.sync(srcDir, targetDir, {
-    afterEachSync({ type, relativePath, absolutePath }) {
-        console.log(type, relativePath, absolutePath);
+    afterEachSync({ eventType, nodeType, relativePath, srcPath, targetPath }) {
+
     },
 });
 ```
@@ -78,8 +78,7 @@ syncDirectory.sync(srcDir, targetDir, {
 
     // wait several 2s: 2 * file number
     await syncDirectory.async(srcDir, targetDir, {
-        async afterEachSync({ type, relativePath, absolutePath }) {
-            console.log(type, relativePath, absolutePath);
+        async afterEachSync({ eventType, nodeType, relativePath, srcPath, targetPath }) {
             await delay(2000); // delay 2s after one file/folder was synced
         },
     });
@@ -124,18 +123,24 @@ name | description | type | values | default | can be `async` ?
 ---- | ---- | ---- | ---- | ---- | ----
 `srcDir` | src directory | String | absolute path | - | -
 `targetDir` | target directory | String | absolute path | - | -
-`config.watch` | watch files change | Boolean | - | false | -
+`config.watch` | watch file changes | Boolean | - | false | -
 `config.chokidarWatchOptions` | watch options ([chokidar](https://github.com/paulmillr/chokidar) is used for watching) | Object | - | `{}` | -
-`config.type` | way to sync files | String | `'copy' / 'hardlink'` | `'hardlink'` | -
-`config.deleteOrphaned` | Decide if you want to delete other files in targetDir when srcDir files are removed | Boolean | - | true | -
+`config.type` | way to sync files | String | `'copy' | 'hardlink'` | `'hardlink'` | -
+`config.deleteOrphaned` | decide if you want to delete other files in targetDir when srcDir does not have it | Boolean | - | true | -
 `config.afterEachSync` | callback function when every file synced | Function | - | blank function | Yes when `syncDirectory.async()`
 `config.supportSymlink` | ensure symlink in target if src has symlinks | Boolean | - | false | -
-`config.exclude` | files that should not sync to target directory. | RegExp / String / Array (item is RegExp / String) | - | null | -
+`config.exclude` | declare files that should not sync to target directory | RegExp / String / Array (item is RegExp / String) | - | null | -
 `config.forceSync` | some files must be synced even though 'excluded' | Function | - | `(file) => { return false }` | No
-`config.filter` | callback function to filter synced files. Sync file when returning `true` | Function | - | `filepath => true` | No
+`config.filter` | allback function to filter which src files should be synced. Sync file when returning `true` | Function | - | `(absoluteSrcFilePath) => true` | No
 `config.onError` | callback function when something wrong | Function | - | `(err) => { throw new Error(err) }` | Yes when `syncDirectory.async()`
 
 +   `watch`
+
+    Type: `true | false`
+
+    Default: `false`
+
+    For: watch file changes.
 
     ```js
     syncDirectory(srcDir, targetDir, {
@@ -144,6 +149,12 @@ name | description | type | values | default | can be `async` ?
     ```
 
 +   `chokidarWatchOptions`
+
+    Type: `Object`
+
+    Default: `{}`
+
+    For: watch options ([chokidar](https://github.com/paulmillr/chokidar) is used for watching).
 
     ```js
     syncDirectory(srcDir, targetDir, {
@@ -157,6 +168,12 @@ name | description | type | values | default | can be `async` ?
     ```
 
 +   `afterEachSync`
+
+    Type: `Function`
+
+    Default: `() => {}`
+
+    For: callback function when every file synced.
 
     ```js
     syncDirectory.sync(srcDir, targetDir, {
@@ -182,6 +199,12 @@ name | description | type | values | default | can be `async` ?
 
 +   `type`
 
+    Type: `'copy' | 'hardlink'`
+
+    Default: `'hardlink'`
+
+    For: way to sync files.
+
     +   `copy`
 
         ```js
@@ -196,9 +219,48 @@ name | description | type | values | default | can be `async` ?
         syncDirectory(srcDir, targetDir);
         ```
 
++   `deleteOrphaned`
+
+    Type: `true | false`
+
+    Default: `'hardlink'`
+
+    For: decide if you want to delete other files in targetDir when srcDir does not have it.
+
+    For instance:
+
+    ```bash
+    srcDir:
+
+    dir1/
+        1.js
+        2.js
+
+    targetDir:
+    
+    dir2
+        1.js
+        2.js
+        3.js
+    ```
+
+    ```js
+    syncDirectory(srcDir, targetDir, {
+        deleteOrphaned: true, // default
+    });
+
+    // dir2/3.js will be removed
+    ```
+
 +   `exclude`
 
-    exclude `node_modules`
+    Type:  RegExp / String / Array (item is RegExp / String)
+
+    Default: `null`
+
+    For: declare files that should not sync to target directory.
+
+    For instance, exclude `node_modules`:
 
     +   String
 
@@ -232,6 +294,12 @@ name | description | type | values | default | can be `async` ?
 
 +   `forceSync`
 
+    Type: `Function`
+
+    Default: `(file) => { return false }`
+
+    For: some files must be synced even though 'excluded'.
+
     ```js
     syncDirectory(srcDir, targetDir, {
         exclude: 'node_modules',
@@ -243,6 +311,12 @@ name | description | type | values | default | can be `async` ?
     ```
 
 +   `supportSymlink`
+
+    Type: `true | false`
+
+    Default: `true`
+
+    For: ensure symlink in target if src has symlinks.
 
     ```js
     // srcFolder:
@@ -267,5 +341,38 @@ name | description | type | values | default | can be `async` ?
     //      1.js
     syncDirectory(srcDir, targetDir, {
         supportSymlink: true,
+    });
+    ```
+
+
++   `filter`
+    
+    Type: `Function`
+
+    Default: `(absoluteSrcFilePath) => true`
+
+    For: callback function to filter which src files should be synced. Sync file when returning `true`.
+
+    ```js
+    syncDirectory(srcDir, targetDir, {
+        filter(absoluteSrcFilePath) {
+            return true;
+        }
+    });
+    ```
+
++   `onError`
+
+    Type: `Function`
+
+    Default: `(err) => { throw new Error(err) }`
+
+    For: callback function when something wrong.
+
+    ```js
+    syncDirectory(srcDir, targetDir, {
+        onError(err) {
+            console.log(err.message);
+        },
     });
     ```
