@@ -2,6 +2,8 @@
 
 `sync-directory` can sync files from src directory to target directory.
 
+**Cli** and **API** using are supported.
+
 We have two ways to sync files: `hardlink` and `copy`.
 
 If type is `copy`, `sync-directory` will copy files from src directory to target directory.
