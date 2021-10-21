@@ -376,3 +376,7 @@ name | description | type | values | default | can be `async` ?
         },
     });
     ```
+
+## LICENSE
+
+MIT
