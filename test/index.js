@@ -14,7 +14,7 @@ if (fs.existsSync(toSymlink)) {
 }
 
 if (fs.existsSync(targetDir)) {
-    fse.removeSync(targetDir);
+    // fse.removeSync(targetDir);
 }
 
 // fse.ensureSymlinkSync(srcSymlink, toSymlink);

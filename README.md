@@ -128,7 +128,7 @@ name | description | type | values | default | can be `async` ?
 `config.watch` | watch file changes | Boolean | - | false | -
 `config.chokidarWatchOptions` | watch options ([chokidar](https://github.com/paulmillr/chokidar) is used for watching) | Object | - | `{}` | -
 `config.type` | way to sync files | String | `'copy' | 'hardlink'` | `'hardlink'` | -
-`config.deleteOrphaned` | decide if you want to delete other files in targetDir when srcDir does not have it | Boolean | - | true | -
+`config.deleteOrphaned` | decide if you want to delete other files in targetDir when srcDir does not have it | Boolean | - | `false` | -
 `config.afterEachSync` | callback function when every file synced | Function | - | blank function | Yes when `syncDirectory.async()`
 `config.supportSymlink` | ensure symlink in target if src has symlinks | Boolean | - | false | -
 `config.exclude` | declare files that should not sync to target directory | RegExp / String / Array (item is RegExp / String) | - | null | -
@@ -225,7 +225,7 @@ name | description | type | values | default | can be `async` ?
 
     Type: `true | false`
 
-    Default: `'hardlink'`
+    Default: `false`
 
     For: decide if you want to delete other files in targetDir when srcDir does not have it.
 
@@ -248,7 +248,7 @@ name | description | type | values | default | can be `async` ?
 
     ```js
     syncDirectory(srcDir, targetDir, {
-        deleteOrphaned: true, // default
+        deleteOrphaned: true,
     });
 
     // dir2/3.js will be removed
