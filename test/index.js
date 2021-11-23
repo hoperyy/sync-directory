@@ -28,7 +28,7 @@ syncDirectory.sync(srcDir, targetDir, {
     supportSymlink: true,
     exclude: [ 'b' ],
     forceSync(file) {
-        return /b/.test(file);
+        // return /b/.test(file);
     },
     afterEachSync({ eventType, relativePath, srcPath, targetPath, nodeType }) {
         // console.log({ eventType, relativePath, srcPath, targetPath, nodeType });
