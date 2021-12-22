@@ -26,6 +26,7 @@ syncDirectory.sync(srcDir, targetDir, {
     // type: 'copy',
     deleteOrphaned: true,
     supportSymlink: true,
+    stayHardlink: false,
     exclude: [ 'b' ],
     forceSync(file) {
         // return /b/.test(file);

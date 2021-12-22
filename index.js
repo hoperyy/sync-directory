@@ -7,6 +7,7 @@ const synced = (
     targetDir, 
     { 
         type = 'hardlink',
+        stayHardlink = false,
         exclude = null,
         watch = false,
         deleteOrphaned = false,
@@ -21,7 +22,7 @@ const synced = (
 ) => {
     try {
         afterSync = afterEachSync;
-        const options = { type, exclude, forceSync, afterSync, deleteOrphaned, supportSymlink, filter, onError, promised };
+        const options = { type, stayHardlink, exclude, forceSync, afterSync, deleteOrphaned, supportSymlink, filter, onError, promised };
 
         // check absolute path
         if (!isAbsoluteUrl(srcDir) || !isAbsoluteUrl(targetDir)) {
@@ -44,6 +45,7 @@ const asynced = (
     targetDir, 
     { 
         type = 'hardlink',
+        stayHardlink = false,
         exclude = null,
         watch = false,
         deleteOrphaned = true,
@@ -59,7 +61,7 @@ const asynced = (
     return new Promise(async (resolve, reject) => {
         try {
             afterSync = afterEachSync;
-            const options = { type, exclude, forceSync, afterSync, deleteOrphaned, supportSymlink, filter, onError, promised };
+            const options = { type, stayHardlink, exclude, forceSync, afterSync, deleteOrphaned, supportSymlink, filter, onError, promised };
 
             // check absolute path
             if (!isAbsoluteUrl(srcDir) || !isAbsoluteUrl(targetDir)) {

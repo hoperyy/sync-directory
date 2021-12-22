@@ -128,6 +128,7 @@ name | description | type | values | default | can be `async` ?
 `config.watch` | watch file changes | Boolean | - | false | -
 `config.chokidarWatchOptions` | watch options ([chokidar](https://github.com/paulmillr/chokidar) is used for watching) | Object | - | `{}` | -
 `config.type` | way to sync files | String | `'copy' | 'hardlink'` | `'hardlink'` | -
+`config.stayHardlink` | files at targetDir stay to be the srcDir files' hardlink when srcDir files change. Details as below. | Boolean | - | `false` | -
 `config.deleteOrphaned` | decide if you want to delete other files in targetDir when srcDir does not have it | Boolean | - | `false` | -
 `config.afterEachSync` | callback function when every file synced | Function | - | blank function | Yes when `syncDirectory.async()`
 `config.supportSymlink` | ensure symlink in target if src has symlinks | Boolean | - | false | -
@@ -220,6 +221,18 @@ name | description | type | values | default | can be `async` ?
         ```js
         syncDirectory(srcDir, targetDir);
         ```
+
++   `stayHardlink`
+
+    Type: `true | false`
+
+    Default: `false`
+
+    By default with `type: 'hardlink'(default)`, after initialized, the targetDir files will be hardlink of srcDir files.
+
+    When srcDir file changes, targetDir files will be changed to the copied version rather than staying at hardlink.
+
+    If `stayHardlink: true`, the targetDir files will stay to be hardlink.
 
 +   `deleteOrphaned`
 
