@@ -137,6 +137,12 @@ name | description | type | values | default | can be `async` ?
 `config.filter` | allback function to filter which src files should be synced. Sync file when returning `true` | Function | - | `(absoluteSrcFilePath) => true` | No
 `config.onError` | callback function when something wrong | Function | - | `(err) => { throw new Error(err) }` | Yes when `syncDirectory.async()`
 
+#### Some confused params
+
+![desc](https://user-images.githubusercontent.com/5757051/148175583-5dbe7a54-cb26-4fd9-8e54-23ed3e30dd93.png)
+
+#### Params Details
+
 +   `watch`
 
     Type: `true | false`
