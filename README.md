@@ -139,7 +139,7 @@ name | description | type | values | default | can be `async` ?
 
 #### Some confused params
 
-![desc](https://user-images.githubusercontent.com/5757051/148175583-5dbe7a54-cb26-4fd9-8e54-23ed3e30dd93.png)
+![image](https://user-images.githubusercontent.com/5757051/148176334-ba741444-7ac1-4d61-b106-5ec306f864a6.png)
 
 #### Params Details
 
