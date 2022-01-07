@@ -121,6 +121,12 @@ const watcher = syncDirectory(A, B, {
 
 ### Params
 
+#### Some confusing params
+
+![image](https://user-images.githubusercontent.com/5757051/148176334-ba741444-7ac1-4d61-b106-5ec306f864a6.png)
+
+#### Params Overview
+
 name | description | type | values | default | can be `async` ?
 ---- | ---- | ---- | ---- | ---- | ----
 `srcDir` | src directory | String | absolute path | - | -
@@ -136,10 +142,6 @@ name | description | type | values | default | can be `async` ?
 `config.forceSync` | some files must be synced even though 'excluded' | Function | - | `(file) => { return false }` | No
 `config.filter` | allback function to filter which src files should be synced. Sync file when returning `true` | Function | - | `(absoluteSrcFilePath) => true` | No
 `config.onError` | callback function when something wrong | Function | - | `(err) => { throw new Error(err) }` | Yes when `syncDirectory.async()`
-
-#### Some confused params
-
-![image](https://user-images.githubusercontent.com/5757051/148176334-ba741444-7ac1-4d61-b106-5ec306f864a6.png)
 
 #### Params Details
 
