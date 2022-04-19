@@ -17,7 +17,7 @@ const synced = (
         forceSync = () => {},
         afterEachSync = () => {},
         filter = () => true,
-        onError = (err) => { throw new Error(err) }
+        onError = (err) => { throw new Error(err.message) }
     } = {}
 ) => {
     try {
