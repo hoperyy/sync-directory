@@ -46,7 +46,7 @@ options:
 
     Sync with type `hardlink`, `copy` as default.
 
-    Same as api `type: 'copy'`.
+    Same as api `type: 'hardlink'`.
 
 +   `-symlink, --symlink`
 
