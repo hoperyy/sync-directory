@@ -42,9 +42,9 @@ options:
 
     Same as api `deleteOrphaned`.
 
-+   `-c, --copy`
++   `-hardlink, --hardlink`
 
-    Sync with type `copy`, `hardlink` as default.
+    Sync with type `hardlink`, `copy` as default.
 
     Same as api `type: 'copy'`.
 
@@ -212,22 +212,22 @@ name | description | type | values | default | can be `async` ?
 
     Type: `'copy' | 'hardlink'`
 
-    Default: `'hardlink'`
+    Default: `'copy'`
 
     For: way to sync files.
 
-    +   `copy`
-
-        ```js
-        syncDirectory(srcDir, targetDir, {
-            type: 'copy'
-        });
-        ```
-
-    +   `hardlink` (default)
+    +   `copy` (default)
 
         ```js
         syncDirectory(srcDir, targetDir);
+        ```
+
+    +   `hardlink`
+
+        ```js
+        syncDirectory(srcDir, targetDir, {
+            type: 'hardlink'
+        });
         ```
 
 +   `stayHardlink`
@@ -236,7 +236,7 @@ name | description | type | values | default | can be `async` ?
 
     Default: `false`
 
-    By default with `type: 'hardlink'(default)`, after initialized, the targetDir files will be hardlink of srcDir files.
+    With config `type: 'hardlink'`, after initialized, the targetDir files will be hardlink of srcDir files.
 
     When srcDir file changes, targetDir files will be changed to the copied version rather than staying at hardlink.
 
