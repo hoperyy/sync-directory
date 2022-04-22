@@ -10,7 +10,7 @@ If type is `copy`, `sync-directory` will copy files from src directory to target
 
 If type is `hardlink`, `sync-directory` can create hardlink files in target directory from src directory.
 
-Apparently, the type `hardlink` is quicker than type `copy`, and `sync-directory` uses `hardlink` by default.
+`sync-directory` uses `copy` by default for safe using.
 
 ## Cli
 
@@ -133,7 +133,7 @@ name | description | type | values | default | can be `async` ?
 `targetDir` | target directory | String | absolute path | - | -
 `config.watch` | watch file changes | Boolean | - | false | -
 `config.chokidarWatchOptions` | watch options ([chokidar](https://github.com/paulmillr/chokidar) is used for watching) | Object | - | `{}` | -
-`config.type` | way to sync files | String | `'copy' \| 'hardlink'` | `'hardlink'` | -
+`config.type` | way to sync files | String | `'copy' \| 'hardlink'` | `'copy'` | -
 `config.stayHardlink` | files at targetDir stay to be the srcDir files' hardlink when srcDir files change. Details as below. | Boolean | - | `false` | -
 `config.deleteOrphaned` | decide if you want to delete other files in targetDir when srcDir does not have it | Boolean | - | `false` | -
 `config.afterEachSync` | callback function when every file synced | Function | - | blank function | Yes when `syncDirectory.async()`

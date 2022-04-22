@@ -24,25 +24,25 @@ const delay = () => new Promise(r => setTimeout(r, 200))
 syncDirectory.sync(srcDir, targetDir, {
     watch: true,
     type: 'hardlink',
-    deleteOrphaned: true,
-    supportSymlink: true,
-    stayHardlink: false,
-    exclude: [ 'b' ],
-    forceSync(file) {
-        // return /b/.test(file);
-    },
+    // deleteOrphaned: true,
+    // supportSymlink: true,
+    // stayHardlink: false,
+    // exclude: [ 'b' ],
+    // forceSync(file) {
+    //     // return /b/.test(file);
+    // },
     afterEachSync({ eventType, relativePath, srcPath, targetPath, nodeType }) {
         // console.log({ eventType, relativePath, srcPath, targetPath, nodeType });
         console.log(eventType, nodeType, targetPath);
         // await delay();
     },
-    chokidarWatchOptions: {
-        awaitWriteFinish: {
-            stabilityThreshold: 2000,
-            pollInterval: 100
-        }
-    },
-    onError(e) {
-        console.log('in onError: ', e);
-    }
+    // chokidarWatchOptions: {
+    //     awaitWriteFinish: {
+    //         stabilityThreshold: 2000,
+    //         pollInterval: 100
+    //     }
+    // },
+    // onError(e) {
+    //     console.log('in onError: ', e);
+    // }
 });

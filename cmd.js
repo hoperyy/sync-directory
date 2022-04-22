@@ -64,9 +64,10 @@ commander
     .option('--quiet', 'disable logs')
     .option('-do, --deleteOrphaned', 'delete orphaned files/folders in target folder')
     .option('-symlink, --symlink', 'support symlink while sync running')
-    .option('-c, --copy', 'Sync with type `copy`, `hardlink` as default')
+    .option('-c, --copy', 'Sync with type `copy`, `copy` as default')
+    .option('-hardlink, --hardlink', 'Sync with type `hardlink`, `copy` as default')
     .action((from, to, options) => {
-        const { watch, deleteOrphaned, symlink, copy, quiet } = options;
+        const { watch, deleteOrphaned, symlink, hardlink, quiet } = options;
 
         const params = {
             from,
@@ -75,7 +76,7 @@ commander
             deleteOrphaned: !!deleteOrphaned,
             supportSymlink: !!symlink,
             quiet,
-            type: copy ? 'copy' : 'hardlink',
+            type: hardlink ? 'hardlink' : 'copy',
         };
 
         actor(params);

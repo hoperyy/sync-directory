@@ -6,7 +6,7 @@ const synced = (
     srcDir, 
     targetDir, 
     { 
-        type = 'hardlink',
+        type = 'copy',
         stayHardlink = false,
         exclude = null,
         watch = false,
@@ -44,7 +44,7 @@ const asynced = (
     srcDir, 
     targetDir, 
     { 
-        type = 'hardlink',
+        type = 'copy',
         stayHardlink = false,
         exclude = null,
         watch = false,
