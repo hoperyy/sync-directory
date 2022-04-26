@@ -1,87 +1,67 @@
 const syncLocalFiles = require('./lib/local-syncfiles');
 const watchLocalFiles = require('./lib/local-watch');
+const matchUtil = require('./lib/match-util');
 const isAbsoluteUrl = require('is-absolute');
 
-const synced = (
-    srcDir, 
-    targetDir, 
-    { 
-        type = 'copy',
-        stayHardlink = false,
-        exclude = null,
-        watch = false,
-        deleteOrphaned = false,
-        supportSymlink = false,
-        chokidarWatchOptions = {},
-        promised = false,
-        forceSync = () => {},
-        afterEachSync = () => {},
-        filter = () => true,
-        onError = (err) => { throw new Error(err.message) }
-    } = {}
-) => {
-    try {
-        afterSync = afterEachSync;
-        const options = { type, stayHardlink, exclude, forceSync, afterSync, deleteOrphaned, supportSymlink, filter, onError, promised };
+const formatParams = (srcDir, targetDir, customOptions) => {
+    const options = { 
+        type: 'copy',
+        stayHardlink: true,
+        watch: false,
+        deleteOrphaned: false,
+        sSymlink: false,
+        chokidarWatchOptions: {},
+        afterEachSync: () => {},
+        include: null,
+        exclude: null,
+        forceSync: null,
+        onError: (err) => { throw new Error(err.message) }
+    };
 
-        // check absolute path
-        if (!isAbsoluteUrl(srcDir) || !isAbsoluteUrl(targetDir)) {
-            onError({ message: '[sync-directory] "srcDir/targetDir" must be absolute path.' });
-            return;
-        }
+    Object.assign(options, customOptions);
 
+    // priot: 1
+    options.include = options.include === null ? () => true : matchUtil.toFunction(options.include);
+    // priot: 2
+    options.exclude = options.exclude === null ? () => false : matchUtil.toFunction(options.exclude);
+    // priot: 3
+    options.forceSync = options.forceSync === null ? () => false : matchUtil.toFunction(options.forceSync);
+
+    options.afterSync = options.afterEachSync;
+
+    // check absolute path
+    if (!isAbsoluteUrl(srcDir) || !isAbsoluteUrl(targetDir)) {
+        onError({ message: '[sync-directory] "srcDir/targetDir" must be absolute path.' });
+        return null;
+    }
+
+    return { srcDir, targetDir, options };
+};
+
+const synced = (...args) => {
+    const params = formatParams(...args);
+
+    if (params) {
+        const { srcDir, targetDir, options } = params;
         syncLocalFiles.sync(srcDir, targetDir, options);
 
-        if (watch) {
-            return watchLocalFiles(srcDir, targetDir, { ...options, chokidarWatchOptions });
+        if (options.watch) {
+            return watchLocalFiles(srcDir, targetDir, options);
         }
-    } catch(err) {
-        onError(err); // never throw error
     }
 };
 
-const asynced = (
-    srcDir, 
-    targetDir, 
-    { 
-        type = 'copy',
-        stayHardlink = false,
-        exclude = null,
-        watch = false,
-        deleteOrphaned = true,
-        supportSymlink = false,
-        chokidarWatchOptions = {},
-        promised = false,
-        forceSync = () => {},
-        afterEachSync = () => {},
-        filter = () => true,
-        onError = (err) => { throw new Error(err.message) }
-    } = {}
-) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            afterSync = afterEachSync;
-            const options = { type, stayHardlink, exclude, forceSync, afterSync, deleteOrphaned, supportSymlink, filter, onError, promised };
+const asynced = async (...args) => {
+    const params = formatParams(...args);
 
-            // check absolute path
-            if (!isAbsoluteUrl(srcDir) || !isAbsoluteUrl(targetDir)) {
-                onError({ message: '[sync-directory] "srcDir/targetDir" must be absolute path.' });
-                resolve(); // never throw error
-                return;
-            }
+    if (params) {
+        const { srcDir, targetDir, options } = params;
+        await syncLocalFiles.async(srcDir, targetDir, options);
 
-            await syncLocalFiles.async(srcDir, targetDir, options);
-
-            if (watch) {
-                resolve(watchLocalFiles(srcDir, targetDir, { ...options, chokidarWatchOptions }));
-                return;
-            }
-        } catch(err) {
-            onError(err);
+        if (options.watch) {
+            return watchLocalFiles(srcDir, targetDir, options);
         }
-
-        resolve();
-    });
+    }
 };
 
 module.exports = synced;

@@ -52,7 +52,7 @@ options:
 
     support symlink while sync running. `false` as default.
 
-    Same as api `supportSymlink`.
+    Same as api `staySymlink`.
 
 ## API Example
 
@@ -134,13 +134,13 @@ name | description | type | values | default | can be `async` ?
 `config.watch` | watch file changes | Boolean | - | false | -
 `config.chokidarWatchOptions` | watch options ([chokidar](https://github.com/paulmillr/chokidar) is used for watching) | Object | - | `{}` | -
 `config.type` | way to sync files | String | `'copy' \| 'hardlink'` | `'copy'` | -
-`config.stayHardlink` | files at targetDir stay to be the srcDir files' hardlink when srcDir files change. Details as below. | Boolean | - | `false` | -
 `config.deleteOrphaned` | decide if you want to delete other files in targetDir when srcDir does not have it | Boolean | - | `false` | -
 `config.afterEachSync` | callback function when every file synced | Function | - | blank function | Yes when `syncDirectory.async()`
-`config.supportSymlink` | ensure symlink in target if src has symlinks | Boolean | - | false | -
-`config.exclude` | declare files that should not sync to target directory | RegExp / String / Array (item is RegExp / String) | - | null | -
-`config.forceSync` | some files must be synced even though 'excluded' | Function | - | `(file) => { return false }` | No
-`config.filter` | allback function to filter which src files should be synced. Sync file when returning `true` | Function | - | `(absoluteSrcFilePath) => true` | No
+`config.staySymlink` | if src folder "A/" is a symlink, the target folder "A/" will also be the same symlink.  | Boolean | - | false | -
+`config.stayHardlink` | only worked when `type: 'hardlink'`. When `stayHardlink: true`, if src file is "src/a.js", the target file "target/a.js" will be a hardlink of "src/a.js".  | Boolean | - | `true` | -
+`config.include` | Priority: `forceSync > exclude > include`. Filter which src files should be synced. | RegExp / String / Array (item is RegExp / String) | - | `(absoluteSrcFilePath) => true` | No
+`config.exclude` | Priority: `forceSync > exclude > include`. Filter which src files should not be synced. | RegExp / String / Array (item is RegExp / String) | - | null | -
+`config.forceSync` | Priority: `forceSync > exclude > include`. Force sync some files even though they are `excluded`. | RegExp / String / Array (item is RegExp / String) | - | `(file) => { return false }` | No
 `config.onError` | callback function when something wrong | Function | - | `(err) => { throw new Error(err) }` | Yes when `syncDirectory.async()`
 
 #### Params Details
@@ -198,15 +198,13 @@ name | description | type | values | default | can be `async` ?
             
         }
     });
-
-    // "eventType": "init:hardlink" / "init:copy" / "add" / "change" / "unlink" / "unlinkDir" / "addDir"
-    //          - init type: "init:hardlink" / "init:copy"
-    //          - watch type: "add" / "change" / "unlink" / "unlinkDir" / "addDir"
-    // "nodeType": "file" / "dir"
-    // "relativePath": relative file/folder path
-    // "srcPath": absolute src file/folder path
-    // "targetPath": absolute target file/folder path
     ```
+
+    +   `eventType`: `"init:hardlink"` / `"init:copy"` / `"add"` / `"change"` / `"unlink"` / `"unlinkDir"` / `"addDir"`
+    +   `nodeType`: `"file"` / `"dir"`
+    +   `relativePath`: relative file/folder path
+    +   `srcPath`: absolute src file/folder path
+    +   `targetPath`: absolute target file/folder path
 
 +   `type`
 
@@ -234,13 +232,15 @@ name | description | type | values | default | can be `async` ?
 
     Type: `true | false`
 
-    Default: `false`
+    Default: `true`
 
-    With config `type: 'hardlink'`, after initialized, the targetDir files will be hardlink of srcDir files.
+    Only worked when `type: 'hardlink'`. 
+    
+    When `stayHardlink: true`, if src file is "src/a.js", the target file "target/a.js" will be a hardlink of "src/a.js". 
+    
+    Then when "src/a.js" changed, "target/a.js" will stay being a hardlink. Otherwise will be a copied file.
 
-    When srcDir file changes, targetDir files will be changed to the copied version rather than staying at hardlink.
-
-    If `stayHardlink: true`, the targetDir files will stay to be hardlink.
+    >   Some watchers will not be able to watch changes of "target/a.js".
 
 +   `deleteOrphaned`
 
@@ -275,21 +275,33 @@ name | description | type | values | default | can be `async` ?
     // dir2/3.js will be removed
     ```
 
-+   `exclude`
++   `include`
+    
+    Type: Function / RegExp / String / Array (item is RegExp / String)
 
-    Type:  RegExp / String / Array (item is RegExp / String)
+    Priority: `forceSync > exclude > include`.
 
     Default: `null`
 
-    For: declare files that should not sync to target directory.
+    For: callback function to filter which src files should be synced.
 
-    For instance, exclude `node_modules`:
+    For instance, include `node_modules`:
+
+    +   Function
+
+        ```js
+        syncDirectory(srcDir, targetDir, {
+            include(filePath) {
+                return /node_modules/.test(filePath);
+            }
+        });
+        ```
 
     +   String
 
         ```js
         syncDirectory(srcDir, targetDir, {
-            exclude: 'node_modules'
+            include: 'node_modules'
         });
         ```
 
@@ -297,7 +309,7 @@ name | description | type | values | default | can be `async` ?
 
         ```js
         syncDirectory(srcDir, targetDir, {
-            exclude: /node\_modules/
+            include: /node\_modules/
         });
         ```
 
@@ -305,41 +317,47 @@ name | description | type | values | default | can be `async` ?
 
         ```js
         syncDirectory(srcDir, targetDir, {
-            exclude: [/node\_modules/]
+            include: [/node\_modules/]
         });
         ```
 
         ```js
         syncDirectory(srcDir, targetDir, {
-            exclude: ['node_modules']
+            include: ['node_modules']
         });
         ```
 
++   `exclude`
+
+    Type:  Function / RegExp / String / Array (item is RegExp / String)
+
+    Priority: `forceSync > exclude > include`.
+
+    Default: `null`
+
+    For: declare files that should not sync to target directory.
+
+    Examples are same as `include`.
+
 +   `forceSync`
 
-    Type: `Function`
+    Type: Function / RegExp / String / Array (item is RegExp / String)
 
-    Default: `(file) => { return false }`
+    Priority: `forceSync > exclude > include`.
+
+    Default: `null`
 
     For: some files must be synced even though 'excluded'.
 
-    ```js
-    syncDirectory(srcDir, targetDir, {
-        exclude: 'node_modules',
-        forceSync(file) {
-            // all files in "node_modules" will be synced event though "exclude" is configed
-            return /node_modules/.test(file);
-        }
-    });
-    ```
+    Examples are same as `include`.
 
-+   `supportSymlink`
++   `staySymlink`
 
     Type: `true | false`
 
-    Default: `true`
+    Default: `false`
 
-    For: ensure symlink in target if src has symlinks.
+    If src folder "A/" is a symlink, the target folder "A/" will also be the same symlink.
 
     ```js
     // srcFolder:
@@ -350,7 +368,7 @@ name | description | type | values | default | can be `async` ?
     //     a/     a is not symlink
     //      1.js
     syncDirectory(srcDir, targetDir, {
-        supportSymlink: false,
+        staySymlink: false,
     });
     ```
 
@@ -363,26 +381,11 @@ name | description | type | values | default | can be `async` ?
     //     a/     a is the same symlink
     //      1.js
     syncDirectory(srcDir, targetDir, {
-        supportSymlink: true,
+        staySymlink: true,
     });
     ```
 
 
-+   `filter`
-    
-    Type: `Function`
-
-    Default: `(absoluteSrcFilePath) => true`
-
-    For: callback function to filter which src files should be synced. Sync file when returning `true`.
-
-    ```js
-    syncDirectory(srcDir, targetDir, {
-        filter(absoluteSrcFilePath) {
-            return true;
-        }
-    });
-    ```
 
 +   `onError`
 

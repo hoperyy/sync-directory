@@ -27,7 +27,7 @@ syncDirectory.sync(srcDir, targetDir, {
     // deleteOrphaned: true,
     // supportSymlink: true,
     // stayHardlink: false,
-    // exclude: [ 'b' ],
+    exclude: [ 'b' ],
     // forceSync(file) {
     //     // return /b/.test(file);
     // },
