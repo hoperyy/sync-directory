@@ -134,7 +134,7 @@ name | description | type | values | default | can be `async` ?
 `config.watch` | watch file changes | Boolean | - | false | -
 `config.chokidarWatchOptions` | watch options ([chokidar](https://github.com/paulmillr/chokidar) is used for watching) | Object | - | `{}` | -
 `config.type` | way to sync files | String | `'copy' \| 'hardlink'` | `'copy'` | -
-`config.deleteOrphaned` | decide if you want to delete other files in targetDir when srcDir does not have it | Boolean | - | `false` | -
+`config.deleteOrphaned` | decide if you want to delete other files in targetDir when srcDir does not have it or excluded | Boolean | - | `false` | -
 `config.afterEachSync` | callback function when every file synced | Function | - | blank function | Yes when `syncDirectory.async()`
 `config.staySymlink` | if src folder "A/" is a symlink, the target folder "A/" will also be the same symlink.  | Boolean | - | false | -
 `config.stayHardlink` | only worked when `type: 'hardlink'`. When `stayHardlink: true`, if src file is "src/a.js", the target file "target/a.js" will be a hardlink of "src/a.js".  | Boolean | - | `true` | -
@@ -248,7 +248,7 @@ name | description | type | values | default | can be `async` ?
 
     Default: `false`
 
-    For: decide if you want to delete other files in targetDir when srcDir does not have it.
+    For: decide if you want to delete other files in targetDir when srcDir does not have it or excluded.
 
     For instance:
 
@@ -270,9 +270,11 @@ name | description | type | values | default | can be `async` ?
     ```js
     syncDirectory(srcDir, targetDir, {
         deleteOrphaned: true,
+        excluded: [ '2.js' ]
     });
 
-    // dir2/3.js will be removed
+    // dir2/3.js will be removed because dir1/3.js does not exist.
+    // dir2/2.js will be removed because dir1/2.js is excluded.
     ```
 
 +   `include`

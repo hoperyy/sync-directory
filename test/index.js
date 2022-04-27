@@ -24,11 +24,12 @@ const delay = () => new Promise(r => setTimeout(r, 200))
 syncDirectory.sync(srcDir, targetDir, {
     watch: true,
     // type: 'hardlink',
-    // deleteOrphaned: true,
+    deleteOrphaned: true,
     // supportSymlink: true,
     // stayHardlink: false,
-    exclude: [ 'bb' ],
-    // forceSync: [ 'b' ],
+    include: [ '/c' ],
+    exclude: [ '/d' ],
+    forceSync: [ '/d' ],
     // forceSync(file) {
     //     // return /b/.test(file);
     // },
