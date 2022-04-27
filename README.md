@@ -10,7 +10,7 @@ If type is `copy`, `sync-directory` will copy files from src directory to target
 
 If type is `hardlink`, `sync-directory` can create hardlink files in target directory from src directory.
 
-`sync-directory` uses `copy` by default for safe using.
+`sync-directory` uses `copy` by default for safe using ()
 
 ## Cli
 
@@ -38,7 +38,7 @@ options:
 
 +   `-do, --deleteOrphaned`
 
-    Delete orphaned files/folders in target folder. `false` as default.
+    Delete orphaned or `excluded` (API using) files/folders in target folder. `false` as default.
 
     Same as api `deleteOrphaned`.
 
@@ -134,7 +134,7 @@ name | description | type | values | default | can be `async` ?
 `config.watch` | watch file changes | Boolean | - | false | -
 `config.chokidarWatchOptions` | watch options ([chokidar](https://github.com/paulmillr/chokidar) is used for watching) | Object | - | `{}` | -
 `config.type` | way to sync files | String | `'copy' \| 'hardlink'` | `'copy'` | -
-`config.deleteOrphaned` | decide if you want to delete other files in targetDir when srcDir does not have it or excluded | Boolean | - | `false` | -
+`config.deleteOrphaned` | delete orphaned or `excluded` (API using) files/folders in target folder. `false` as default. | Boolean | - | `false` | -
 `config.afterEachSync` | callback function when every file synced | Function | - | blank function | Yes when `syncDirectory.async()`
 `config.staySymlink` | if src folder "A/" is a symlink, the target folder "A/" will also be the same symlink.  | Boolean | - | false | -
 `config.stayHardlink` | only worked when `type: 'hardlink'`. When `stayHardlink: true`, if src file is "src/a.js", the target file "target/a.js" will be a hardlink of "src/a.js".  | Boolean | - | `true` | -
@@ -248,7 +248,7 @@ name | description | type | values | default | can be `async` ?
 
     Default: `false`
 
-    For: decide if you want to delete other files in targetDir when srcDir does not have it or excluded.
+    Delete orphaned or `excluded` (API using) files/folders in target folder. `false` as default.
 
     For instance:
 
