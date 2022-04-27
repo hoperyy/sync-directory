@@ -10,7 +10,7 @@ If type is `copy`, `sync-directory` will copy files from src directory to target
 
 If type is `hardlink`, `sync-directory` can create hardlink files in target directory from src directory.
 
-`sync-directory` uses `copy` by default for safe using ()
+`sync-directory` uses `copy` by default for safe using. (`hardlink` will be quicker but some watchers can't trigger change event for target files.)
 
 ## Cli
 
