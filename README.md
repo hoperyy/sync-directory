@@ -54,7 +54,7 @@ options:
 
     Same as api `staySymlink`.
 
-## API Example
+## API
 
 ### sync
 
@@ -121,10 +121,6 @@ const watcher = syncDirectory(A, B, {
 
 ### Params
 
-#### Some confusing params
-
-![image](https://user-images.githubusercontent.com/5757051/148176334-ba741444-7ac1-4d61-b106-5ec306f864a6.png)
-
 #### Params Overview
 
 name | description | type | values | default | can be `async` ?
@@ -138,10 +134,13 @@ name | description | type | values | default | can be `async` ?
 `config.afterEachSync` | callback function when every file synced | Function | - | blank function | Yes when `syncDirectory.async()`
 `config.staySymlink` | if src folder "A/" is a symlink, the target folder "A/" will also be the same symlink.  | Boolean | - | false | -
 `config.stayHardlink` | only worked when `type: 'hardlink'`. When `stayHardlink: true`, if src file is "src/a.js", the target file "target/a.js" will be a hardlink of "src/a.js".  | Boolean | - | `true` | -
-`config.include` | Priority: `forceSync > exclude > include`. Filter which src files should be synced. | RegExp / String / Array (item is RegExp / String) | - | `(absoluteSrcFilePath) => true` | No
-`config.exclude` | Priority: `forceSync > exclude > include`. Filter which src files should not be synced. | RegExp / String / Array (item is RegExp / String) | - | null | -
-`config.forceSync` | Priority: `forceSync > exclude > include`. Force sync some files even though they are `excluded`. | RegExp / String / Array (item is RegExp / String) | - | `(file) => { return false }` | No
+`config.exclude` | Priority: `forceSync > exclude`. Filter which src files should not be synced. | RegExp / String / Array (item is RegExp / String) | - | null | -
+`config.forceSync` | Priority: `forceSync > exclude`. Force sync some files even though they are `excluded`. | RegExp / String / Array (item is RegExp / String) | - | `(file) => { return false }` | No
 `config.onError` | callback function when something wrong | Function | - | `(err) => { throw new Error(err) }` | Yes when `syncDirectory.async()`
+
+#### Some confusing params
+
+![image](https://user-images.githubusercontent.com/5757051/148176334-ba741444-7ac1-4d61-b106-5ec306f864a6.png)
 
 #### Params Details
 
@@ -261,7 +260,7 @@ name | description | type | values | default | can be `async` ?
 
     targetDir:
     
-    dir2
+    dir2/
         1.js
         2.js
         3.js
@@ -277,23 +276,21 @@ name | description | type | values | default | can be `async` ?
     // dir2/2.js will be removed because dir1/2.js is excluded.
     ```
 
-+   `include`
-    
-    Type: Function / RegExp / String / Array (item is RegExp / String)
++   `exclude`
 
-    Priority: `forceSync > exclude > include`.
+    Type:  Function / RegExp / String / Array (item is RegExp / String)
+
+    Priority: `forceSync > exclude`.
 
     Default: `null`
 
-    For: callback function to filter which src files should be synced.
-
-    For instance, include `node_modules`:
+    For: declare files that should not sync to target directory.
 
     +   Function
 
         ```js
         syncDirectory(srcDir, targetDir, {
-            include(filePath) {
+            exclude(filePath) {
                 return /node_modules/.test(filePath);
             }
         });
@@ -303,7 +300,7 @@ name | description | type | values | default | can be `async` ?
 
         ```js
         syncDirectory(srcDir, targetDir, {
-            include: 'node_modules'
+            exclude: 'node_modules'
         });
         ```
 
@@ -311,7 +308,7 @@ name | description | type | values | default | can be `async` ?
 
         ```js
         syncDirectory(srcDir, targetDir, {
-            include: /node\_modules/
+            exclude: /node\_modules/
         });
         ```
 
@@ -319,39 +316,70 @@ name | description | type | values | default | can be `async` ?
 
         ```js
         syncDirectory(srcDir, targetDir, {
-            include: [/node\_modules/]
+            exclude: [/node\_modules/]
         });
         ```
 
         ```js
         syncDirectory(srcDir, targetDir, {
-            include: ['node_modules']
+            exclude: ['node_modules']
         });
         ```
-
-+   `exclude`
-
-    Type:  Function / RegExp / String / Array (item is RegExp / String)
-
-    Priority: `forceSync > exclude > include`.
-
-    Default: `null`
-
-    For: declare files that should not sync to target directory.
-
-    Examples are same as `include`.
 
 +   `forceSync`
 
     Type: Function / RegExp / String / Array (item is RegExp / String)
 
-    Priority: `forceSync > exclude > include`.
+    Priority: `forceSync > exclude`.
 
     Default: `null`
 
     For: some files must be synced even though 'excluded'.
 
-    Examples are same as `include`.
+    +   Function
+
+        ```js
+        syncDirectory(srcDir, targetDir, {
+            exclude: ['node_modules'],
+            forceSync(filePath) {
+                return /node_modules\/jquery/.test(filePath);
+            }
+        });
+        ```
+
+    +   String
+
+        ```js
+        syncDirectory(srcDir, targetDir, {
+            exclude: ['node_modules'],
+            forceSync: 'node_modules/jquery'
+        });
+        ```
+
+    +   RegExp
+
+        ```js
+        syncDirectory(srcDir, targetDir, {
+            exclude: ['node_modules'],
+            forceSync: /node_modules\/jquery/
+        });
+        ```
+
+    +   Array
+
+        ```js
+        syncDirectory(srcDir, targetDir, {
+            exclude: ['node_modules'],
+            forceSync: [/node_modules\/jquery/]
+        });
+        ```
+
+        ```js
+        syncDirectory(srcDir, targetDir, {
+            exclude: ['node_modules'],
+            forceSync: ['node_modules/jquery']
+        });
+        ```
 
 +   `staySymlink`
 

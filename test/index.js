@@ -21,30 +21,34 @@ if (fs.existsSync(targetDir)) {
 
 const delay = () => new Promise(r => setTimeout(r, 200))
 
-syncDirectory.sync(srcDir, targetDir, {
-    watch: true,
-    // type: 'hardlink',
-    deleteOrphaned: true,
-    // supportSymlink: true,
-    // stayHardlink: false,
-    include: [ '/c' ],
-    exclude: [ '/d' ],
-    forceSync: [ '/d' ],
-    // forceSync(file) {
-    //     // return /b/.test(file);
-    // },
-    afterEachSync({ eventType, relativePath, srcPath, targetPath, nodeType }) {
-        // console.log({ eventType, relativePath, srcPath, targetPath, nodeType });
-        console.log(eventType, nodeType, targetPath);
-        // await delay();
-    },
-    // chokidarWatchOptions: {
-    //     awaitWriteFinish: {
-    //         stabilityThreshold: 2000,
-    //         pollInterval: 100
-    //     }
-    // },
-    // onError(e) {
-    //     console.log('in onError: ', e);
-    // }
-});
+(async () => {
+    console.log(111)
+    syncDirectory.async(srcDir, targetDir, {
+        watch: true,
+        // type: 'hardlink',
+        deleteOrphaned: true,
+        // supportSymlink: true,
+        // stayHardlink: false,
+        // include: [ '/c' ],
+        // exclude: [ '/d' ],
+        // forceSync: [ '/d' ],
+        // forceSync(file) {
+        //     // return /b/.test(file);
+        // },
+        async afterEachSync({ eventType, relativePath, srcPath, targetPath, nodeType }) {
+            // console.log({ eventType, relativePath, srcPath, targetPath, nodeType });
+            console.log(eventType, nodeType, targetPath);
+            await delay();
+        },
+        // chokidarWatchOptions: {
+        //     awaitWriteFinish: {
+        //         stabilityThreshold: 2000,
+        //         pollInterval: 100
+        //     }
+        // },
+        // onError(e) {
+        //     console.log('in onError: ', e);
+        // }
+    });
+    console.log(222)
+})();

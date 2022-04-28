@@ -1,6 +1,6 @@
 {
   "name": "sync-directory",
-  "version": "5.0.2",
+  "version": "5.0.3",
   "description": "sync two directories by copying or creating hardlink",
   "main": "index.js",
   "types": "./index.d.ts",
