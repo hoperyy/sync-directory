@@ -31,7 +31,7 @@ const formatParams = (srcDir, targetDir, customOptions) => {
 
     // check absolute path
     if (!isAbsoluteUrl(srcDir) || !isAbsoluteUrl(targetDir)) {
-        onError({ message: '[sync-directory] "srcDir/targetDir" must be absolute path.' });
+        options.onError({ message: '[sync-directory] "srcDir/targetDir" must be absolute path.' });
         return null;
     }
 
