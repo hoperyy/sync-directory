@@ -30,29 +30,35 @@ options:
 
     Watch changes. `false` as default.
     
-    Same as api `watch`.
+    Same as config `watch`.
 
 +   `--quiet`
 
     Disable unnecessary logs.
 
++   `--exclude <strings...>`
+
+    Exclude some path. Such as `syncdir a b --exclude node_modules package-lock.json`.
+
+    Same as config `exclude`
+
 +   `-do, --deleteOrphaned`
 
     Delete orphaned or `excluded` (API using) files/folders in target folder. `false` as default.
 
-    Same as api `deleteOrphaned`.
+    Same as config `deleteOrphaned`.
 
 +   `-hardlink, --hardlink`
 
     Sync with type `hardlink`, `copy` as default.
 
-    Same as api `type: 'hardlink'`.
+    Same as config `type: 'hardlink'`.
 
 +   `-symlink, --symlink`
 
     support symlink while sync running. `false` as default.
 
-    Same as api `staySymlink`.
+    Same as config `staySymlink`.
 
 ## API
 
