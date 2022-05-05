@@ -7,7 +7,7 @@ const commander = require('commander');
 const isAbsoluteUrl = require('is-absolute');
 const run = require('./index').sync;
 
-const actor = function ({ from, to, watch, deleteOrphaned, supportSymlink, type, quiet }) {
+const actor = function ({ from, to, watch, deleteOrphaned, supportSymlink, type, quiet, exclude }) {
     const cwd = process.cwd();
 
     if (!from) {
@@ -41,6 +41,7 @@ const actor = function ({ from, to, watch, deleteOrphaned, supportSymlink, type,
         console.log('   - watch:', watch);
         console.log('   - deleteOrphaned:', deleteOrphaned);
         console.log('   - type: ', type);
+        console.log('   - exclude: ', exclude);
         console.log('   - supportSymlink: ', supportSymlink);
         console.log('');
     }
@@ -49,6 +50,7 @@ const actor = function ({ from, to, watch, deleteOrphaned, supportSymlink, type,
         watch,
         type,
         deleteOrphaned,
+        exclude,
         afterEachSync({ type, relativePath }) {
             if (!quiet) {
                 console.log(`${type}: `, relativePath);
@@ -66,8 +68,9 @@ commander
     .option('-symlink, --symlink', 'support symlink while sync running')
     .option('-c, --copy', 'Sync with type `copy`, `copy` as default')
     .option('-hardlink, --hardlink', 'Sync with type `hardlink`, `copy` as default')
+    .option('-e, --exclude <strings...>', 'Filter which src files should not be synced')
     .action((from, to, options) => {
-        const { watch, deleteOrphaned, symlink, hardlink, quiet } = options;
+        const { watch, deleteOrphaned, symlink, hardlink, quiet, exclude } = options;
 
         const params = {
             from,
@@ -76,6 +79,7 @@ commander
             deleteOrphaned: !!deleteOrphaned,
             supportSymlink: !!symlink,
             quiet,
+            exclude,
             type: hardlink ? 'hardlink' : 'copy',
         };
 
