@@ -13,6 +13,30 @@ const assertFileLink=(a, b, msg)=>
 const assertNotFileLink=(a, b, msg)=>
     assert.notStrictEqual(fs.lstatSync(a).ino, fs.lstatSync(b).ino, msg||'file must not be hard link');
 
+const assertDirTree=(dir,tree)=>{
+    assert.deepEqual(fs.readdirSync(dir).sort(), Object.keys(tree).sort());
+    for(let name in tree){
+        const data=tree[name]
+        const file=path.join(dir,name)
+        if(typeof(data)==='string')
+            assertFileContent(file, data);
+        else
+            assertDirTree(file, data);
+    }
+}
+
+const mkDirTree=(dir,tree)=>{
+    fs.ensureDirSync(dir);
+    for(let name in tree){
+        const data=tree[name]
+        const file=path.join(dir,name)
+        if(typeof(data)==='string')
+            fs.writeFileSync(file, data, 'utf-8');
+        else
+            mkDirTree(file, data);
+    }
+}
+
 const tryLinkSync=(a,b)=>{
     try{
         fs.ensureLinkSync(a,b);
@@ -28,13 +52,19 @@ const srcDir = path.join(testDir, 'srcDir');
 const targetDir = path.join(testDir, 'targetDir');
 const srcFile = path.join(srcDir, 'test.txt');
 const targetFile = path.join(targetDir, 'test.txt');
+const testTree={
+    'srcDir': {
+        'emptydir': {},
+        'fulldir': {'file.txt': 'file data'},
+        'test.txt': 'test data',
+    },
+    'targetDir': {},
+}
 
 describe('sync-directory', function () {
     beforeEach(function () {
-        fs.ensureDirSync(testDir);
-        fs.ensureDirSync(srcDir);
-        fs.ensureDirSync(targetDir);
-        fs.writeFileSync(srcFile, 'test data', 'utf-8');
+        mkDirTree(testDir, testTree)
+        assertDirTree(testDir, testTree)
     });
 
     afterEach(function () {
@@ -47,7 +77,7 @@ describe('sync-directory', function () {
                 type: 'copy'
             });
             assert.strictEqual(watcher, undefined);
-            assertFileContent(targetFile, 'test data');
+            assertDirTree(targetDir, testTree['srcDir'])
             assertNotFileLink(targetFile, srcFile);
         });
     });
@@ -60,7 +90,7 @@ describe('sync-directory', function () {
                     type: 'copy',
                     watch: true,
                 });
-                assertFileContent(targetFile, 'test data');
+                assertDirTree(targetDir, testTree['srcDir'])
                 assertNotFileLink(targetFile, srcFile);
                 await setTimeout(100);
                 fs.writeFileSync(srcFile, 'new data');
@@ -82,7 +112,7 @@ describe('sync-directory', function () {
                 type: 'hardlink',
             });
             assert.strictEqual(watcher, undefined);
-            assertFileContent(targetFile, 'test data');
+            assertDirTree(targetDir, testTree['srcDir'])
             assertFileLink(targetFile, srcFile);
         });
     });
@@ -98,7 +128,7 @@ describe('sync-directory', function () {
                     type: 'hardlink',
                     watch: true,
                 });
-                assertFileContent(targetFile, 'test data');
+                assertDirTree(targetDir, testTree['srcDir'])
                 assertFileLink(targetFile, srcFile);
                 await setTimeout(100);
                 fs.writeFileSync(srcFile, 'new data');
