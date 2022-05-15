@@ -65,21 +65,24 @@ describe('sync-directory', function () {
     });
 
     describe('sync-copy', function () {
-        it('should copy files', function () {
-            const watcher = syncDirectory(srcDir, targetDir, {
+        const t = syncDirectory => async function () {
+            const watcher = await syncDirectory(srcDir, targetDir, {
                 type: 'copy',
             });
             assert.strictEqual(watcher, undefined);
             assertDirTree(targetDir, testTree.srcDir);
             assertNotFileLink(targetFile, srcFile);
-        });
+        };
+
+        it('should copy files (sync)', t(syncDirectory.sync));
+        it('should copy files (async)', t(syncDirectory.async));
     });
 
     describe('watch-copy', function () {
-        it('should copy files', async function () {
+        const t = syncDirectory => async function () {
             let watcher;
             try {
-                watcher = syncDirectory(srcDir, targetDir, {
+                watcher = await syncDirectory(srcDir, targetDir, {
                     type: 'copy',
                     watch: true,
                 });
@@ -93,31 +96,37 @@ describe('sync-directory', function () {
             } finally {
                 await watcher.close();
             };
-        });
+        };
+
+        it('should copy files and watch changes (sync)', t(syncDirectory.sync));
+        it('should copy files and watch changes (async)', t(syncDirectory.async));
     });
 
     describe('sync-hardlink', function () {
-        it('should hardlink files', function () {
+        const t = syncDirectory => async function () {
             // no hardlinks on some hosts
             if (!tryLinkSync(srcFile, srcFile + '.link')) this.skip();
 
-            const watcher = syncDirectory(srcDir, targetDir, {
+            const watcher = await syncDirectory(srcDir, targetDir, {
                 type: 'hardlink',
             });
             assert.strictEqual(watcher, undefined);
             assertDirTree(targetDir, testTree.srcDir);
             assertFileLink(targetFile, srcFile);
-        });
+        };
+
+        it('should hardlink files (sync)', t(syncDirectory.sync));
+        it('should hardlink files (async)', t(syncDirectory.async));
     });
 
     describe('watch-hardlink', function () {
-        it('should hardlink files', async function () {
+        const t = syncDirectory => async function () {
             // no hardlinks on some hosts
             if (!tryLinkSync(srcFile, srcFile + '.link')) this.skip();
 
             let watcher;
             try {
-                watcher = syncDirectory(srcDir, targetDir, {
+                watcher = await syncDirectory(srcDir, targetDir, {
                     type: 'hardlink',
                     watch: true,
                 });
@@ -131,6 +140,9 @@ describe('sync-directory', function () {
             } finally {
                 await watcher.close();
             };
-        });
+        };
+
+        it('should hardlink files and watch changes (sync)', t(syncDirectory.sync));
+        it('should hardlink files and watch changes (async)', t(syncDirectory.async));
     });
 });
