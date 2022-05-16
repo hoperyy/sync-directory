@@ -2,7 +2,7 @@
 
 `sync-directory` can sync files from src directory to target directory.
 
-**Cli** and **API** using are supported.
+**CLI** and **API** are supported.
 
 We have two ways to sync files: `hardlink` and `copy`.
 
@@ -10,7 +10,7 @@ If type is `copy`, `sync-directory` will copy files from src directory to target
 
 If type is `hardlink`, `sync-directory` can create hardlink files in target directory from src directory.
 
-`sync-directory` uses `copy` by default for safe using. (`hardlink` will be quicker but some watchers can't trigger change event for target files.)
+`sync-directory` uses `copy` by default for safety. (`hardlink` will be quicker but some watchers can't trigger change event for target files.)
 
 ## Cli
 
@@ -44,7 +44,7 @@ options:
 
 +   `-do, --deleteOrphaned`
 
-    Delete orphaned or `excluded` (API using) files/folders in target folder. `false` as default.
+    Delete orphaned or `excluded` (when using API) files/folders in target folder. `false` as default.
 
     Same as config `deleteOrphaned`.
 
@@ -239,11 +239,11 @@ name | description | type | values | default | can be `async` ?
 
     Default: `true`
 
-    Only worked when `type: 'hardlink'`. 
+    Only works when `type: 'hardlink'`. 
     
     When `stayHardlink: true`, if src file is "src/a.js", the target file "target/a.js" will be a hardlink of "src/a.js". 
     
-    Then when "src/a.js" changed, "target/a.js" will stay being a hardlink. Otherwise will be a copied file.
+    Then when "src/a.js" changed, "target/a.js" will remain a hardlink. Otherwise will be a copied file.
 
     >   Some watchers will not be able to watch changes of "target/a.js".
 
@@ -253,7 +253,7 @@ name | description | type | values | default | can be `async` ?
 
     Default: `false`
 
-    Delete orphaned or `excluded` (API using) files/folders in target folder. `false` as default.
+    Delete orphaned or `excluded` (when using API) files/folders in target folder. `false` as default.
 
     For instance:
 
