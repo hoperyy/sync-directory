@@ -6,6 +6,7 @@ const isAbsoluteUrl = require('is-absolute');
 const formatParams = (srcDir, targetDir, customOptions) => {
     const options = { 
         type: 'copy',
+        skipInitialSync: false,
         stayHardlink: true,
         watch: false,
         deleteOrphaned: false,
@@ -43,7 +44,10 @@ const synced = (...args) => {
 
     if (params) {
         const { srcDir, targetDir, options } = params;
-        syncLocalFiles.sync(srcDir, targetDir, options);
+
+        if (!options.skipInitialSync) {
+            syncLocalFiles.sync(srcDir, targetDir, options);
+        }
 
         if (options.watch) {
             return watchLocalFiles(srcDir, targetDir, options);
@@ -56,7 +60,10 @@ const asynced = async (...args) => {
 
     if (params) {
         const { srcDir, targetDir, options } = params;
-        await syncLocalFiles.async(srcDir, targetDir, options);
+
+        if (!options.skipInitialSync) {
+            await syncLocalFiles.async(srcDir, targetDir, options);
+        }
 
         if (options.watch) {
             return watchLocalFiles(srcDir, targetDir, options);

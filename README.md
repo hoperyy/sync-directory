@@ -136,6 +136,7 @@ name | description | type | values | default | can be `async` ?
 `config.watch` | watch file changes | Boolean | - | false | -
 `config.chokidarWatchOptions` | watch options ([chokidar](https://github.com/paulmillr/chokidar) is used for watching) | Object | - | `{}` | -
 `config.type` | way to sync files | String | `'copy' \| 'hardlink'` | `'copy'` | -
+`config.skipInitialSync` | skip the first time sync actions when it's `true`. It's useful when you just want the srcFolder to be watched. | Boolean | `true | false` | `false` | -
 `config.deleteOrphaned` | delete orphaned or `excluded` (API using) files/folders in target folder. `false` as default. | Boolean | - | `false` | -
 `config.afterEachSync` | callback function when every file synced | Function | - | blank function | Yes when `syncDirectory.async()`
 `config.staySymlink` | if src folder "A/" is a symlink, the target folder "A/" will also be the same symlink.  | Boolean | - | false | -
@@ -232,6 +233,25 @@ name | description | type | values | default | can be `async` ?
             type: 'hardlink'
         });
         ```
+
++   `skipInitialSync`
+
+    Type: `true | false`
+
+    Default: `false`
+
+    For: enhance the performance
+
+    It's for enhancing the sync performance when you just want `srcDir` to be watched.
+
+    ```js
+    syncDirectory(srcDir, targetDir, {
+        skipInitialSync: true,
+        watch: true,
+    })
+    ```
+
+    The `srcDir` won't be synced to `targetDir` when `skipInitialSync: true` and the `srcDir`'s file changes will be watched and synced to `targetDir`.
 
 +   `stayHardlink`
 
@@ -420,8 +440,6 @@ name | description | type | values | default | can be `async` ?
         staySymlink: true,
     });
     ```
-
-
 
 +   `onError`
 

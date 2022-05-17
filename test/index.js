@@ -21,12 +21,13 @@ if (fs.existsSync(targetDir)) {
 
 const delay = () => new Promise(r => setTimeout(r, 200))
 
+console.log(111);
 (async () => {
-    console.log(111)
-    syncDirectory.async(srcDir, targetDir, {
+    await syncDirectory.sync(srcDir, targetDir, {
         watch: true,
         // type: 'hardlink',
         deleteOrphaned: true,
+        // skipInitialSync: true,
         // supportSymlink: true,
         // stayHardlink: false,
         // include: [ '/c' ],
