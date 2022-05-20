@@ -31,20 +31,26 @@ const mkDirTree = (dir, tree) => {
 	}
 };
 
-const tryLinkSync = (a, b) => {
-	try {
-		fs.ensureLinkSync(a, b);
-		return true;
-	} catch (e) {
-		return false;
-	}
-};
-
 const testDir = path.resolve(__dirname, 'tmp');
 const srcDir = path.join(testDir, 'srcDir');
 const targetDir = path.join(testDir, 'targetDir');
 const srcFile = path.join(srcDir, 'test.txt');
 const targetFile = path.join(targetDir, 'test.txt');
+
+const canLink = (() => {
+	try {
+		// no hardlinks on some hosts
+		fs.ensureDirSync(srcDir);
+		fs.ensureDirSync(targetDir);
+		fs.writeFileSync(srcFile, 'data');
+		fs.ensureLinkSync(srcFile, targetFile);
+		return true;
+	} catch (e) {
+		return false;
+	} finally {
+		fs.rmSync(testDir, { recursive: true, force: true });
+	}
+})();
 
 describe('basic', function () {
 	const testTree = {
@@ -82,8 +88,7 @@ describe('basic', function () {
 
 		describe('hardlink', function () {
 			const t = syncDirectory => async function () {
-			// no hardlinks on some hosts
-				if (!tryLinkSync(srcFile, srcFile + '.link')) this.skip();
+				if (!canLink) this.skip();
 
 				const watcher = await syncDirectory(srcDir, targetDir, {
 					type: 'hardlink',
@@ -125,8 +130,7 @@ describe('basic', function () {
 
 		describe('hardlink', function () {
 			const t = syncDirectory => async function () {
-			// no hardlinks on some hosts
-				if (!tryLinkSync(srcFile, srcFile + '.link')) this.skip();
+				if (!canLink) this.skip();
 
 				let watcher;
 				try {
