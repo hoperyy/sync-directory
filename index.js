@@ -16,7 +16,11 @@ const formatParams = (srcDir, targetDir, customOptions) => {
         include: null,
         exclude: null,
         forceSync: null,
-        onError: (err) => { throw new Error(err.message) }
+        onError: (err) => {
+            const e = new Error(err.message);
+            e.stack = err.stack;
+            throw e;
+        }
     };
 
     Object.assign(options, customOptions);
