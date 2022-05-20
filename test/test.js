@@ -45,16 +45,17 @@ const srcDir = path.join(testDir, 'srcDir');
 const targetDir = path.join(testDir, 'targetDir');
 const srcFile = path.join(srcDir, 'test.txt');
 const targetFile = path.join(targetDir, 'test.txt');
-const testTree = {
-	srcDir: {
-		emptydir: {},
-		fulldir: { 'file.txt': 'file data' },
-		'test.txt': 'test data',
-	},
-	targetDir: {},
-};
 
-describe('sync-directory', function () {
+describe('basic', function () {
+	const testTree = {
+		srcDir: {
+			emptydir: {},
+			fulldir: { 'file.txt': 'file data' },
+			'test.txt': 'test data',
+		},
+		targetDir: {},
+	};
+
 	beforeEach(function () {
 		mkDirTree(testDir, testTree);
 		assertDirTree(testDir, testTree);
@@ -64,85 +65,343 @@ describe('sync-directory', function () {
 		fs.rmSync(testDir, { recursive: true, force: true });
 	});
 
-	describe('sync-copy', function () {
-		const t = syncDirectory => async function () {
-			const watcher = await syncDirectory(srcDir, targetDir, {
-				type: 'copy',
-			});
-			assert.strictEqual(watcher, undefined);
-			assertDirTree(targetDir, testTree.srcDir);
-			assertNotFileLink(targetFile, srcFile);
-		};
-
-		it('should copy files (sync)', t(syncDirectory.sync));
-		it('should copy files (async)', t(syncDirectory.async));
-	});
-
-	describe('watch-copy', function () {
-		const t = syncDirectory => async function () {
-			let watcher;
-			try {
-				watcher = await syncDirectory(srcDir, targetDir, {
+	describe('sync', function () {
+		describe('copy', function () {
+			const t = syncDirectory => async function () {
+				const watcher = await syncDirectory(srcDir, targetDir, {
 					type: 'copy',
-					watch: true,
 				});
+				assert.strictEqual(watcher, undefined);
 				assertDirTree(targetDir, testTree.srcDir);
 				assertNotFileLink(targetFile, srcFile);
-				await setTimeout(100);
-				fs.writeFileSync(srcFile, 'new data');
-				await setTimeout(100);
-				assertFileContent(targetFile, 'new data');
-				assertNotFileLink(targetFile, srcFile);
-			} finally {
-				await watcher.close();
 			};
-		};
 
-		it('should copy files and watch changes (sync)', t(syncDirectory.sync));
-		it('should copy files and watch changes (async)', t(syncDirectory.async));
-	});
+			it('should copy files (sync)', t(syncDirectory.sync));
+			it('should copy files (async)', t(syncDirectory.async));
+		});
 
-	describe('sync-hardlink', function () {
-		const t = syncDirectory => async function () {
+		describe('hardlink', function () {
+			const t = syncDirectory => async function () {
 			// no hardlinks on some hosts
-			if (!tryLinkSync(srcFile, srcFile + '.link')) this.skip();
+				if (!tryLinkSync(srcFile, srcFile + '.link')) this.skip();
 
-			const watcher = await syncDirectory(srcDir, targetDir, {
-				type: 'hardlink',
-			});
-			assert.strictEqual(watcher, undefined);
-			assertDirTree(targetDir, testTree.srcDir);
-			assertFileLink(targetFile, srcFile);
-		};
-
-		it('should hardlink files (sync)', t(syncDirectory.sync));
-		it('should hardlink files (async)', t(syncDirectory.async));
-	});
-
-	describe('watch-hardlink', function () {
-		const t = syncDirectory => async function () {
-			// no hardlinks on some hosts
-			if (!tryLinkSync(srcFile, srcFile + '.link')) this.skip();
-
-			let watcher;
-			try {
-				watcher = await syncDirectory(srcDir, targetDir, {
+				const watcher = await syncDirectory(srcDir, targetDir, {
 					type: 'hardlink',
-					watch: true,
 				});
+				assert.strictEqual(watcher, undefined);
 				assertDirTree(targetDir, testTree.srcDir);
 				assertFileLink(targetFile, srcFile);
-				await setTimeout(100);
-				fs.writeFileSync(srcFile, 'new data');
-				await setTimeout(100);
-				assertFileContent(targetFile, 'new data');
-				assertFileLink(targetFile, srcFile);
-			} finally {
-				await watcher.close();
 			};
+
+			it('should hardlink files (sync)', t(syncDirectory.sync));
+			it('should hardlink files (async)', t(syncDirectory.async));
+		});
+	});
+
+	describe('watch', function () {
+		describe('copy', function () {
+			const t = syncDirectory => async function () {
+				let watcher;
+				try {
+					watcher = await syncDirectory(srcDir, targetDir, {
+						type: 'copy',
+						watch: true,
+					});
+					assertDirTree(targetDir, testTree.srcDir);
+					assertNotFileLink(targetFile, srcFile);
+					await setTimeout(100);
+					fs.writeFileSync(srcFile, 'new data');
+					await setTimeout(100);
+					assertFileContent(targetFile, 'new data');
+					assertNotFileLink(targetFile, srcFile);
+				} finally {
+					await watcher.close();
+				};
+			};
+
+			it('should copy files and watch changes (sync)', t(syncDirectory.sync));
+			it('should copy files and watch changes (async)', t(syncDirectory.async));
+		});
+
+		describe('hardlink', function () {
+			const t = syncDirectory => async function () {
+			// no hardlinks on some hosts
+				if (!tryLinkSync(srcFile, srcFile + '.link')) this.skip();
+
+				let watcher;
+				try {
+					watcher = await syncDirectory(srcDir, targetDir, {
+						type: 'hardlink',
+						watch: true,
+					});
+					assertDirTree(targetDir, testTree.srcDir);
+					assertFileLink(targetFile, srcFile);
+					await setTimeout(100);
+					fs.writeFileSync(srcFile, 'new data');
+					await setTimeout(100);
+					assertFileContent(targetFile, 'new data');
+					assertFileLink(targetFile, srcFile);
+				} finally {
+					await watcher.close();
+				};
+			};
+
+			it('should hardlink files and watch changes (sync)', t(syncDirectory.sync));
+			it('should hardlink files and watch changes (async)', t(syncDirectory.async));
+		});
+	});
+});
+
+describe('options', function () {
+	const tree = {
+		a: {
+			Dsame: {},
+			Dupdate: {
+				Dsame: {},
+				Dadd: {},
+				fsame: '7f3',
+				fadd: '3b6',
+				fupdate: '742',
+			},
+			Dadd: {
+				Dadd: {},
+				fadd: '004',
+			},
+			fsame: '3a2',
+			fadd: '9b0',
+			fupdate: '47e',
+		},
+		b: {
+			Dsame: {},
+			Dupdate: {
+				Dsame: {},
+				Dold: {},
+				same: '7f3',
+				old: '97d',
+				update: '009',
+			},
+			Dold: {
+				Dold: {},
+				old: '65c',
+			},
+			same: '3a2',
+			old: '33c',
+			update: '121',
+		},
+		c: {
+			Dccc1: {
+				Dccc2: {},
+				fccc2: '766',
+			},
+			fccc1: '333',
+		},
+		d: {
+			Dddd1: {
+				Dddd2: {},
+				fddd2: '008',
+			},
+			fddd1: 'dda',
+		},
+	};
+	tree.ab = { ...tree.a, ...tree.b, Dupdate: { ...tree.a.Dupdate, ...tree.b.Dupdate } };
+
+	describe('skipInitialSync', function () {
+		const treeBefore = {
+			srcDir: tree.a,
+			targetDir: tree.b,
+		};
+		const treeAfter = {
+			srcDir: tree.a,
+			targetDir: tree.b,
 		};
 
-		it('should hardlink files and watch changes (sync)', t(syncDirectory.sync));
-		it('should hardlink files and watch changes (async)', t(syncDirectory.async));
+		beforeEach(function () {
+			mkDirTree(testDir, treeBefore);
+			assertDirTree(testDir, treeBefore);
+		});
+
+		afterEach(function () {
+			fs.rmSync(testDir, { recursive: true, force: true });
+		});
+
+		describe('watch', function () {
+			const t = syncDirectory => async function () {
+				let watcher;
+				try {
+					watcher = await syncDirectory(srcDir, targetDir, {
+						type: 'copy',
+						watch: true,
+						skipInitialSync: true,
+					});
+					assertDirTree(testDir, treeAfter);
+					await setTimeout(100);
+					fs.writeFileSync(srcFile, 'new data');
+					await setTimeout(100);
+					assertFileContent(targetFile, 'new data');
+				} finally {
+					await watcher.close();
+				};
+			};
+
+			it('only watch changes (sync)', t(syncDirectory.sync));
+			it('only watch changes (async)', t(syncDirectory.async));
+		});
+	});
+
+	describe('deleteOrphaned', function () {
+		const treeBefore = {
+			srcDir: tree.a,
+			targetDir: tree.b,
+		};
+
+		beforeEach(function () {
+			mkDirTree(testDir, treeBefore);
+			assertDirTree(testDir, treeBefore);
+		});
+
+		afterEach(function () {
+			fs.rmSync(testDir, { recursive: true, force: true });
+		});
+
+		describe('true', function () {
+			const treeAfter = {
+				srcDir: tree.a,
+				targetDir: tree.a,
+			};
+
+			const t = syncDirectory => async function () {
+				await syncDirectory(srcDir, targetDir, {
+					type: 'copy',
+					deleteOrphaned: true,
+				});
+				assertDirTree(testDir, treeAfter);
+			};
+
+			it('copy new/changed and delete orphaned (sync)', t(syncDirectory.sync));
+			it('copy new/changed and delete orphaned (async)', t(syncDirectory.async));
+		});
+
+		describe('false', function () {
+			const treeAfter = {
+				srcDir: tree.a,
+				targetDir: tree.ab,
+			};
+
+			const t = syncDirectory => async function () {
+				await syncDirectory(srcDir, targetDir, {
+					type: 'copy',
+				});
+				assertDirTree(testDir, treeAfter);
+			};
+
+			it('copy new/changed files (sync)', t(syncDirectory.sync));
+			it('copy new/changed files (async)', t(syncDirectory.async));
+		});
+	});
+
+	describe('exclude', function () {
+		const treeBefore = {
+			srcDir: { ...tree.a, ...tree.c, ...tree.d },
+			targetDir: tree.b,
+		};
+
+		beforeEach(function () {
+			mkDirTree(testDir, treeBefore);
+			assertDirTree(testDir, treeBefore);
+		});
+
+		afterEach(function () {
+			fs.rmSync(testDir, { recursive: true, force: true });
+		});
+
+		describe('string', function () {
+			const treeAfter = {
+				srcDir: treeBefore.srcDir,
+				targetDir: { ...tree.ab, ...tree.d },
+			};
+
+			const t = syncDirectory => async function () {
+				await syncDirectory(srcDir, targetDir, {
+					type: 'copy',
+					exclude: 'ccc',
+				});
+				assertDirTree(testDir, treeAfter);
+			};
+
+			it('copy new/changed except excluded string (sync)', t(syncDirectory.sync));
+			it('copy new/changed except excluded string (async)', t(syncDirectory.async));
+		});
+
+		describe('array', function () {
+			const treeAfter = {
+				srcDir: treeBefore.srcDir,
+				targetDir: tree.ab,
+			};
+
+			const t = syncDirectory => async function () {
+				await syncDirectory(srcDir, targetDir, {
+					type: 'copy',
+					exclude: ['ccc', 'ddd'],
+				});
+				assertDirTree(testDir, treeAfter);
+			};
+
+			it('copy new/changed except excluded array (sync)', t(syncDirectory.sync));
+			it('copy new/changed except excluded array (async)', t(syncDirectory.async));
+		});
+	});
+
+	describe('forceSync', function () {
+		const treeBefore = {
+			srcDir: { ...tree.a, ...tree.c, ...tree.d },
+			targetDir: tree.b,
+		};
+
+		beforeEach(function () {
+			mkDirTree(testDir, treeBefore);
+			assertDirTree(testDir, treeBefore);
+		});
+
+		afterEach(function () {
+			fs.rmSync(testDir, { recursive: true, force: true });
+		});
+
+		describe('string', function () {
+			const treeAfter = {
+				srcDir: treeBefore.srcDir,
+				targetDir: { ...tree.ab, ...tree.c },
+			};
+
+			const t = syncDirectory => async function () {
+				await syncDirectory(srcDir, targetDir, {
+					type: 'copy',
+					exclude: ['ccc', 'ddd'],
+					forceSync: 'ccc',
+				});
+				assertDirTree(testDir, treeAfter);
+			};
+
+			it('copy new/changed and forceSync string (sync)', t(syncDirectory.sync));
+			it('copy new/changed and forceSync string (async)', t(syncDirectory.async));
+		});
+
+		describe('array', function () {
+			const treeAfter = {
+				srcDir: treeBefore.srcDir,
+				targetDir: { ...tree.ab, ...tree.c, ...tree.d },
+			};
+
+			const t = syncDirectory => async function () {
+				await syncDirectory(srcDir, targetDir, {
+					type: 'copy',
+					exclude: ['ccc', 'ddd'],
+					forceSync: ['ccc', 'ddd'],
+				});
+				assertDirTree(testDir, treeAfter);
+			};
+
+			it('copy new/changed and forceSync array (sync)', t(syncDirectory.sync));
+			it('copy new/changed and forceSync array (async)', t(syncDirectory.async));
+		});
 	});
 });
