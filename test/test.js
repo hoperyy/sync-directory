@@ -1,4 +1,5 @@
 const assert = require('assert');
+const sinon = require('sinon');
 const fs = require('fs-extra');
 const path = require('path');
 const { setTimeout } = require('timers/promises');
@@ -353,6 +354,32 @@ describe('options', function () {
 			it('copy new/changed except excluded array (sync)', t(syncDirectory.sync));
 			it('copy new/changed except excluded array (async)', t(syncDirectory.async));
 		});
+
+		describe('function', function () {
+			const treeAfter = {
+				srcDir: treeBefore.srcDir,
+				targetDir: { ...tree.ab, ...tree.d },
+			};
+
+			const t = syncDirectory => async function () {
+				const exclude = sinon.spy(p =>
+					p.indexOf('/Dccc1/')>=0 || p === '/fccc1');
+					//p === '/Dccc1/' || p === '/fccc1');
+
+				await syncDirectory(srcDir, targetDir, {
+					type: 'copy',
+					exclude,
+				});
+
+				assert(exclude.calledWith('/Dccc1/'));
+				// assert(exclude.neverCalledWith('/Dccc1/fccc2'));
+				// assert(exclude.neverCalledWith('/Dccc1/Dccc2/'));
+				assertDirTree(testDir, treeAfter);
+			};
+
+			it('copy new/changed except exclude function (sync)', t(syncDirectory.sync));
+			it('copy new/changed except exclude function (async)', t(syncDirectory.async));
+		});
 	});
 
 	describe('forceSync', function () {
@@ -406,6 +433,35 @@ describe('options', function () {
 
 			it('copy new/changed and forceSync array (sync)', t(syncDirectory.sync));
 			it('copy new/changed and forceSync array (async)', t(syncDirectory.async));
+		});
+
+		describe('function', function () {
+			const treeAfter = {
+				srcDir: treeBefore.srcDir,
+				targetDir: { ...tree.ab, ...tree.c, ...tree.d },
+			};
+
+			const t = syncDirectory => async function () {
+				const exclude = sinon.spy(p =>
+					p === '/Dccc1/');
+
+				const forceSync = sinon.spy(p =>
+					p === '/Dccc1/fccc2' || p === '/Dccc1/Dccc2/');
+
+				await syncDirectory(srcDir, targetDir, {
+					type: 'copy',
+					exclude,
+					forceSync,
+				});
+
+				assert(forceSync.calledWith('/Dccc1/'));
+				assert(forceSync.calledWith('/Dccc1/fccc2'));
+				assert(forceSync.calledWith('/Dccc1/Dccc2/'));
+				assertDirTree(testDir, treeAfter);
+			};
+
+			it('copy new/changed and forceSync function (sync)', t(syncDirectory.sync));
+			it('copy new/changed and forceSync function (async)', t(syncDirectory.async));
 		});
 	});
 });
