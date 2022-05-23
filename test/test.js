@@ -102,6 +102,18 @@ describe('basic', function () {
 			it('should hardlink files (sync)', t(syncDirectory.sync));
 			it('should hardlink files (async)', t(syncDirectory.async));
 		});
+
+		describe('dots', function () {
+			const t = syncDirectory => async function () {
+				const watcher = await syncDirectory(srcDir+'/../srcDir', targetDir+'/../targetDir', {
+					type: 'copy',
+				});
+				assertDirTree(targetDir, testTree.srcDir);
+			};
+
+			it('should copy files (sync)', t(syncDirectory.sync));
+			it('should copy files (async)', t(syncDirectory.async));
+		});
 	});
 
 	describe('watch', function () {
@@ -153,6 +165,33 @@ describe('basic', function () {
 
 			it('should hardlink files and watch changes (sync)', t(syncDirectory.sync));
 			it('should hardlink files and watch changes (async)', t(syncDirectory.async));
+		});
+
+		describe('dots', function () {
+			const t = syncDirectory => async function () {
+				let watcher;
+				try {
+					watcher = await syncDirectory(srcDir+'/../srcDir', targetDir+'/../targetDir', {
+						type: 'copy',
+						watch: true,
+					});
+					assertDirTree(targetDir, testTree.srcDir);
+					assertNotFileLink(targetFile, srcFile);
+					await setTimeout(100);
+					fs.writeFileSync(srcFile, 'new data');
+					await setTimeout(100);
+					//assertFileContent(targetFile, 'new data');
+					assertNotFileLink(targetFile, srcFile);
+					fs.writeFileSync(srcFile, 'test data');
+					await setTimeout(100);
+					assertDirTree(targetDir, testTree.srcDir);
+				} finally {
+					await watcher.close();
+				};
+			};
+
+			it('should copy files and watch changes (sync)', t(syncDirectory.sync));
+			it('should copy files and watch changes (async)', t(syncDirectory.async));
 		});
 	});
 });
