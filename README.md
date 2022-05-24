@@ -42,6 +42,12 @@ options:
 
     Same as config `exclude`
 
++   `-sc, --skipChildren`
+
+    Skip children of an `excluded` directory. Avoids deep scanning of excluded big folders.
+
+    Same as config `skipChildren`.
+
 +   `-do, --deleteOrphaned`
 
     Delete orphaned or `excluded` (when using API) files/folders in target folder. `false` as default.
@@ -143,6 +149,7 @@ name | description | type | values | default | can be `async` ?
 `config.stayHardlink` | only worked when `type: 'hardlink'`. When `stayHardlink: true`, if src file is "src/a.js", the target file "target/a.js" will be a hardlink of "src/a.js".  | Boolean | - | `true` | -
 `config.exclude` | Priority: `forceSync > exclude`. Filter which src files should not be synced. | RegExp / String / Array (item is RegExp / String) | - | null | -
 `config.forceSync` | Priority: `forceSync > exclude`. Force sync some files even though they are `excluded`. | RegExp / String / Array (item is RegExp / String) | - | `(file) => { return false }` | No
+`config.skipChildren` | skip children of an `excluded` directory. | Boolean | - | `false` | -
 `config.onError` | callback function when something wrong | Function | - | `(err) => { throw new Error(err) }` | Yes when `syncDirectory.async()`
 
 #### Some confusing params
