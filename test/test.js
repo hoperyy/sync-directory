@@ -292,6 +292,66 @@ describe('options', function () {
 		});
 	});
 
+	xdescribe('bidi', function () {
+		const treeBefore = {
+			srcDir: tree.c,
+			targetDir: tree.d,
+		};
+		const treeAfter = {
+			srcDir: {...tree.c,...tree.d},
+			targetDir: {...tree.d,...tree.c},
+		};
+
+		beforeEach(function () {
+			mkDirTree(testDir, treeBefore);
+			assertDirTree(testDir, treeBefore);
+		});
+
+		afterEach(function () {
+			fs.rmSync(testDir, { recursive: true, force: true });
+		});
+
+		describe('sync', function () {
+			const t = syncDirectory => async function () {
+				await syncDirectory(srcDir, targetDir, {
+					type: 'copy',
+					bidi: true,
+				});
+				assertDirTree(testDir, treeAfter);
+			};
+
+			it('copy forward & backward (sync)', t(syncDirectory.sync));
+			it('copy forward & backward (async)', t(syncDirectory.async));
+		});
+
+		describe('watch', function () {
+			const t = syncDirectory => async function () {
+				let watcher;
+				try {
+					watcher = await syncDirectory(srcDir, targetDir, {
+						type: 'copy',
+						watch: true,
+						bidi: true,
+					});
+					assertDirTree(testDir, treeAfter);
+					await setTimeout(100);
+					fs.writeFileSync(srcFile, 'new data');
+					await setTimeout(100);
+					assertFileContent(targetFile, 'new data');
+					fs.writeFileSync(targetFile, 'test data');
+					await setTimeout(100);
+					assertFileContent(srcFile, 'test data');
+					assertDirTree(testDir, treeAfter);
+				} finally {
+					await watcher.close();
+				};
+			};
+
+			it('copy & watch forward & backward (sync)', t(syncDirectory.sync));
+			it('copy & watch forward & backward (async)', t(syncDirectory.async));
+		});
+	});
+
 	describe('deleteOrphaned', function () {
 		const treeBefore = {
 			srcDir: tree.a,
