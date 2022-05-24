@@ -1,4 +1,5 @@
 const assert = require('assert');
+const sinon = require('sinon');
 const fs = require('fs-extra');
 const path = require('path');
 const { setTimeout } = require('timers/promises');
@@ -101,6 +102,18 @@ describe('basic', function () {
 			it('should hardlink files (sync)', t(syncDirectory.sync));
 			it('should hardlink files (async)', t(syncDirectory.async));
 		});
+
+		describe('dots', function () {
+			const t = syncDirectory => async function () {
+				const watcher = await syncDirectory(srcDir+'/../srcDir', targetDir+'/../targetDir', {
+					type: 'copy',
+				});
+				assertDirTree(targetDir, testTree.srcDir);
+			};
+
+			it('should copy files (sync)', t(syncDirectory.sync));
+			it('should copy files (async)', t(syncDirectory.async));
+		});
 	});
 
 	describe('watch', function () {
@@ -152,6 +165,33 @@ describe('basic', function () {
 
 			it('should hardlink files and watch changes (sync)', t(syncDirectory.sync));
 			it('should hardlink files and watch changes (async)', t(syncDirectory.async));
+		});
+
+		describe('dots', function () {
+			const t = syncDirectory => async function () {
+				let watcher;
+				try {
+					watcher = await syncDirectory(srcDir+'/../srcDir', targetDir+'/../targetDir', {
+						type: 'copy',
+						watch: true,
+					});
+					assertDirTree(targetDir, testTree.srcDir);
+					assertNotFileLink(targetFile, srcFile);
+					await setTimeout(100);
+					fs.writeFileSync(srcFile, 'new data');
+					await setTimeout(100);
+					//assertFileContent(targetFile, 'new data');
+					assertNotFileLink(targetFile, srcFile);
+					fs.writeFileSync(srcFile, 'test data');
+					await setTimeout(100);
+					assertDirTree(targetDir, testTree.srcDir);
+				} finally {
+					await watcher.close();
+				};
+			};
+
+			it('should copy files and watch changes (sync)', t(syncDirectory.sync));
+			it('should copy files and watch changes (async)', t(syncDirectory.async));
 		});
 	});
 });
@@ -353,6 +393,32 @@ describe('options', function () {
 			it('copy new/changed except excluded array (sync)', t(syncDirectory.sync));
 			it('copy new/changed except excluded array (async)', t(syncDirectory.async));
 		});
+
+		describe('function', function () {
+			const treeAfter = {
+				srcDir: treeBefore.srcDir,
+				targetDir: { ...tree.ab, ...tree.d },
+			};
+
+			const t = syncDirectory => async function () {
+				const exclude = sinon.spy(p =>
+					p.indexOf('/Dccc1/')>=0 || p === '/fccc1');
+					//p === '/Dccc1/' || p === '/fccc1');
+
+				await syncDirectory(srcDir, targetDir, {
+					type: 'copy',
+					exclude,
+				});
+
+				assert(exclude.calledWith('/Dccc1/'));
+				// assert(exclude.neverCalledWith('/Dccc1/fccc2'));
+				// assert(exclude.neverCalledWith('/Dccc1/Dccc2/'));
+				assertDirTree(testDir, treeAfter);
+			};
+
+			it('copy new/changed except exclude function (sync)', t(syncDirectory.sync));
+			it('copy new/changed except exclude function (async)', t(syncDirectory.async));
+		});
 	});
 
 	describe('forceSync', function () {
@@ -406,6 +472,35 @@ describe('options', function () {
 
 			it('copy new/changed and forceSync array (sync)', t(syncDirectory.sync));
 			it('copy new/changed and forceSync array (async)', t(syncDirectory.async));
+		});
+
+		describe('function', function () {
+			const treeAfter = {
+				srcDir: treeBefore.srcDir,
+				targetDir: { ...tree.ab, ...tree.c, ...tree.d },
+			};
+
+			const t = syncDirectory => async function () {
+				const exclude = sinon.spy(p =>
+					p === '/Dccc1/');
+
+				const forceSync = sinon.spy(p =>
+					p === '/Dccc1/fccc2' || p === '/Dccc1/Dccc2/');
+
+				await syncDirectory(srcDir, targetDir, {
+					type: 'copy',
+					exclude,
+					forceSync,
+				});
+
+				assert(forceSync.calledWith('/Dccc1/'));
+				assert(forceSync.calledWith('/Dccc1/fccc2'));
+				assert(forceSync.calledWith('/Dccc1/Dccc2/'));
+				assertDirTree(testDir, treeAfter);
+			};
+
+			it('copy new/changed and forceSync function (sync)', t(syncDirectory.sync));
+			it('copy new/changed and forceSync function (async)', t(syncDirectory.async));
 		});
 	});
 });
