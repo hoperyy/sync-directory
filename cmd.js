@@ -7,7 +7,7 @@ const commander = require('commander');
 const isAbsoluteUrl = require('is-absolute');
 const run = require('./index').sync;
 
-const actor = function ({ from, to, watch, skipInitialSync, deleteOrphaned, supportSymlink, type, quiet, exclude }) {
+const actor = function ({ from, to, watch, skipInitialSync deleteOrphaned, supportSymlink, type, quiet, exclude, skipChildren }) {
     const cwd = process.cwd();
 
     if (!from) {
@@ -43,6 +43,7 @@ const actor = function ({ from, to, watch, skipInitialSync, deleteOrphaned, supp
         console.log('   - deleteOrphaned:', deleteOrphaned);
         console.log('   - type: ', type);
         console.log('   - exclude: ', exclude);
+        console.log('   - skipChildren: ', skipChildren);
         console.log('   - supportSymlink: ', supportSymlink);
         console.log('');
     }
@@ -53,9 +54,10 @@ const actor = function ({ from, to, watch, skipInitialSync, deleteOrphaned, supp
         skipInitialSync,
         deleteOrphaned,
         exclude,
-        afterEachSync({ type, relativePath }) {
+        skipChildren
+        afterEachSync({ eventType, relativePath }) {
             if (!quiet) {
-                console.log(`${type}: `, relativePath);
+                console.log(`${eventType}: `, relativePath);
             }
         }
     });
@@ -72,8 +74,9 @@ commander
     .option('-c, --copy', 'Sync with type `copy`, `copy` as default')
     .option('-hardlink, --hardlink', 'Sync with type `hardlink`, `copy` as default')
     .option('-e, --exclude <strings...>', 'Filter which src files should not be synced')
+    .option('-sc, --skipChildren', 'Skip children of an excluded directory')
     .action((from, to, options) => {
-        const { watch, skipInitialSync, deleteOrphaned, symlink, hardlink, quiet, exclude } = options;
+        const { watch, skipInitialSync, deleteOrphaned, symlink, hardlink, quiet, exclude, skipChildren } = options;
 
         const params = {
             from,
@@ -84,6 +87,7 @@ commander
             supportSymlink: !!symlink,
             quiet,
             exclude,
+            skipChildren: !!skipChildren,
             type: hardlink ? 'hardlink' : 'copy',
         };
 
