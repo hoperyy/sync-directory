@@ -462,8 +462,7 @@ describe('options', function () {
 
 			const t = syncDirectory => async function () {
 				const exclude = sinon.spy(p =>
-					p.indexOf('/Dccc1/')>=0 || p === '/fccc1');
-					//p === '/Dccc1/' || p === '/fccc1');
+					p.indexOf('/Dccc1/') === 0 || p === '/fccc1');
 
 				await syncDirectory(srcDir, targetDir, {
 					type: 'copy',
@@ -471,13 +470,39 @@ describe('options', function () {
 				});
 
 				assert(exclude.calledWith('/Dccc1/'));
-				// assert(exclude.neverCalledWith('/Dccc1/fccc2'));
-				// assert(exclude.neverCalledWith('/Dccc1/Dccc2/'));
+				assert(exclude.calledWith('/Dccc1/fccc2'));
+				assert(exclude.calledWith('/Dccc1/Dccc2/'));
 				assertDirTree(testDir, treeAfter);
 			};
 
 			it('copy new/changed except exclude function (sync)', t(syncDirectory.sync));
 			it('copy new/changed except exclude function (async)', t(syncDirectory.async));
+		});
+
+		describe('skipChildren', function () {
+			const treeAfter = {
+				srcDir: treeBefore.srcDir,
+				targetDir: { ...tree.ab, ...tree.d },
+			};
+
+			const t = syncDirectory => async function () {
+				const exclude = sinon.spy(p =>
+					p === '/Dccc1/' || p === '/fccc1');
+
+				await syncDirectory(srcDir, targetDir, {
+					type: 'copy',
+					exclude,
+					skipChildren: true,
+				});
+
+				assert(exclude.calledWith('/Dccc1/'));
+				assert(exclude.neverCalledWith('/Dccc1/fccc2'));
+				assert(exclude.neverCalledWith('/Dccc1/Dccc2/'));
+				assertDirTree(testDir, treeAfter);
+			};
+
+			it('copy and skip exclude dir (sync)', t(syncDirectory.sync));
+			it('copy and skip exclude dir (async)', t(syncDirectory.async));
 		});
 	});
 

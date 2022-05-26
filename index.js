@@ -16,6 +16,7 @@ const formatParams = (srcDir, targetDir, customOptions) => {
         include: null,
         exclude: null,
         forceSync: null,
+        skipChildren: false,
         onError: (err) => {
             const e = new Error(err.message);
             e.stack = err.stack;
