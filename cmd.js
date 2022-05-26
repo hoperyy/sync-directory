@@ -52,10 +52,10 @@ const actor = function ({ from, to, watch, deleteOrphaned, supportSymlink, type,
         type,
         deleteOrphaned,
         exclude,
-        skipChildren,
-        afterEachSync({ type, relativePath }) {
+        skipChildren
+        afterEachSync({ eventType, relativePath }) {
             if (!quiet) {
-                console.log(`${type}: `, relativePath);
+                console.log(`${eventType}: `, relativePath);
             }
         }
     });
