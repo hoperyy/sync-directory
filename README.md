@@ -42,6 +42,12 @@ options:
 
     Same as config `exclude`
 
++   `-si, --skipInitialSync`
+
+    Skip the first time sync actions when it's `true`. It's useful when you just want the srcFolder to be watched. `false` as default.
+
+    Same as config `skipInitialSync`.
+
 +   `-sc, --skipChildren`
 
     Skip children of an `excluded` directory. Avoids deep scanning of excluded big folders.

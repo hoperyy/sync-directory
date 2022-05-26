@@ -7,7 +7,7 @@ const commander = require('commander');
 const isAbsoluteUrl = require('is-absolute');
 const run = require('./index').sync;
 
-const actor = function ({ from, to, watch, deleteOrphaned, supportSymlink, type, quiet, exclude, skipChildren }) {
+const actor = function ({ from, to, watch, skipInitialSync deleteOrphaned, supportSymlink, type, quiet, exclude, skipChildren }) {
     const cwd = process.cwd();
 
     if (!from) {
@@ -39,6 +39,7 @@ const actor = function ({ from, to, watch, deleteOrphaned, supportSymlink, type,
         console.log('   - from: ', from);
         console.log('   - to:   ', to);
         console.log('   - watch:', watch);
+        console.log('   - skipInitialSync:', skipInitialSync);
         console.log('   - deleteOrphaned:', deleteOrphaned);
         console.log('   - type: ', type);
         console.log('   - exclude: ', exclude);
@@ -50,6 +51,7 @@ const actor = function ({ from, to, watch, deleteOrphaned, supportSymlink, type,
     run(from, to, {
         watch,
         type,
+        skipInitialSync,
         deleteOrphaned,
         exclude,
         skipChildren
@@ -66,6 +68,7 @@ commander
     .arguments('<from> <to>')
     .option('-w, --watch', 'Watch unnecessary changes')
     .option('--quiet', 'disable logs')
+    .option('-si, --skipInitialSync', 'skip the first time sync actions')
     .option('-do, --deleteOrphaned', 'delete orphaned files/folders in target folder')
     .option('-symlink, --symlink', 'support symlink while sync running')
     .option('-c, --copy', 'Sync with type `copy`, `copy` as default')
@@ -73,12 +76,13 @@ commander
     .option('-e, --exclude <strings...>', 'Filter which src files should not be synced')
     .option('-sc, --skipChildren', 'Skip children of an excluded directory')
     .action((from, to, options) => {
-        const { watch, deleteOrphaned, symlink, hardlink, quiet, exclude, skipChildren } = options;
+        const { watch, skipInitialSync, deleteOrphaned, symlink, hardlink, quiet, exclude, skipChildren } = options;
 
         const params = {
             from,
             to,
             watch: !!watch,
+            skipInitialSync: !!skipInitialSync,
             deleteOrphaned: !!deleteOrphaned,
             supportSymlink: !!symlink,
             quiet,
