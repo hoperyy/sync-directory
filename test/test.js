@@ -478,11 +478,27 @@ describe('options', function () {
 			it('copy new/changed except exclude function (sync)', t(syncDirectory.sync));
 			it('copy new/changed except exclude function (async)', t(syncDirectory.async));
 		});
+	});
 
-		describe('skipChildren', function () {
+	describe('skipChildren', function () {
+		const treeBefore = {
+			srcDir: tree.c,
+			targetDir: tree.d,
+		};
+
+		beforeEach(function () {
+			mkDirTree(testDir, treeBefore);
+			assertDirTree(testDir, treeBefore);
+		});
+
+		afterEach(function () {
+			fs.rmSync(testDir, { recursive: true, force: true });
+		});
+
+		describe('srcDir', function () {
 			const treeAfter = {
 				srcDir: treeBefore.srcDir,
-				targetDir: { ...tree.ab, ...tree.d },
+				targetDir: tree.d,
 			};
 
 			const t = syncDirectory => async function () {
@@ -498,6 +514,32 @@ describe('options', function () {
 				assert(exclude.calledWith('/Dccc1/'));
 				assert(exclude.neverCalledWith('/Dccc1/fccc2'));
 				assert(exclude.neverCalledWith('/Dccc1/Dccc2/'));
+				assertDirTree(testDir, treeAfter);
+			};
+
+			it('copy and skip exclude dir (sync)', t(syncDirectory.sync));
+			it('copy and skip exclude dir (async)', t(syncDirectory.async));
+		});
+
+		describe('targetDir', function () {
+			const treeAfter = {
+				srcDir: treeBefore.srcDir,
+				targetDir: { ...tree.c, ...tree.d },
+			};
+
+			const t = syncDirectory => async function () {
+				const exclude = sinon.spy(p =>
+					p === '/Dddd1/' || p === '/fddd1');
+
+				await syncDirectory(srcDir, targetDir, {
+					type: 'copy',
+					exclude,
+					skipChildren: true,
+				});
+
+				assert(exclude.calledWith('/Dddd1/'));
+				assert(exclude.neverCalledWith('/Dddd1/fddd2'));
+				assert(exclude.neverCalledWith('/Dddd1/Dddd2/'));
 				assertDirTree(testDir, treeAfter);
 			};
 
