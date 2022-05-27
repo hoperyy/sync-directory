@@ -7,7 +7,7 @@ const commander = require('commander');
 const isAbsoluteUrl = require('is-absolute');
 const run = require('./index').sync;
 
-const actor = function ({ from, to, watch, skipInitialSync deleteOrphaned, supportSymlink, type, quiet, exclude, skipChildren }) {
+const actor = function ({ from, to, watch, skipInitialSync, deleteOrphaned, supportSymlink, type, quiet, exclude, skipChildren }) {
     const cwd = process.cwd();
 
     if (!from) {
@@ -54,7 +54,7 @@ const actor = function ({ from, to, watch, skipInitialSync deleteOrphaned, suppo
         skipInitialSync,
         deleteOrphaned,
         exclude,
-        skipChildren
+        skipChildren,
         afterEachSync({ eventType, relativePath }) {
             if (!quiet) {
                 console.log(`${eventType}: `, relativePath);
