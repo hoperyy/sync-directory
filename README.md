@@ -54,8 +54,6 @@ options:
 
     Same as config `nodeep`.
 
-    > The reason why `deep` was not used is that cli options is `--nodeep`. Just keep this two the same.
-
 +   `-do, --deleteOrphaned`
 
     Delete orphaned or `excluded` (when using API) files/folders in target folder. `false` as default.
@@ -289,6 +287,8 @@ name | description | type | values | default | can be `async` ?
     Default: `false`
 
     Just walk the first level sub files/folders. Avoids deep scanning of excluded big folders.
+
+    > The reason why `deep` was not used is that cli options is `--nodeep`. Just keep this two the same.
 
     ```js
     // srcFolder:
