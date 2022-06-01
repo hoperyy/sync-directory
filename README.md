@@ -160,7 +160,7 @@ name | description | type | values | default | can be `async` ?
 
 #### Some confusing params
 
-![image](https://user-images.githubusercontent.com/5757051/148176334-ba741444-7ac1-4d61-b106-5ec306f864a6.png)
+![image](https://user-images.githubusercontent.com/5757051/171374990-b42a6978-9041-4265-b87d-a2950ec0da36.png)
 
 #### Params Details
 
