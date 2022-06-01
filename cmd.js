@@ -74,9 +74,9 @@ commander
     .option('-c, --copy', 'Sync with type `copy`, `copy` as default')
     .option('-hardlink, --hardlink', 'Sync with type `hardlink`, `copy` as default')
     .option('-e, --exclude <strings...>', 'Filter which src files should not be synced')
-    .option('-deep, --deep', 'Skip children of an excluded directory')
+    .option('-nd, --nodeep', 'Just walk the first level sub files/folders')
     .action((from, to, options) => {
-        const { watch, skipInitialSync, deleteOrphaned, symlink, hardlink, quiet, exclude, deep } = options;
+        const { watch, skipInitialSync, deleteOrphaned, symlink, hardlink, quiet, exclude, nodeep } = options;
 
         const params = {
             from,
@@ -87,7 +87,7 @@ commander
             supportSymlink: !!symlink,
             quiet,
             exclude,
-            deep: !!deep,
+            deep: !nodeep,
             type: hardlink ? 'hardlink' : 'copy',
         };
 

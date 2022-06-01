@@ -48,11 +48,13 @@ options:
 
     Same as config `skipInitialSync`.
 
-+   `-sc, --skipChildren`
++   `-nd, --nodeep`
 
-    Skip children of an `excluded` directory. Avoids deep scanning of excluded big folders.
+    Just walk the first level sub files/folders. Avoids deep scanning of excluded big folders.
 
-    Same as config `skipChildren`.
+    Same as config `nodeep`.
+
+    > The reason why `deep` was not used is that cli options is `--nodeep`. Just keep this two the same.
 
 +   `-do, --deleteOrphaned`
 
@@ -155,7 +157,7 @@ name | description | type | values | default | can be `async` ?
 `config.stayHardlink` | only worked when `type: 'hardlink'`. When `stayHardlink: true`, if src file is "src/a.js", the target file "target/a.js" will be a hardlink of "src/a.js".  | Boolean | - | `true` | -
 `config.exclude` | Priority: `forceSync > exclude`. Filter which src files should not be synced. | RegExp / String / Array (item is RegExp / String) | - | null | -
 `config.forceSync` | Priority: `forceSync > exclude`. Force sync some files even though they are `excluded`. | RegExp / String / Array (item is RegExp / String) | - | `(file) => { return false }` | No
-`config.skipChildren` | skip children of an `excluded` directory. | Boolean | - | `false` | -
+`config.nodeep` | Just walk the first level sub files/folders. | Boolean | - | `false` | -
 `config.onError` | callback function when something wrong | Function | - | `(err) => { throw new Error(err) }` | Yes when `syncDirectory.async()`
 
 #### Some confusing params
@@ -279,6 +281,26 @@ name | description | type | values | default | can be `async` ?
     Then when "src/a.js" changed, "target/a.js" will remain a hardlink. Otherwise will be a copied file.
 
     >   Some watchers will not be able to watch changes of "target/a.js".
+
++   `nodeep`
+
+    Type: `true | false`
+
+    Default: `false`
+
+    Just walk the first level sub files/folders. Avoids deep scanning of excluded big folders.
+
+    ```js
+    // srcFolder:
+    //     a/     a is symlink
+    //      1.js
+
+    // targetFolder:
+    //     a/
+    syncDirectory(srcDir, targetDir, {
+        nodeep: true, // 1.js will be ignored
+    });
+    ```
 
 +   `deleteOrphaned`
 
