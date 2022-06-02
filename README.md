@@ -50,7 +50,7 @@ options:
 
 +   `-nd, --nodeep`
 
-    Just walk the first level sub files/folders. Avoids deep scanning of excluded big folders.
+    Just walk the first level sub files/folders. Avoids deep scanning of big folders.
 
     Same as config `nodeep`.
 
@@ -286,7 +286,7 @@ name | description | type | values | default | can be `async` ?
 
     Default: `false`
 
-    Just walk the first level sub files/folders. Avoids deep scanning of excluded big folders.
+    Just walk the first level sub files/folders. Avoids deep scanning of big folders.
 
     > The reason why `deep` was not used is that cli options is `--nodeep`. Just keep this two the same.
 
