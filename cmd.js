@@ -7,7 +7,7 @@ const commander = require('commander');
 const isAbsoluteUrl = require('is-absolute');
 const run = require('./index').sync;
 
-const actor = function ({ from, to, watch, skipInitialSync, deleteOrphaned, supportSymlink, type, quiet, exclude, deep }) {
+const actor = function ({ from, to, watch, skipInitialSync, deleteOrphaned, supportSymlink, type, quiet, exclude, nodeep }) {
     const cwd = process.cwd();
 
     if (!from) {
@@ -43,7 +43,7 @@ const actor = function ({ from, to, watch, skipInitialSync, deleteOrphaned, supp
         console.log('   - deleteOrphaned:', deleteOrphaned);
         console.log('   - type: ', type);
         console.log('   - exclude: ', exclude);
-        console.log('   - deep: ', deep);
+        console.log('   - nodeep: ', nodeep);
         console.log('   - supportSymlink: ', supportSymlink);
         console.log('');
     }
@@ -54,7 +54,7 @@ const actor = function ({ from, to, watch, skipInitialSync, deleteOrphaned, supp
         skipInitialSync,
         deleteOrphaned,
         exclude,
-        deep,
+        nodeep,
         afterEachSync({ eventType, relativePath }) {
             if (!quiet) {
                 console.log(`${eventType}: `, relativePath);
@@ -78,6 +78,8 @@ commander
     .action((from, to, options) => {
         const { watch, skipInitialSync, deleteOrphaned, symlink, hardlink, quiet, exclude, nodeep } = options;
 
+        console.log(nodeep);
+
         const params = {
             from,
             to,
@@ -87,7 +89,7 @@ commander
             supportSymlink: !!symlink,
             quiet,
             exclude,
-            deep: !nodeep,
+            nodeep: !!nodeep,
             type: hardlink ? 'hardlink' : 'copy',
         };
 
