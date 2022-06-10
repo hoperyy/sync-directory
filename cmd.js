@@ -78,8 +78,6 @@ commander
     .action((from, to, options) => {
         const { watch, skipInitialSync, deleteOrphaned, symlink, hardlink, quiet, exclude, nodeep } = options;
 
-        console.log(nodeep);
-
         const params = {
             from,
             to,
