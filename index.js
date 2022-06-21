@@ -10,7 +10,7 @@ const formatParams = (srcDir, targetDir, customOptions) => {
         stayHardlink: true,
         watch: false,
         deleteOrphaned: false,
-        sSymlink: false,
+        staySymlink: false,
         chokidarWatchOptions: {},
         afterEachSync: () => {},
         include: null,

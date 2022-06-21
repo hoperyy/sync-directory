@@ -25,7 +25,7 @@ syncDirectory.sync(srcDir, targetDir, {
     watch: true,
     // type: 'hardlink',
     deleteOrphaned: true,
-    nodeep: true,
+    // nodeep: true,
     // skipInitialSync: true,
     // supportSymlink: true,
     // stayHardlink: false,

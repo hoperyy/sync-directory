@@ -3,6 +3,7 @@ export default function syncDirectory(srcDir: string, targetDir: string, options
     forceSync?(filePath?: string): boolean;
     exclude?: string | RegExp | Array<string | RegExp | Function>;
     watch?: boolean;
+    nodeep?: boolean;
     deleteOrphaned?: boolean;
     supportSymlink?: boolean;
     afterEachSync?(params?: { eventType: string; nodeType: string; relativePath: string, srcPath: string; targetPath: string }): any;
