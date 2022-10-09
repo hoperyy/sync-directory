@@ -2,8 +2,33 @@ const syncLocalFiles = require('./lib/local-syncfiles');
 const watchLocalFiles = require('./lib/local-watch');
 const matchUtil = require('./lib/match-util');
 const isAbsoluteUrl = require('is-absolute');
+const path = require('path');
+const fs = require('fs');
 
-const formatParams = (srcDir, targetDir, customOptions) => {
+const formatParams = (srcDir, targetDir, customOptions = {}) => {
+    // format srcDir and targetDir to absolute path
+    if (!srcDir) {
+        console.error(`[sync-directory] source path is missing`);
+        process.exit(1);
+    }
+
+    if (!targetDir) {
+        console.error(`[sync-directory] target path is missing`);
+        process.exit(1);
+    }
+
+    const cwd = customOptions.cwd || process.cwd(); // prefer customed cwd
+    if (!isAbsoluteUrl(srcDir)) {
+        srcDir = path.join(cwd, srcDir);
+    }
+    if (!isAbsoluteUrl(targetDir)) {
+        targetDir = path.join(cwd, targetDir);
+    }
+    if (!fs.existsSync(srcDir)) {
+        console.error(`[sync-directory] "srcDir" folder does not exist: "${srcDir}"`);
+        process.exit(1);
+    }
+
     const options = { 
         type: 'copy',
         skipInitialSync: false,
@@ -12,11 +37,11 @@ const formatParams = (srcDir, targetDir, customOptions) => {
         deleteOrphaned: false,
         staySymlink: false,
         chokidarWatchOptions: {},
-        afterEachSync: () => {},
         include: null,
         exclude: null,
         forceSync: null,
         nodeep: false,
+        afterEachSync: () => {},
         onError: (err) => {
             const e = new Error(err.message);
             e.stack = err.stack;
@@ -34,12 +59,6 @@ const formatParams = (srcDir, targetDir, customOptions) => {
     options.forceSync = options.forceSync === null ? () => false : matchUtil.toFunction(options.forceSync);
 
     options.afterSync = options.afterEachSync;
-
-    // check absolute path
-    if (!isAbsoluteUrl(srcDir) || !isAbsoluteUrl(targetDir)) {
-        options.onError({ message: '[sync-directory] "srcDir/targetDir" must be absolute path.' });
-        return null;
-    }
 
     return { srcDir, targetDir, options };
 };
@@ -79,3 +98,4 @@ const asynced = async (...args) => {
 module.exports = synced;
 module.exports.sync = synced;
 module.exports.async = asynced;
+module.exports.formatParams = formatParams;

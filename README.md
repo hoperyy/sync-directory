@@ -145,6 +145,7 @@ name | description | type | values | default | can be `async` ?
 ---- | ---- | ---- | ---- | ---- | ----
 `srcDir` | src directory | String | absolute path | - | -
 `targetDir` | target directory | String | absolute path | - | -
+`config.cwd` | when srcDir or targetDir is a relative path, they will be formatted to absolute path by `path.join(cwd, srcDir | targetDir)` | string | - | `process.cwd()` | -
 `config.watch` | watch file changes | Boolean | - | false | -
 `config.chokidarWatchOptions` | watch options ([chokidar](https://github.com/paulmillr/chokidar) is used for watching) | Object | - | `{}` | -
 `config.type` | way to sync files | String | `'copy' \| 'hardlink'` | `'copy'` | -
@@ -163,6 +164,20 @@ name | description | type | values | default | can be `async` ?
 ![image](https://user-images.githubusercontent.com/5757051/171374990-b42a6978-9041-4265-b87d-a2950ec0da36.png)
 
 #### Params Details
+
++   `cwd`
+
+    Type: `String`
+
+    Default: `process.cwd()`
+
+    For: format `srcDir | targetDir` to absolute path when they are relative paths
+
+    ```js
+    syncDirectory(srcDir, targetDir, {
+        cwd: __dirname
+    });
+    ```
 
 +   `watch`
 
