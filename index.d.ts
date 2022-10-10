@@ -1,4 +1,5 @@
 export default function syncDirectory(srcDir: string, targetDir: string, options?: {
+    cwd?: string;
     type?: string;
     forceSync?(filePath?: string): boolean;
     exclude?: string | RegExp | Array<string | RegExp | Function>;
