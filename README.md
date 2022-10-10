@@ -143,8 +143,8 @@ const watcher = syncDirectory(A, B, {
 
 name | description | type | values | default | can be `async` ?
 ---- | ---- | ---- | ---- | ---- | ----
-`srcDir` | src directory | String | absolute path | - | -
-`targetDir` | target directory | String | absolute path | - | -
+`srcDir` | src directory | String | absolute or relative path | - | -
+`targetDir` | target directory | String | absolute or relative path | - | -
 `config.cwd` | when srcDir or targetDir is a relative path, they will be formatted to absolute path by `path.join(cwd, srcDir | targetDir)` | string | - | `process.cwd()` | -
 `config.watch` | watch file changes | Boolean | - | false | -
 `config.chokidarWatchOptions` | watch options ([chokidar](https://github.com/paulmillr/chokidar) is used for watching) | Object | - | `{}` | -
@@ -237,8 +237,8 @@ name | description | type | values | default | can be `async` ?
     +   `eventType`: `"init:hardlink"` / `"init:copy"` / `"add"` / `"change"` / `"unlink"` / `"unlinkDir"` / `"addDir"`
     +   `nodeType`: `"file"` / `"dir"`
     +   `relativePath`: relative file/folder path
-    +   `srcPath`: absolute src file/folder path
-    +   `targetPath`: absolute target file/folder path
+    +   `srcPath`: absolute or relative src file/folder path
+    +   `targetPath`: absolute or relative target file/folder path
 
 +   `type`
 
