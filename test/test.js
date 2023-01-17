@@ -2,7 +2,7 @@ const assert = require('assert');
 const sinon = require('sinon');
 const fs = require('fs-extra');
 const path = require('path');
-const { setTimeout } = require('timers/promises');
+const { setTimeout } = require('timers-promises');
 const syncDirectory = require('..');
 
 const assertFileContent = (path, content, msg) =>
@@ -586,7 +586,7 @@ describe('options', function () {
 				await syncDirectory(srcDir, targetDir, {
 					type: 'copy',
 					exclude,
-					skipChildren: true,
+					nodeep: true,
 				});
 
 				assert(exclude.calledWith('/Dccc1/'));
@@ -612,7 +612,7 @@ describe('options', function () {
 				await syncDirectory(srcDir, targetDir, {
 					type: 'copy',
 					exclude,
-					skipChildren: true,
+					nodeep: true,
 				});
 
 				assert(exclude.calledWith('/Dddd1/'));
