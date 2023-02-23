@@ -72,14 +72,24 @@ options:
 
     Same as config `staySymlink`.
 
-## API
+## API (commonjs and esm are supported)
 
 ### sync
 
-```js
-const syncDirectory = require('sync-directory');
++   commonjs
 
-syncDirectory.sync(srcDir, targetDir, {
+    ```js
+    const syncDirecotry = require('sync-directory');
+    ```
+
++   esm
+
+    ```js
+    import syncDirecotry from 'sync-directory/index.mjs'
+    ```
+
+```js
+syncDirecotry(srcDir, targetDir, {
     afterEachSync({ eventType, nodeType, relativePath, srcPath, targetPath }) {
 
     },
@@ -88,16 +98,26 @@ syncDirectory.sync(srcDir, targetDir, {
 
 ### async
 
++   commonjs
+
+    ```js
+    const { async } = require('sync-directory');
+    ```
+
++   esm
+
+    ```js
+    import { async } from 'sync-directory/index.mjs'
+    ```
+
 ```js
 (async () => {
-    const syncDirectory = require('sync-directory');
-
     const delay = (time = 2000) => new Promise(r => setTimeout(r, time));
 
     console.log('start'); // time a
 
     // wait several 2s: 2 * file number
-    await syncDirectory.async(srcDir, targetDir, {
+    await async(srcDir, targetDir, {
         async afterEachSync({ eventType, nodeType, relativePath, srcPath, targetPath }) {
             await delay(2000); // delay 2s after one file/folder was synced
         },
@@ -109,8 +129,19 @@ syncDirectory.sync(srcDir, targetDir, {
 
 ## Pick Your API
 
++   commonjs
+
+    ```js
+    const syncDirectory = require('sync-directory');
+    ```
+
++   esm
+
+    ```js
+    import syncDirectory from 'sync-directory/index.mjs';
+    ```
+
 ```js
-const syncDirectory = require('sync-directory');
 syncDirectory(srcDir, targetDir[, config]);
 ```
 
