@@ -1,9 +1,15 @@
 {
   "name": "sync-directory",
-  "version": "6.0.2",
+  "version": "6.0.3",
   "description": "sync two directories by copying or creating hardlink",
-  "main": "index.js",
-  "module": "index.mjs",
+  "main": "./index.js",
+  "module": "./index.mjs",
+  "exports": {
+    ".": {
+      "require": "./index.js",
+      "import": "./index.mjs"
+    }
+  },
   "types": "./index.d.ts",
   "scripts": {
     "test": "npx mocha --timeout 10000"

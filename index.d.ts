@@ -1,4 +1,4 @@
-export default function syncDirectory(srcDir: string, targetDir: string, options?: {
+type options = {
     cwd?: string;
     type?: string;
     forceSync?(filePath?: string): boolean;
@@ -11,4 +11,14 @@ export default function syncDirectory(srcDir: string, targetDir: string, options
     filter?(filePath?: string): boolean;
     onError?(err?: object): any;
     chokidarWatchOptions?: Object;
-}): object | void
+}
+
+type res = object | void
+
+declare function syncDirectory(srcDir: string, targetDir: string, options?: options): res
+declare function asyncSyncDirectory(srcDir: string, targetDir: string, options?: options): Promise<res>
+
+export default syncDirectory
+
+export const sync: typeof syncDirectory
+export const async: typeof asyncSyncDirectory
