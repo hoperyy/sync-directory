@@ -79,17 +79,17 @@ options:
 +   commonjs
 
     ```js
-    const syncDirecotry = require('sync-directory');
+    const syncDirectory = require('sync-directory');
     ```
 
 +   esm
 
     ```js
-    import syncDirecotry from 'sync-directory/index.mjs'
+    import syncDirectory from 'sync-directory/index.mjs'
     ```
 
 ```js
-syncDirecotry(srcDir, targetDir, {
+syncDirectory(srcDir, targetDir, {
     afterEachSync({ eventType, nodeType, relativePath, srcPath, targetPath }) {
 
     },
