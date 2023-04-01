@@ -8,13 +8,11 @@ const fs = require('fs');
 const formatParams = (srcDir, targetDir, customOptions = {}) => {
     // format srcDir and targetDir to absolute path
     if (!srcDir) {
-        console.error(`[sync-directory] source path is missing`);
-        process.exit(1);
+        throw new Error(`[sync-directory] source path is missing`);
     }
 
     if (!targetDir) {
-        console.error(`[sync-directory] target path is missing`);
-        process.exit(1);
+        throw new Error(`[sync-directory] target path is missing`);
     }
 
     const cwd = customOptions.cwd || process.cwd(); // prefer customed cwd
@@ -25,8 +23,7 @@ const formatParams = (srcDir, targetDir, customOptions = {}) => {
         targetDir = path.join(cwd, targetDir);
     }
     if (!fs.existsSync(srcDir)) {
-        console.error(`[sync-directory] "srcDir" folder does not exist: "${srcDir}"`);
-        process.exit(1);
+        throw new Error(`[sync-directory] "srcDir" folder does not exist: "${srcDir}"`);
     }
 
     const options = { 
