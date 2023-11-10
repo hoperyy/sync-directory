@@ -1,4 +1,4 @@
-type options = {
+export type options = {
     cwd?: string;
     type?: string;
     forceSync?(filePath?: string): boolean;
@@ -13,7 +13,7 @@ type options = {
     chokidarWatchOptions?: Object;
 }
 
-type res = object | void
+export type res = object | void
 
 declare function syncDirectory(srcDir: string, targetDir: string, options?: options): res
 declare function asyncSyncDirectory(srcDir: string, targetDir: string, options?: options): Promise<res>
