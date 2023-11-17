@@ -2,7 +2,7 @@ export type options = {
     cwd?: string;
     type?: string;
     forceSync?(filePath?: string): boolean;
-    exclude?: string | RegExp | Array<string | RegExp | Function>;
+    exclude?: string | RegExp | Function | Array<string | RegExp | Function>;
     watch?: boolean;
     nodeep?: boolean;
     deleteOrphaned?: boolean;
