@@ -1,3 +1,7 @@
+## Website
+
+Docs: https://hoperyy.github.io/sync-directory/
+
 ## Description
 
 `sync-directory` can sync files from src directory to target directory.
