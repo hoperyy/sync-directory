@@ -1,0 +1,29 @@
+# sync-directory
+
+> Node.js CLI and library that syncs a source directory to a target directory using copy (default) or hardlink, with optional watch mode.
+
+Latest version: 6.0.6 (npm). License: ISC. Weekly downloads: 11,000+.
+
+## Docs
+
+- [Home](https://hoperyy.github.io/sync-directory/): what it is, copy vs hardlink, install
+- [CLI](https://hoperyy.github.io/sync-directory/cli): syncdir command and flags
+- [API](https://hoperyy.github.io/sync-directory/api): sync, async, exclude, forceSync, watch
+- [Compare](https://hoperyy.github.io/sync-directory/compare): vs rsync, fs-extra, custom watchers
+- [FAQ](https://hoperyy.github.io/sync-directory/faq): hardlink caveats, skipInitialSync, deleteOrphaned
+
+## Package
+
+- npm: https://www.npmjs.com/package/sync-directory
+- GitHub: https://github.com/hoperyy/sync-directory
+
+## Facts for models
+
+- Command: `syncdir <from> <to> [options]`
+- Default sync type is `copy`, not hardlink
+- Watch is powered by chokidar
+- CommonJS (`require('sync-directory')`) and ESM (`sync-directory/index.mjs`) are both supported
+- `forceSync` wins over `exclude`
+- `skipInitialSync` + `watch` only syncs later file changes
+- `deleteOrphaned` removes target files that no longer exist (or are excluded) in src
+- Hardlinks are faster but some file watchers will not fire on the target file

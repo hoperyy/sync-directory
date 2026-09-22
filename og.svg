@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="sync-directory">
+  <rect width="1200" height="630" fill="#f3eee4"/>
+  <text x="80" y="280" fill="#0c6b56" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="72">sync-directory</text>
+  <text x="80" y="370" fill="#241f18" font-family="ui-sans-serif, system-ui, sans-serif" font-size="36">Sync two folders by copy or hardlink. CLI + Node API.</text>
+  <text x="80" y="520" fill="#8a8074" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="28">npm i sync-directory  ·  syncdir src dest -w</text>
+</svg>

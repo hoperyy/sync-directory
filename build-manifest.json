@@ -1,0 +1,20 @@
+{
+  "assets": {
+    "public/.nojekyll": "/sync-directory/.nojekyll",
+    "public/_headers": "/sync-directory/_headers",
+    "public/favicon.svg": "/sync-directory/favicon.svg",
+    "public/google8d88386a67ec1358.html": "/sync-directory/google8d88386a67ec1358.html",
+    "public/llms.txt": "/sync-directory/llms.txt",
+    "public/og.svg": "/sync-directory/og.svg",
+    "public/robots.txt": "/sync-directory/robots.txt",
+    "public/sitemap.xml": "/sync-directory/sitemap.xml",
+    "umi.css": "/sync-directory/umi.7dd5938a.css",
+    "umi.js": "/sync-directory/umi.8280b9ea.js",
+    "src__pages__404.js": "/sync-directory/src__pages__404.173c6dc6.async.js",
+    "src__pages__compare.js": "/sync-directory/src__pages__compare.fdc56194.async.js",
+    "src__pages__index.js": "/sync-directory/src__pages__index.df923d10.async.js",
+    "src__pages__api.js": "/sync-directory/src__pages__api.cf9040fe.async.js",
+    "src__pages__cli.js": "/sync-directory/src__pages__cli.40405f77.async.js",
+    "src__pages__faq.js": "/sync-directory/src__pages__faq.2cc46e20.async.js"
+  }
+}
