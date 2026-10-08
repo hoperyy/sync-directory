@@ -1,6 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="sync-directory">
-  <rect width="1200" height="630" fill="#f3eee4"/>
-  <text x="80" y="280" fill="#0c6b56" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="72">sync-directory</text>
-  <text x="80" y="370" fill="#241f18" font-family="ui-sans-serif, system-ui, sans-serif" font-size="36">Sync two folders by copy or hardlink. CLI + Node API.</text>
-  <text x="80" y="520" fill="#8a8074" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="28">npm i sync-directory  ·  syncdir src dest -w</text>
+  <rect width="1200" height="630" fill="#f7f6f2"/>
+  <rect x="80" y="76" width="52" height="52" rx="12" fill="#17694f"/>
+  <path d="M94 90v18h24m-8-8 8 8-8 8" fill="none" stroke="#ffffff" stroke-width="4"/>
+  <text x="153" y="113" fill="#202b28" font-family="Arial, sans-serif" font-size="30" font-weight="700">sync-directory</text>
+  <text x="80" y="267" fill="#202b28" font-family="Arial, sans-serif" font-size="64" font-weight="700">Sync two directories.</text>
+  <text x="80" y="348" fill="#17694f" font-family="Arial, sans-serif" font-size="64" font-weight="700">Keep your workflow moving.</text>
+  <text x="80" y="433" fill="#56635d" font-family="Arial, sans-serif" font-size="28">Node.js CLI &amp; API · Copy or hardlink · Optional watch mode</text>
+  <rect x="80" y="484" width="650" height="65" rx="8" fill="#1f3029"/>
+  <text x="105" y="526" fill="#f0f6ef" font-family="Menlo, monospace" font-size="23">npm install sync-directory</text>
 </svg>

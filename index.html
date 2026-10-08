@@ -1,8 +1,306 @@
-<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="/sync-directory/umi.7dd5938a.css"/><title>sync-directory</title><link rel="shortcut icon" href="favicon.svg"/><meta name="viewport" content="width=device-width, initial-scale=1"/><meta name="theme-color" content="#f3eee4"/><meta name="color-scheme" content="light"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;600;700&amp;display=swap"/><title data-rh="true">sync-directory — sync two folders by copy or hardlink</title>
-<meta data-rh="true" name="description" content="sync-directory syncs two folders by copy or hardlink. Node.js CLI and API, watch mode, exclude filters, CommonJS and ESM."/><meta data-rh="true" name="keywords" content="sync-directory, syncdir, node.js directory sync, hardlink, chokidar watch, copy folder"/><meta data-rh="true" name="robots" content="index,follow,max-image-preview:large"/><meta data-rh="true" property="og:site_name" content="sync-directory"/><meta data-rh="true" property="og:type" content="website"/><meta data-rh="true" property="og:title" content="sync-directory — sync two folders by copy or hardlink"/><meta data-rh="true" property="og:description" content="sync-directory syncs two folders by copy or hardlink. Node.js CLI and API, watch mode, exclude filters, CommonJS and ESM."/><meta data-rh="true" property="og:url" content="https://hoperyy.github.io/sync-directory/"/><meta data-rh="true" property="og:image" content="https://hoperyy.github.io/sync-directory/og.svg"/><meta data-rh="true" property="og:locale" content="en_US"/><meta data-rh="true" name="twitter:card" content="summary_large_image"/><meta data-rh="true" name="twitter:title" content="sync-directory — sync two folders by copy or hardlink"/><meta data-rh="true" name="twitter:description" content="sync-directory syncs two folders by copy or hardlink. Node.js CLI and API, watch mode, exclude filters, CommonJS and ESM."/><meta data-rh="true" name="twitter:image" content="https://hoperyy.github.io/sync-directory/og.svg"/>
-<link data-rh="true" rel="canonical" href="https://hoperyy.github.io/sync-directory/"/><link data-rh="true" rel="alternate" hrefLang="en" href="https://hoperyy.github.io/sync-directory/"/><link data-rh="true" rel="alternate" type="text/plain" title="LLM feed" href="https://hoperyy.github.io/sync-directory/llms.txt"/>
-</head><body><noscript><b>Enable JavaScript to run this app.</b></noscript><div id="root"><script async="" src="https://www.googletagmanager.com/gtag/js?id=G-NCGJMGKSW2"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-NCGJMGKSW2');</script><header class="site-header"><div class="wrap inner"><a class="brand" href="/sync-directory/">sync-<span>directory</span></a><nav class="nav" aria-label="Primary"><a href="/sync-directory/" class="active">Home</a><a href="/sync-directory/cli">CLI</a><a href="/sync-directory/api">API</a><a href="/sync-directory/compare">Compare</a><a href="/sync-directory/faq">FAQ</a><a href="https://www.npmjs.com/package/sync-directory" rel="noreferrer">npm</a><a href="https://github.com/hoperyy/sync-directory" rel="noreferrer">GitHub</a></nav></div></header><main><div class="wrap page"><script type="application/ld+json">[{"@context":"https://schema.org","@type":"SoftwareApplication","name":"sync-directory","applicationCategory":"DeveloperApplication","operatingSystem":"Node.js","softwareVersion":"6.0.6","license":"https://opensource.org/licenses/ISC","url":"https://hoperyy.github.io/sync-directory","downloadUrl":"https://www.npmjs.com/package/sync-directory","codeRepository":"https://github.com/hoperyy/sync-directory","sameAs":["https://www.npmjs.com/package/sync-directory","https://github.com/hoperyy/sync-directory"],"description":"sync-directory syncs two folders by copy or hardlink. Node.js CLI and API, watch mode, exclude filters, CommonJS and ESM.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"author":{"@type":"Person","name":"hoperyy","url":"https://github.com/hoperyy"}},{"@context":"https://schema.org","@type":"WebSite","name":"sync-directory","url":"https://hoperyy.github.io/sync-directory","sameAs":["https://www.npmjs.com/package/sync-directory","https://github.com/hoperyy/sync-directory"]}]</script><section class="hero"><div class="kicker">Node.js CLI + API</div><h1>Sync two directories without inventing another watcher.</h1><p class="lede"><code>sync-directory</code> copies or hardlinks an entire source tree into a target folder. Use it once, or keep it running with chokidar watch. Default is copy, because it is the mode file watchers actually see.</p><div class="cta-row"><a class="btn primary" href="https://www.npmjs.com/package/sync-directory">npm i sync-directory</a><a class="btn ghost" href="/sync-directory/cli">CLI reference</a><a class="btn ghost" href="/sync-directory/api">API reference</a></div><div class="stats"><div class="stat"><b>11,000+</b><span>weekly npm downloads</span></div><div class="stat"><b>48+</b><span>known dependents</span></div><div class="stat"><b>6.0.6</b><span>current version</span></div><div class="stat"><b>2017</b><span>first published</span></div></div></section><section class="grid-2"><article class="card"><div class="term-title">install + first sync</div><pre><code>npm i sync-directory -g
-syncdir ./src ./mirror -w
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>sync-directory: Node.js Directory Sync, CLI &amp; API</title>
+  <meta name="description" content="Sync two directories in Node.js with sync-directory. Learn the syncdir CLI and sync/async API, watch mode, filters, and copy vs hardlink in one guide.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <meta name="theme-color" content="#f7f6f2">
+  <meta name="color-scheme" content="light">
+  <link rel="canonical" href="https://hoperyy.github.io/sync-directory/">
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="alternate" type="text/plain" title="sync-directory documentation for language models" href="./llms.txt">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="sync-directory">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:title" content="sync-directory: Node.js Directory Sync, CLI &amp; API">
+  <meta property="og:description" content="Copy or hardlink a directory, watch file changes, and filter paths. One practical guide to the syncdir CLI and Node.js API.">
+  <meta property="og:url" content="https://hoperyy.github.io/sync-directory/">
+  <meta property="og:image" content="https://hoperyy.github.io/sync-directory/og.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="sync-directory — sync two directories with Node.js. Copy or hardlink. CLI and API.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="sync-directory: Node.js Directory Sync, CLI &amp; API">
+  <meta name="twitter:description" content="Copy or hardlink a directory, watch file changes, and filter paths. CLI and API examples in one guide.">
+  <meta name="twitter:image" content="https://hoperyy.github.io/sync-directory/og.png">
+  <meta name="twitter:image:alt" content="sync-directory — sync two directories with Node.js. Copy or hardlink. CLI and API.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://hoperyy.github.io/sync-directory/#website",
+        "name": "sync-directory",
+        "url": "https://hoperyy.github.io/sync-directory/",
+        "inLanguage": "en"
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://hoperyy.github.io/sync-directory/#webpage",
+        "url": "https://hoperyy.github.io/sync-directory/",
+        "name": "sync-directory: Node.js Directory Sync, CLI & API",
+        "description": "Sync two directories in Node.js with sync-directory. Learn the syncdir CLI and sync/async API, watch mode, filters, and copy vs hardlink in one guide.",
+        "inLanguage": "en",
+        "isPartOf": { "@id": "https://hoperyy.github.io/sync-directory/#website" },
+        "mainEntity": { "@id": "https://hoperyy.github.io/sync-directory/#software" }
+      },
+      {
+        "@type": "SoftwareSourceCode",
+        "@id": "https://hoperyy.github.io/sync-directory/#software",
+        "name": "sync-directory",
+        "description": "A Node.js package and syncdir CLI for syncing local directories by copy or hardlink, with optional watch mode and path filters.",
+        "url": "https://hoperyy.github.io/sync-directory/",
+        "codeRepository": "https://github.com/hoperyy/sync-directory",
+        "programmingLanguage": "JavaScript",
+        "runtimePlatform": "Node.js",
+        "author": { "@type": "Person", "name": "hoperyy", "url": "https://github.com/hoperyy" },
+        "sameAs": ["https://www.npmjs.com/package/sync-directory", "https://github.com/hoperyy/sync-directory"]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to documentation</a>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="#main" aria-label="sync-directory home"><span class="brand-mark" aria-hidden="true">↳</span> sync-directory</a>
+      <nav aria-label="Project links">
+        <a href="https://www.npmjs.com/package/sync-directory">npm <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/hoperyy/sync-directory">GitHub <span aria-hidden="true">↗</span></a>
+      </nav>
+    </div>
+  </header>
 
-# or in a project
-npm i sync-directory</code></pre></article><article class="card"><h3>Copy vs hardlink</h3><p><strong>copy</strong> is the default. It is slower, but the target files are real files, so most watchers fire.</p><p><strong>hardlink</strong> is faster and uses almost no extra disk. Some watchers will not notice changes on the target side. Pick it when you control both trees.</p><p>See the <a href="/sync-directory/compare">comparison</a> if you are coming from rsync or a homegrown fs-extra loop.</p></article></section><section class="grid-3" style="margin-top:16px"><article class="card"><h3>Watch</h3><p>Pass <code>watch: true</code> (API) or <code>-w</code> (CLI). Under the hood this is chokidar. You get a watcher back from the sync API.</p></article><article class="card"><h3>Filter</h3><p><code>exclude</code> skips paths. <code>forceSync</code> always wins, so you can keep <code>node_modules</code> out except one package.</p></article><article class="card"><h3>Sync or async</h3><p><code>syncDirectory.sync()</code> blocks. <code>syncDirectory.async()</code> <!-- -->returns a Promise and can await <code>afterEachSync</code>.</p></article></section></div></main><footer class="site-footer"><div class="wrap inner"><span>sync-directory<!-- --> v<!-- -->6.0.6<!-- --> · <!-- -->ISC<!-- --> · maintained by<!-- --> <a href="https://github.com/hoperyy">hoperyy</a></span><span><a href="/sync-directory/llms.txt">llms.txt</a> · <a href="/sync-directory/sitemap.xml">sitemap</a></span></div></footer></div><script>window.__UMI_LOADER_DATA__ = {}; window.__UMI_METADATA_LOADER_DATA__ = {"headScripts":[],"styles":[],"title":"sync-directory","favicons":["favicon.svg"],"links":[{"rel":"preconnect","href":"https://fonts.googleapis.com"},{"rel":"preconnect","href":"https://fonts.gstatic.com","crossorigin":true},{"rel":"stylesheet","href":"https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;600;700&display=swap"}],"metas":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"name":"theme-color","content":"#f3eee4"},{"name":"color-scheme","content":"light"}],"scripts":[]}; window.__UMI_BUILD_ClIENT_CSS__ = "/sync-directory/umi.7dd5938a.css"</script></body></html><script src="/sync-directory/umi.8280b9ea.js" async=""></script>
+  <main id="main" class="wrap">
+    <section class="hero" aria-labelledby="page-title">
+      <p class="eyebrow">A small tool for your Node.js workflow</p>
+      <h1 id="page-title">Sync two directories.<br><span>Keep your workflow moving.</span></h1>
+      <p class="intro"><strong>sync-directory</strong> copies or hardlinks files from a source directory to a target directory. Run a one-time sync, or watch for file changes with the <code>syncdir</code> CLI and the Node.js API.</p>
+      <p class="hero-note">Copy by default · Optional watch mode · CommonJS &amp; ESM</p>
+      <div class="hero-actions">
+        <a class="button" href="#quick-start">Get started <span aria-hidden="true">↓</span></a>
+        <a href="#cli">CLI reference</a>
+        <a href="#api">Node.js API</a>
+      </div>
+      <div class="terminal" aria-label="Install and sync from the terminal">
+        <div class="terminal-label"><span aria-hidden="true">● ● ●</span> terminal</div>
+        <pre><code><span class="code-comment"># Install the CLI, then sync and watch</span>
+npm install --global sync-directory
+syncdir ./src ./mirror --watch</code></pre>
+        <div class="terminal-foot"><span>./src</span><span aria-hidden="true">→</span><span>./mirror</span><span class="terminal-mode">copy + watch</span></div>
+      </div>
+    </section>
+
+    <section id="quick-start" class="doc-section" aria-labelledby="quick-start-title">
+      <div class="section-heading"><span class="section-number" aria-hidden="true">01</span><h2 id="quick-start-title">Start with a simple sync</h2></div>
+      <p>Use two local paths: the source you want to read and the target you want to update. Both relative and absolute paths work. The source directory must already exist; the target directory is created if needed.</p>
+      <div class="example-grid">
+        <div>
+          <h3>In your terminal</h3>
+          <pre><code>npm install --global sync-directory
+
+<span class="code-comment"># Copy the source tree once</span>
+syncdir ./src ./mirror
+
+<span class="code-comment"># Copy it, then watch for changes</span>
+syncdir ./src ./mirror --watch</code></pre>
+        </div>
+        <div>
+          <h3>In your Node.js project</h3>
+          <pre><code>npm install sync-directory</code></pre>
+          <pre><code>const syncDirectory = require('sync-directory');
+
+syncDirectory('./src', './mirror');</code></pre>
+          <p class="small">Good for local development assets, build scripts, and tooling that needs a source-to-target folder sync.</p>
+        </div>
+      </div>
+      <p class="note"><strong>Choose a dedicated target folder.</strong> Syncing can overwrite matching target files. Watch mode also propagates source deletions. <code>deleteOrphaned</code> controls cleanup during the initial sync; it does not disable deletions while watching.</p>
+    </section>
+
+    <section id="cli" class="doc-section" aria-labelledby="cli-title">
+      <div class="section-heading"><span class="section-number" aria-hidden="true">02</span><h2 id="cli-title">The syncdir CLI</h2></div>
+      <p>Install globally to make <code>syncdir</code> available in your shell. By default, it copies recursively once and exits. Add <code>--watch</code> to keep it running.</p>
+      <pre><code>syncdir &lt;from&gt; &lt;to&gt; [options]
+
+<span class="code-comment"># Ignore dependencies and a lockfile</span>
+syncdir ./src ./mirror --watch --exclude node_modules package-lock.json
+
+<span class="code-comment"># Create hardlinks during the initial sync</span>
+syncdir ./src ./mirror --hardlink
+
+<span class="code-comment"># Watch an already populated target without an initial copy</span>
+syncdir ./src ./mirror --watch --skipInitialSync</code></pre>
+      <div class="table-scroll" role="region" aria-label="CLI options" tabindex="0">
+        <table>
+          <caption>Command-line options</caption>
+          <thead><tr><th scope="col">Flag</th><th scope="col">Behavior</th><th scope="col">Default</th></tr></thead>
+          <tbody>
+            <tr><th scope="row"><code>-w, --watch</code></th><td>Watch source changes after the initial sync.</td><td>Off</td></tr>
+            <tr><th scope="row"><code>--quiet</code></th><td>Suppress the CLI's sync logs.</td><td>Off</td></tr>
+            <tr><th scope="row"><code>-e, --exclude &lt;strings...&gt;</code></th><td>Skip paths containing any supplied string. These are substring filters, not glob patterns.</td><td>No exclusions</td></tr>
+            <tr><th scope="row"><code>-si, --skipInitialSync</code></th><td>Skip the first sync. Pair with <code>--watch</code> for subsequent changes.</td><td>Off</td></tr>
+            <tr><th scope="row"><code>-nd, --nodeep</code></th><td>Limit the initial directory scan to the first level. See <a href="#implementation-notes">watch limitations</a>.</td><td>Off</td></tr>
+            <tr><th scope="row"><code>-do, --deleteOrphaned</code></th><td>Remove non-excluded target entries absent from the source during the initial sync.</td><td>Off</td></tr>
+            <tr><th scope="row"><code>-c, --copy</code></th><td>Copy files. This is already the default; <code>--hardlink</code> takes precedence if both flags are passed.</td><td>Copy</td></tr>
+            <tr><th scope="row"><code>-hardlink, --hardlink</code></th><td>Create hardlinks instead of copying files during the initial sync.</td><td>Off</td></tr>
+            <tr><th scope="row"><code>-symlink, --symlink</code></th><td>Advertised as symlink support. The CLI currently passes a different option name from the implementation; use the API and read <a href="#implementation-notes">the symlink note</a>.</td><td>Off</td></tr>
+            <tr><th scope="row"><code>-v, --version</code></th><td>Print the installed package version.</td><td>—</td></tr>
+            <tr><th scope="row"><code>-h, --help</code></th><td>Print command usage and available flags.</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="api" class="doc-section" aria-labelledby="api-title">
+      <div class="section-heading"><span class="section-number" aria-hidden="true">03</span><h2 id="api-title">The Node.js API</h2></div>
+      <p>Call <code>syncDirectory(srcDir, targetDir, options)</code> for synchronous work. Use the asynchronous export when you want to await the initial sync or an asynchronous callback.</p>
+      <div class="example-grid">
+        <div><h3>CommonJS</h3><pre><code>const syncDirectory = require('sync-directory');
+const { async: syncDirectoryAsync } = require('sync-directory');
+
+syncDirectory('./src', './mirror');</code></pre></div>
+        <div><h3>ES modules</h3><pre><code>import syncDirectory, {
+  async as syncDirectoryAsync,
+} from 'sync-directory';
+
+syncDirectory('./src', './mirror');</code></pre></div>
+      </div>
+      <p class="small">Import from the package root. Its <code>exports</code> map chooses the CommonJS or ESM entry point; the older <code>sync-directory/index.mjs</code> import shown in the README is not an exported package subpath.</p>
+      <div class="table-scroll" role="region" aria-label="API return values" tabindex="0">
+        <table>
+          <caption>Choose the function that fits your workflow</caption>
+          <thead><tr><th scope="col">Function</th><th scope="col">Initial sync</th><th scope="col">Returns</th></tr></thead>
+          <tbody>
+            <tr><th scope="row"><code>syncDirectory()</code><br><code>syncDirectory.sync()</code></th><td>Synchronous; blocks the calling thread.</td><td><code>undefined</code>, or a chokidar watcher with <code>watch: true</code>.</td></tr>
+            <tr><th scope="row"><code>syncDirectoryAsync()</code><br><code>syncDirectory.async()</code></th><td>Promise-based directory scan; awaits callbacks. File copies still use synchronous filesystem operations internally.</td><td>A Promise resolving to <code>undefined</code>, or a chokidar watcher with <code>watch: true</code>.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h3>Run something after each synced entry</h3>
+      <pre><code>await syncDirectoryAsync('./src', './mirror', {
+  async afterEachSync({ eventType, nodeType, relativePath, srcPath, targetPath }) {
+    console.log(eventType, relativePath);
+    <span class="code-comment">// Await your own work here, for example updating a build manifest.</span>
+  },
+});</code></pre>
+      <p>The callback receives <code>eventType</code>, <code>nodeType</code> (<code>file</code> or <code>dir</code>), the relative path, and the source and target paths. Events include <code>init:copy</code>, <code>init:hardlink</code>, <code>add</code>, <code>change</code>, <code>unlink</code>, <code>unlinkDir</code>, and <code>addDir</code>.</p>
+    </section>
+
+    <section id="watch-and-filter" class="doc-section" aria-labelledby="watch-title">
+      <div class="section-heading"><span class="section-number" aria-hidden="true">04</span><h2 id="watch-title">Watch changes and filter paths</h2></div>
+      <h3>Keep a local target up to date</h3>
+      <p><code>watch: true</code> starts a chokidar watcher after the initial sync. Keep the returned watcher if you need to stop it later. Awaiting the async function finishes the initial sync; it does not wait for watching to end.</p>
+      <pre><code>const watcher = await syncDirectoryAsync('./src', './mirror', {
+  watch: true,
+  exclude: ['node_modules', '.git'],
+  chokidarWatchOptions: {
+    awaitWriteFinish: {
+      stabilityThreshold: 2000,
+      pollInterval: 100,
+    },
+  },
+});
+
+<span class="code-comment">// When your script no longer needs to watch:</span>
+await watcher.close();</code></pre>
+      <h3>Exclude entries, with specific exceptions</h3>
+      <p><code>exclude</code> and <code>forceSync</code> accept a string, regular expression, predicate, or array of matchers. Strings match substrings. Library filters use paths relative to the scanned source or target; they can start with a path separator. In watch mode, chokidar can also pass absolute paths to the exclusion predicate. Normalize separators rather than relying on a trailing slash.</p>
+      <pre><code>syncDirectory('./src', './mirror', {
+  exclude: ['.map', '.log'],
+  forceSync: 'important.log',
+});</code></pre>
+      <p><code>forceSync</code> wins when the library evaluates both filters for an entry, so this initial sync includes <code>important.log</code>. You can also keep a package inside an excluded directory during the initial sync:</p>
+      <pre><code>syncDirectory('./src', './mirror', {
+  exclude: 'node_modules',
+  forceSync: 'node_modules/keep-this-package',
+});</code></pre>
+      <p class="note"><strong>Watch filters have extra limits.</strong> Chokidar can ignore a path before <code>forceSync</code> runs. For watched exceptions, allow the entry and its parent directories in your exclusion predicate. New-directory events can also copy descendants recursively without filtering each child, so verify the behavior for your folder layout.</p>
+    </section>
+
+    <section id="options" class="doc-section" aria-labelledby="options-title">
+      <div class="section-heading"><span class="section-number" aria-hidden="true">05</span><h2 id="options-title">API options, at a glance</h2></div>
+      <p>Pass these as the third argument. Start with the defaults and add the behavior your workflow needs.</p>
+      <dl class="options-list">
+        <div><dt><code>cwd</code><span>process.cwd()</span></dt><dd>Base directory for resolving relative source and target paths.</dd></div>
+        <div><dt><code>type</code><span>'copy'</span></dt><dd><code>'copy'</code> or <code>'hardlink'</code>. <a href="#copy-vs-hardlink">Compare the two modes</a> before enabling hardlinks.</dd></div>
+        <div><dt><code>watch</code><span>false</span></dt><dd>Watch for later source changes using chokidar. The function returns a watcher, directly or through a Promise.</dd></div>
+        <div><dt><code>chokidarWatchOptions</code><span>{}</span></dt><dd>Options passed to chokidar, such as <code>awaitWriteFinish</code>. Custom options override the library's watcher defaults.</dd></div>
+        <div><dt><code>skipInitialSync</code><span>false</span></dt><dd>Skip the initial directory sync. Use with <code>watch: true</code> to process subsequent changes; without watching, no sync runs.</dd></div>
+        <div><dt><code>deleteOrphaned</code><span>false</span></dt><dd>During the initial sync, remove target entries absent from the source within the scanned, non-excluded set. Do not rely on it to clean excluded target entries. Source deletions still propagate in watch mode.</dd></div>
+        <div><dt><code>exclude</code><span>null</span></dt><dd>Skip matching paths. Accepts strings, regular expressions, functions, and arrays of those matchers.</dd></div>
+        <div><dt><code>forceSync</code><span>null</span></dt><dd>Include a matching entry despite an exclusion when both filters are evaluated. Accepts the same matcher types as <code>exclude</code>. See <a href="#watch-and-filter">watcher caveats</a>.</dd></div>
+        <div><dt><code>nodeep</code><span>false</span></dt><dd>Scan only first-level entries during the initial sync. Watch mode checks event paths, but a new-directory event can copy its contents recursively.</dd></div>
+        <div><dt><code>stayHardlink</code><span>true</span></dt><dd>Used with <code>type: 'hardlink'</code>. On watched changes, <code>false</code> replaces a target hardlink with a copy. See <a href="#implementation-notes">hardlink limitations</a>.</dd></div>
+        <div><dt><code>staySymlink</code><span>false</span></dt><dd>Enables symlink handling during the initial hardlink sync. This does not provide general symlink preservation in copy or watch mode.</dd></div>
+        <div><dt><code>afterEachSync</code><span>() =&gt; {}</span></dt><dd>Callback after an entry is processed. The async API awaits it during the initial sync; watch handlers also await it per event.</dd></div>
+        <div><dt><code>onError</code><span>throws an Error</span></dt><dd>Handles errors surfaced by the sync processor. Initial sync error handlers are not awaited, even by the async API. Some low-level filesystem errors are caught internally, so this callback does not report every failure.</dd></div>
+      </dl>
+    </section>
+
+    <section id="copy-vs-hardlink" class="doc-section" aria-labelledby="modes-title">
+      <div class="section-heading"><span class="section-number" aria-hidden="true">06</span><h2 id="modes-title">Copy or hardlink?</h2></div>
+      <p><strong>Use copy for the usual development workflow.</strong> It creates separate target files and is the package default. This is the better starting point when a bundler or development server watches the target directory.</p>
+      <div class="mode-grid">
+        <article><p class="mode-label">The default</p><h3>Copy</h3><p>Source and target have separate file contents. A one-time sync takes a copy; watch mode updates it after source events. Uses additional disk space for target files.</p><pre><code>syncDirectory('./src', './mirror');</code></pre></article>
+        <article><p class="mode-label">For controlled local workflows</p><h3>Hardlink</h3><p>Two paths share the same underlying file data. Links require the same filesystem. Editing either link can affect the other, and some target-side watchers miss changes.</p><pre><code>syncDirectory('./src', './mirror', {
+  type: 'hardlink',
+});</code></pre></article>
+      </div>
+      <p>Hardlinks can avoid copying file bytes, but check your editor and filesystem behavior before combining them with watching. See the <a href="#implementation-notes">implementation notes</a> for newly created or replaced files.</p>
+      <h3>Where this tool fits</h3>
+      <p>Use <code>sync-directory</code> when local folder syncing belongs inside a Node.js script, plugin, or development workflow. It combines initial sync, path filtering, and a watcher. For remote transfers over SSH, use a tool designed for remote synchronization, such as rsync. For a standalone copy without watching, a filesystem copy function may be enough.</p>
+    </section>
+
+    <section id="faq" class="doc-section faq" aria-labelledby="faq-title">
+      <div class="section-heading"><span class="section-number" aria-hidden="true">07</span><h2 id="faq-title">A few common questions</h2></div>
+      <h3>Does it sync in both directions?</h3>
+      <p>No. The source drives the target. It does not merge two directories or resolve edits made independently in both trees. Hardlinks share file data, so they need extra care even though the sync workflow remains source-to-target.</p>
+      <h3>Will it remove files from the target?</h3>
+      <p>An initial sync keeps unmatched target entries unless <code>deleteOrphaned: true</code> is set. While watching, a source <code>unlink</code> or <code>unlinkDir</code> event removes the corresponding non-excluded target path regardless of that option.</p>
+      <h3>Can I watch without copying the directory first?</h3>
+      <p>Yes. Set both <code>watch: true</code> and <code>skipInitialSync: true</code>, or use <code>syncdir ./src ./mirror --watch --skipInitialSync</code>. This processes later changes; existing unchanged entries are not initially synced.</p>
+      <h3>Does the async API return the watcher?</h3>
+      <p>Yes. With <code>watch: true</code>, await the function to get a chokidar watcher, then call <code>await watcher.close()</code> when needed. Without watching, the Promise resolves to <code>undefined</code>.</p>
+      <h3>Are exclusion strings glob patterns?</h3>
+      <p>No. A string is a substring match against the path. Use a regular expression or predicate when you need more precise matching, and allow ancestor directories when keeping nested exceptions.</p>
+      <details id="implementation-notes">
+        <summary>Implementation notes worth checking before you rely on an option</summary>
+        <div class="details-body">
+          <p>These notes reflect the source implementation reviewed for this guide. Check the <a href="https://github.com/hoperyy/sync-directory">repository</a> and your installed version for changes.</p>
+          <ul>
+            <li><strong>ESM imports:</strong> use <code>'sync-directory'</code>. The package's export map does not expose <code>'sync-directory/index.mjs'</code>, even though older README examples use it.</li>
+            <li><strong>Symlinks:</strong> the CLI's <code>--symlink</code> sets <code>supportSymlink</code>, while initial hardlink processing reads <code>staySymlink</code>. The API option is handled in hardlink mode and creates a target symlink to the source path; it does not preserve all symlink behavior across modes.</li>
+            <li><strong>Hardlink watching:</strong> with <code>stayHardlink: true</code>, file event handlers do not create or relink target files. New files and editor saves that replace the source inode may not stay linked. Use copy mode if the target needs to track these changes reliably.</li>
+            <li><strong>Filter exceptions:</strong> excluded ancestors can prevent a nested entry from being scanned. Chokidar may also ignore a path before <code>forceSync</code> is evaluated. Allow the exception and its parents in the exclusion predicate.</li>
+            <li><strong>Cleanup:</strong> both source and target scans apply exclusion filters, so excluded target files are not reliably removed by <code>deleteOrphaned</code>, despite the README's broader description.</li>
+            <li><strong>Shallow watching:</strong> <code>nodeep</code> limits the initial scan and filters nested event paths, but a watched <code>addDir</code> event can copy a new directory recursively without applying exclusions to each descendant.</li>
+            <li><strong>Async and errors:</strong> the async API awaits directory scanning and callbacks, but individual copies still call synchronous filesystem functions. Some filesystem failures are caught internally rather than forwarded to <code>onError</code>.</li>
+          </ul>
+        </div>
+      </details>
+    </section>
+
+    <section class="closing" aria-label="Project resources">
+      <h2>Ready to sync?</h2>
+      <p>Start with copy mode and two local folders. Add watching and filters as your workflow grows.</p>
+      <pre><code>npm install sync-directory</code></pre>
+      <p><a href="https://www.npmjs.com/package/sync-directory">Package on npm <span aria-hidden="true">↗</span></a><a href="https://github.com/hoperyy/sync-directory">Source &amp; README <span aria-hidden="true">↗</span></a><a href="https://github.com/hoperyy/sync-directory/issues">Report an issue <span aria-hidden="true">↗</span></a></p>
+    </section>
+  </main>
+
+  <footer class="site-footer"><div class="wrap footer-inner"><p>sync-directory · By <a href="https://github.com/hoperyy">hoperyy</a></p><p>CLI &amp; API documentation · <a href="#main">Back to top ↑</a></p></div></footer>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NCGJMGKSW2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-NCGJMGKSW2');
+  </script>
+</body>
+</html>

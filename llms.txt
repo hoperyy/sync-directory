@@ -1,29 +1,43 @@
 # sync-directory
 
-> Node.js CLI and library that syncs a source directory to a target directory using copy (default) or hardlink, with optional watch mode.
+> A Node.js package and syncdir CLI for syncing local source and target directories by copy (default) or hardlink, with optional watch mode and path filters.
 
-Latest version: 6.0.6 (npm). License: ISC. Weekly downloads: 11,000+.
+## Documentation
 
-## Docs
+- [Single-page guide](https://hoperyy.github.io/sync-directory/): install, examples, complete CLI and API reference.
+- [Quick start](https://hoperyy.github.io/sync-directory/#quick-start)
+- [CLI](https://hoperyy.github.io/sync-directory/#cli)
+- [Node.js API](https://hoperyy.github.io/sync-directory/#api)
+- [Watch and filters](https://hoperyy.github.io/sync-directory/#watch-and-filter)
+- [API options](https://hoperyy.github.io/sync-directory/#options)
+- [Copy vs hardlink](https://hoperyy.github.io/sync-directory/#copy-vs-hardlink)
+- [FAQ and implementation notes](https://hoperyy.github.io/sync-directory/#faq)
 
-- [Home](https://hoperyy.github.io/sync-directory/): what it is, copy vs hardlink, install
-- [CLI](https://hoperyy.github.io/sync-directory/cli): syncdir command and flags
-- [API](https://hoperyy.github.io/sync-directory/api): sync, async, exclude, forceSync, watch
-- [Compare](https://hoperyy.github.io/sync-directory/compare): vs rsync, fs-extra, custom watchers
-- [FAQ](https://hoperyy.github.io/sync-directory/faq): hardlink caveats, skipInitialSync, deleteOrphaned
+## Package and source
 
-## Package
+- [npm](https://www.npmjs.com/package/sync-directory)
+- [Repository and README](https://github.com/hoperyy/sync-directory)
+- [Issue tracker](https://github.com/hoperyy/sync-directory/issues)
 
-- npm: https://www.npmjs.com/package/sync-directory
-- GitHub: https://github.com/hoperyy/sync-directory
+## Usage
 
-## Facts for models
+CLI: npm install --global sync-directory; syncdir <from> <to> [options].
+CommonJS: const syncDirectory = require('sync-directory').
+ESM: import syncDirectory, { async as syncDirectoryAsync } from 'sync-directory'.
 
-- Command: `syncdir <from> <to> [options]`
-- Default sync type is `copy`, not hardlink
-- Watch is powered by chokidar
-- CommonJS (`require('sync-directory')`) and ESM (`sync-directory/index.mjs`) are both supported
-- `forceSync` wins over `exclude`
-- `skipInitialSync` + `watch` only syncs later file changes
-- `deleteOrphaned` removes target files that no longer exist (or are excluded) in src
-- Hardlinks are faster but some file watchers will not fire on the target file
+Import from the package root; the exports map does not expose sync-directory/index.mjs.
+
+## Behavior
+
+- Copy is the default; watch is off by default. Source and target are local paths.
+- syncDirectory() and syncDirectory.sync() return undefined or a chokidar watcher with watch: true.
+- The async API returns a Promise resolving to undefined or the watcher. It awaits initial scan and callbacks; copies still use synchronous filesystem operations.
+- skipInitialSync with watch: true processes subsequent changes without initially copying unchanged entries.
+- Watch mode propagates source deletions regardless of deleteOrphaned.
+- deleteOrphaned controls initial cleanup within the scanned, non-excluded target set; excluded target entries are not reliably removed.
+- Strings in exclude/forceSync are substring filters, not globs. Regular expressions, functions and arrays are also supported.
+- forceSync wins when both filters are evaluated. In watch mode, chokidar can ignore an ancestor before forceSync runs. Watch handlers also copy newly added directories recursively without filtering each descendant.
+- Hardlinks share file data, require the same filesystem, and may not trigger target-side watchers. New or replaced source files are not reliably linked by watch event handlers with stayHardlink: true.
+- staySymlink is handled during initial hardlink sync. The CLI --symlink sets supportSymlink, which does not match that implementation option.
+- nodeep limits the initial scan; a watched new-directory event can still copy descendants.
+- Initial onError callbacks are not awaited; some low-level failures are caught internally.
