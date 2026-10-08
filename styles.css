@@ -39,7 +39,7 @@ nav a { text-decoration: none; color: var(--muted); }
 body:has(#quick-start:target) .sidebar a[href="#quick-start"],
 body:has(#cli:target) .sidebar a[href="#cli"],
 body:has(#api:target) .sidebar a[href="#api"],
-body:has(#options:target) .sidebar a[href="#options"],
+body:has(#options:target) .sidebar a[href="#api"],
 body:has(#faq:target) .sidebar a[href="#faq"] { background: #e8eee3; color: var(--accent); }
 .mobile-menu { display: none; }
 .mobile-menu nav { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 3px; padding: 8px; }
@@ -65,6 +65,8 @@ p { margin: 0 0 12px; }
 .step { display: inline-flex; align-items: center; justify-content: center; width: 25px; height: 25px; flex-shrink: 0; border-radius: 6px; background: #e8eee3; color: var(--accent); font-family: ui-monospace, monospace; font-size: 12px; font-weight: 650; }
 h2 { margin: 0; font-size: 24px; font-weight: 720; }
 h3 { margin: 0 0 9px; font-size: 15px; font-weight: 650; }
+.api-options { margin-top: 24px; }
+.subsection-title { margin-bottom: 15px; font-size: 18px; }
 .section-intro { margin-bottom: 14px; font-size: 14px; color: var(--muted); }
 code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
 code { font-size: .82em; overflow-wrap: anywhere; }

@@ -10,7 +10,7 @@
   <meta name="color-scheme" content="light">
   <link rel="canonical" href="https://hoperyy.github.io/sync-directory/">
   <link rel="icon" href="./favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./styles.css?v=20261008-sidebar">
+  <link rel="stylesheet" href="./styles.css?v=20261008-api-options">
   <link rel="alternate" type="text/plain" title="sync-directory documentation for language models" href="./llms.txt">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="sync-directory">
@@ -82,17 +82,15 @@
         <p class="nav-title">On this page</p>
         <a href="#quick-start"><span aria-hidden="true">01</span>Install</a>
         <a href="#cli"><span aria-hidden="true">02</span>CLI</a>
-        <a href="#api"><span aria-hidden="true">03</span>API</a>
-        <a href="#options"><span aria-hidden="true">04</span>Options</a>
-        <a href="#faq"><span aria-hidden="true">05</span>FAQ</a>
+        <a href="#api"><span aria-hidden="true">03</span>API &amp; options</a>
+        <a href="#faq"><span aria-hidden="true">04</span>FAQ</a>
       </nav>
       <details class="mobile-menu">
         <summary>On this page</summary>
         <nav aria-label="On this page">
           <a href="#quick-start">Install</a>
           <a href="#cli">CLI</a>
-          <a href="#api">API</a>
-          <a href="#options">Options</a>
+          <a href="#api">API &amp; options</a>
           <a href="#faq">FAQ</a>
         </nav>
       </details>
@@ -134,7 +132,7 @@
   --hardlink</code></pre></article>
       </div>
       <p class="note">Use a dedicated target: matching files can be overwritten, and watching also propagates source deletions.</p>
-      <details>
+      <details open>
         <summary>All CLI flags</summary>
         <div class="details-body table-scroll" role="region" aria-label="All CLI flags" tabindex="0">
           <table>
@@ -159,7 +157,7 @@
     </section>
 
     <section id="api" class="doc-section" aria-labelledby="api-title">
-      <div class="section-heading"><span class="step" aria-hidden="true">3</span><h2 id="api-title">Use the API</h2></div>
+      <div class="section-heading"><span class="step" aria-hidden="true">3</span><h2 id="api-title">API &amp; options</h2></div>
       <div class="example-grid">
         <div><h3>CommonJS</h3><pre><code>const syncDirectory = require('sync-directory');
 
@@ -169,7 +167,23 @@ syncDirectory('./src', './mirror');</code></pre></div>
 syncDirectory('./src', './mirror');</code></pre></div>
       </div>
       <p class="small">Import from the package root. Pass configuration as the third argument.</p>
-      <details>
+      <section id="options" class="api-options" aria-labelledby="options-title">
+        <h3 id="options-title" class="subsection-title">Configure your sync</h3>
+      <div class="settings-grid">
+        <div><h3>A typical watch setup</h3><pre><code>syncDirectory('./src', './mirror', {
+  watch: true,
+  exclude: ['node_modules', '.git'],
+});</code></pre><p class="small">String filters match substrings, not globs.</p></div>
+        <dl class="common-options">
+          <div><dt><code>watch</code></dt><dd>Keep syncing changes. Default: <code>false</code>.</dd></div>
+          <div><dt><code>exclude</code></dt><dd>Skip matching paths. Default: no exclusions.</dd></div>
+          <div><dt><code>type</code></dt><dd><code>'copy'</code> (default) or <code>'hardlink'</code>.</dd></div>
+          <div><dt><code>skipInitialSync</code></dt><dd>Watch only later changes. Default: <code>false</code>.</dd></div>
+          <div><dt><code>deleteOrphaned</code></dt><dd>Clean initial target leftovers. Default: <code>false</code>.</dd></div>
+        </dl>
+      </div>
+      </section>
+      <details open>
         <summary>Async API, callbacks &amp; stopping a watcher</summary>
         <div class="details-body">
           <pre><code>import { async as syncDirectoryAsync } from 'sync-directory';
@@ -187,24 +201,7 @@ await watcher.close();</code></pre>
           <p><code>afterEachSync</code> also receives <code>nodeType</code>, <code>srcPath</code>, and <code>targetPath</code>. Events: <code>init:copy</code>, <code>init:hardlink</code>, <code>add</code>, <code>change</code>, <code>unlink</code>, <code>unlinkDir</code>, <code>addDir</code>.</p>
         </div>
       </details>
-    </section>
-
-    <section id="options" class="doc-section" aria-labelledby="options-title">
-      <div class="section-heading"><span class="step" aria-hidden="true">4</span><h2 id="options-title">Choose your options</h2></div>
-      <div class="settings-grid">
-        <div><h3>A typical watch setup</h3><pre><code>syncDirectory('./src', './mirror', {
-  watch: true,
-  exclude: ['node_modules', '.git'],
-});</code></pre><p class="small">String filters match substrings, not globs.</p></div>
-        <dl class="common-options">
-          <div><dt><code>watch</code></dt><dd>Keep syncing changes. Default: <code>false</code>.</dd></div>
-          <div><dt><code>exclude</code></dt><dd>Skip matching paths. Default: no exclusions.</dd></div>
-          <div><dt><code>type</code></dt><dd><code>'copy'</code> (default) or <code>'hardlink'</code>.</dd></div>
-          <div><dt><code>skipInitialSync</code></dt><dd>Watch only later changes. Default: <code>false</code>.</dd></div>
-          <div><dt><code>deleteOrphaned</code></dt><dd>Clean initial target leftovers. Default: <code>false</code>.</dd></div>
-        </dl>
-      </div>
-      <details id="copy-vs-hardlink">
+      <details open id="copy-vs-hardlink">
         <summary>Copy vs hardlink: which should I use?</summary>
         <div class="details-body">
           <div class="mode-grid">
@@ -214,7 +211,7 @@ await watcher.close();</code></pre>
           <p>Use copy for reliable watching of newly created or replaced files. Hardlink watch handlers do not always create or restore links.</p>
         </div>
       </details>
-      <details>
+      <details open>
         <summary>Complete API option reference</summary>
         <div class="details-body">
           <dl class="options-list">
@@ -237,11 +234,11 @@ await watcher.close();</code></pre>
     </section>
 
     <section id="faq" class="doc-section faq" aria-labelledby="faq-title">
-      <div class="section-heading"><span class="step" aria-hidden="true">5</span><h2 id="faq-title">Before you sync</h2></div>
-      <details><summary>Does it sync in both directions?</summary><div class="details-body"><p>No. Changes flow from source to target. It does not merge independent edits. Hardlinks share data, so editing either link can affect both.</p></div></details>
-      <details><summary>When are target files deleted?</summary><div class="details-body"><p>Initial sync keeps extra target entries unless <code>deleteOrphaned: true</code> is set. While watching, source deletions remove matching non-excluded target paths regardless of that option.</p></div></details>
-      <details><summary>Can I watch without copying the folder first?</summary><div class="details-body"><pre><code>syncdir ./src ./mirror --watch --skipInitialSync</code></pre><p>Existing unchanged entries are skipped; subsequent source changes are processed.</p></div></details>
-      <details id="implementation-notes">
+      <div class="section-heading"><span class="step" aria-hidden="true">4</span><h2 id="faq-title">Before you sync</h2></div>
+      <details open><summary>Does it sync in both directions?</summary><div class="details-body"><p>No. Changes flow from source to target. It does not merge independent edits. Hardlinks share data, so editing either link can affect both.</p></div></details>
+      <details open><summary>When are target files deleted?</summary><div class="details-body"><p>Initial sync keeps extra target entries unless <code>deleteOrphaned: true</code> is set. While watching, source deletions remove matching non-excluded target paths regardless of that option.</p></div></details>
+      <details open><summary>Can I watch without copying the folder first?</summary><div class="details-body"><pre><code>syncdir ./src ./mirror --watch --skipInitialSync</code></pre><p>Existing unchanged entries are skipped; subsequent source changes are processed.</p></div></details>
+      <details open id="implementation-notes">
         <summary>Compatibility &amp; implementation notes</summary>
         <div class="details-body">
           <p>Based on the <a href="https://github.com/hoperyy/sync-directory">source implementation</a>; check your installed version for changes.</p>

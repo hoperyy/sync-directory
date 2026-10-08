@@ -7,9 +7,9 @@
 - [Single-page guide](https://hoperyy.github.io/sync-directory/): install, examples, complete CLI and API reference.
 - [Install](https://hoperyy.github.io/sync-directory/#quick-start)
 - [CLI](https://hoperyy.github.io/sync-directory/#cli)
-- [Node.js API](https://hoperyy.github.io/sync-directory/#api)
+- [Node.js API and options](https://hoperyy.github.io/sync-directory/#api)
 - [Watch mode](https://hoperyy.github.io/sync-directory/#watch-and-filter)
-- [API options](https://hoperyy.github.io/sync-directory/#options)
+- [Configuration within the API section](https://hoperyy.github.io/sync-directory/#options)
 - [Copy vs hardlink](https://hoperyy.github.io/sync-directory/#copy-vs-hardlink)
 - [FAQ and implementation notes](https://hoperyy.github.io/sync-directory/#faq)
 
