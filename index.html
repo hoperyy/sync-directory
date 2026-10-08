@@ -10,7 +10,7 @@
   <meta name="color-scheme" content="light">
   <link rel="canonical" href="https://hoperyy.github.io/sync-directory/">
   <link rel="icon" href="./favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./styles.css?v=20261008-compact">
+  <link rel="stylesheet" href="./styles.css?v=20261008-sidebar">
   <link rel="alternate" type="text/plain" title="sync-directory documentation for language models" href="./llms.txt">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="sync-directory">
@@ -76,17 +76,29 @@
       </nav>
     </div>
   </header>
-  <nav class="section-nav" aria-label="On this page">
-    <div class="wrap section-nav-inner">
-      <a href="#quick-start">Install</a>
-      <a href="#cli">CLI</a>
-      <a href="#api">API</a>
-      <a href="#options">Options</a>
-      <a href="#faq">FAQ</a>
-    </div>
-  </nav>
+  <div class="wrap page-layout">
+    <aside class="sidebar">
+      <nav class="section-nav" aria-label="On this page">
+        <p class="nav-title">On this page</p>
+        <a href="#quick-start"><span aria-hidden="true">01</span>Install</a>
+        <a href="#cli"><span aria-hidden="true">02</span>CLI</a>
+        <a href="#api"><span aria-hidden="true">03</span>API</a>
+        <a href="#options"><span aria-hidden="true">04</span>Options</a>
+        <a href="#faq"><span aria-hidden="true">05</span>FAQ</a>
+      </nav>
+      <details class="mobile-menu">
+        <summary>On this page</summary>
+        <nav aria-label="On this page">
+          <a href="#quick-start">Install</a>
+          <a href="#cli">CLI</a>
+          <a href="#api">API</a>
+          <a href="#options">Options</a>
+          <a href="#faq">FAQ</a>
+        </nav>
+      </details>
+    </aside>
 
-  <main id="main" class="wrap">
+  <main id="main" class="content">
     <section class="hero" aria-labelledby="page-title">
       <div>
         <p class="eyebrow">Node.js CLI + API</p>
@@ -245,6 +257,7 @@ await watcher.close();</code></pre>
       </details>
     </section>
   </main>
+  </div>
   <footer class="site-footer"><div class="wrap footer-inner"><p>sync-directory · By <a href="https://github.com/hoperyy">hoperyy</a></p><p><a href="https://github.com/hoperyy/sync-directory#readme">README</a> · <a href="https://github.com/hoperyy/sync-directory/issues">Issues</a> · <a href="#main">Back to top ↑</a></p></div></footer>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-NCGJMGKSW2"></script>
   <script>
