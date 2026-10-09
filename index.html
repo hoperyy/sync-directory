@@ -10,7 +10,7 @@
   <meta name="color-scheme" content="light">
   <link rel="canonical" href="https://hoperyy.github.io/sync-directory/">
   <link rel="icon" href="./favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./styles.css?v=20261008-api-options">
+  <link rel="stylesheet" href="./styles.css?v=20261009-reference">
   <link rel="alternate" type="text/plain" title="sync-directory documentation for language models" href="./llms.txt">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="sync-directory">
@@ -80,17 +80,15 @@
     <aside class="sidebar">
       <nav class="section-nav" aria-label="On this page">
         <p class="nav-title">On this page</p>
-        <a href="#quick-start"><span aria-hidden="true">01</span>Install</a>
-        <a href="#cli"><span aria-hidden="true">02</span>CLI</a>
-        <a href="#api"><span aria-hidden="true">03</span>API &amp; options</a>
-        <a href="#faq"><span aria-hidden="true">04</span>FAQ</a>
+        <a href="#cli"><span aria-hidden="true">01</span>CLI</a>
+        <a href="#api"><span aria-hidden="true">02</span>API</a>
+        <a href="#faq"><span aria-hidden="true">03</span>FAQ</a>
       </nav>
       <details class="mobile-menu">
         <summary>On this page</summary>
         <nav aria-label="On this page">
-          <a href="#quick-start">Install</a>
           <a href="#cli">CLI</a>
-          <a href="#api">API &amp; options</a>
+          <a href="#api">API</a>
           <a href="#faq">FAQ</a>
         </nav>
       </details>
@@ -112,17 +110,13 @@
       </div>
     </section>
 
-    <section id="quick-start" class="doc-section" aria-labelledby="install-title">
-      <div class="section-heading"><span class="step" aria-hidden="true">1</span><h2 id="install-title">Install</h2></div>
-      <div class="example-grid install-grid">
-        <div><h3>For the command line</h3><pre><code>npm install --global sync-directory</code></pre></div>
-        <div><h3>For a Node.js project</h3><pre><code>npm install sync-directory</code></pre></div>
-      </div>
-      <p class="small">The source must exist. The target is created if needed. Relative and absolute paths both work.</p>
-    </section>
-
     <section id="cli" class="doc-section" aria-labelledby="cli-title">
-      <div class="section-heading"><span class="step" aria-hidden="true">2</span><h2 id="cli-title">Run the CLI</h2></div>
+      <div class="section-heading"><span class="step" aria-hidden="true">1</span><h2 id="cli-title">CLI</h2></div>
+      <div id="quick-start" class="install-block">
+        <h3 class="subsection-title">Install</h3>
+        <pre><code>npm install --global sync-directory</code></pre>
+      </div>
+      <h3 class="subsection-title">Usage</h3>
       <p class="section-intro"><code>syncdir &lt;source&gt; &lt;target&gt; [options]</code></p>
       <div class="recipe-grid">
         <article class="recipe"><h3>Copy once</h3><p>Sync the folder, then exit.</p><pre><code>syncdir ./src ./mirror</code></pre></article>
@@ -131,6 +125,7 @@
         <article class="recipe"><h3>Create hardlinks</h3><p>Share file data on one filesystem.</p><pre><code>syncdir ./src ./mirror \
   --hardlink</code></pre></article>
       </div>
+      <p class="small">Relative and absolute paths work. The source must exist; the target is created if needed.</p>
       <p class="note">Use a dedicated target: matching files can be overwritten, and watching also propagates source deletions.</p>
       <details open>
         <summary>All CLI flags</summary>
@@ -157,50 +152,48 @@
     </section>
 
     <section id="api" class="doc-section" aria-labelledby="api-title">
-      <div class="section-heading"><span class="step" aria-hidden="true">3</span><h2 id="api-title">API &amp; options</h2></div>
+      <div class="section-heading"><span class="step" aria-hidden="true">2</span><h2 id="api-title">API</h2></div>
+      <h3 class="subsection-title">Install</h3>
+      <pre><code>npm install sync-directory</code></pre>
+      <h3 class="subsection-title">Usage</h3>
       <div class="example-grid">
-        <div><h3>CommonJS</h3><pre><code>const syncDirectory = require('sync-directory');
-
-syncDirectory('./src', './mirror');</code></pre></div>
-        <div><h3>ES modules</h3><pre><code>import syncDirectory from 'sync-directory';
-
-syncDirectory('./src', './mirror');</code></pre></div>
+        <div><h4>CommonJS</h4><pre><code>const syncDirectory = require('sync-directory');</code></pre></div>
+        <div><h4>ES modules</h4><pre><code>import syncDirectory from 'sync-directory';</code></pre></div>
       </div>
-      <p class="small">Import from the package root. Pass configuration as the third argument.</p>
-      <section id="options" class="api-options" aria-labelledby="options-title">
-        <h3 id="options-title" class="subsection-title">Configure your sync</h3>
-      <div class="settings-grid">
-        <div><h3>A typical watch setup</h3><pre><code>syncDirectory('./src', './mirror', {
+      <pre><code>const watcher = syncDirectory('./src', './mirror', {
   watch: true,
   exclude: ['node_modules', '.git'],
-});</code></pre><p class="small">String filters match substrings, not globs.</p></div>
-        <dl class="common-options">
-          <div><dt><code>watch</code></dt><dd>Keep syncing changes. Default: <code>false</code>.</dd></div>
-          <div><dt><code>exclude</code></dt><dd>Skip matching paths. Default: no exclusions.</dd></div>
-          <div><dt><code>type</code></dt><dd><code>'copy'</code> (default) or <code>'hardlink'</code>.</dd></div>
-          <div><dt><code>skipInitialSync</code></dt><dd>Watch only later changes. Default: <code>false</code>.</dd></div>
-          <div><dt><code>deleteOrphaned</code></dt><dd>Clean initial target leftovers. Default: <code>false</code>.</dd></div>
-        </dl>
-      </div>
-      </section>
-      <details open>
-        <summary>Async API, callbacks &amp; stopping a watcher</summary>
-        <div class="details-body">
-          <pre><code>import { async as syncDirectoryAsync } from 'sync-directory';
-
-const watcher = await syncDirectoryAsync('./src', './mirror', {
-  watch: true,
-  afterEachSync({ eventType, relativePath }) {
-    console.log(eventType, relativePath);
-  },
-});
-
-<span class="code-comment">// When watching is no longer needed:</span>
-await watcher.close();</code></pre>
-          <p><code>syncDirectory()</code> and <code>.sync()</code> return a watcher with <code>watch: true</code>, otherwise <code>undefined</code>. The async API returns a Promise of the same result; it awaits initial scanning and callbacks, while file copies still use synchronous operations.</p>
-          <p><code>afterEachSync</code> also receives <code>nodeType</code>, <code>srcPath</code>, and <code>targetPath</code>. Events: <code>init:copy</code>, <code>init:hardlink</code>, <code>add</code>, <code>change</code>, <code>unlink</code>, <code>unlinkDir</code>, <code>addDir</code>.</p>
+});</code></pre>
+      <p class="small">Pass config as the third argument. With <code>watch: true</code>, keep the returned watcher and call <code>await watcher.close()</code> when finished. Without watching, the sync API returns <code>undefined</code>. <code>syncDirectory.async()</code> returns a Promise of the same result.</p>
+      <section id="options" class="api-options" aria-labelledby="options-title">
+        <h3 id="options-title" class="subsection-title">Config options</h3>
+        <p class="table-hint">Scroll horizontally to read the full table →</p>
+        <div class="table-scroll" role="region" aria-label="API config options" tabindex="0">
+          <table class="config-table">
+            <caption>All options for syncDirectory(source, target, config).</caption>
+            <thead><tr><th scope="col">Option</th><th scope="col">Default</th><th scope="col">Description</th></tr></thead>
+            <tbody>
+              <tr><th scope="row"><code>cwd</code></th><td><code>process.cwd()</code></td><td>String. Base directory for resolving relative source and target paths.</td></tr>
+              <tr><th scope="row"><code>type</code></th><td><code>'copy'</code></td><td><code>'copy'</code> or <code>'hardlink'</code>. <a href="#copy-vs-hardlink">Compare the modes</a>.</td></tr>
+              <tr><th scope="row"><code>watch</code></th><td><code>false</code></td><td>Boolean. Watch source changes with chokidar after the initial sync; return its watcher.</td></tr>
+              <tr><th scope="row"><code>chokidarWatchOptions</code></th><td><code>{}</code></td><td>Object. Chokidar settings such as <code>awaitWriteFinish</code>; overrides watcher defaults.</td></tr>
+              <tr><th scope="row"><code>skipInitialSync</code></th><td><code>false</code></td><td>Boolean. Skip the first sync. Use with <code>watch: true</code> for later changes; otherwise no sync runs.</td></tr>
+              <tr><th scope="row"><code>deleteOrphaned</code></th><td><code>false</code></td><td>Boolean. Remove initial target leftovers within the scanned, non-excluded set. Excluded entries are not reliably removed. Watch deletions propagate independently.</td></tr>
+              <tr><th scope="row"><code>exclude</code></th><td><code>null</code></td><td>String, RegExp, predicate, or array of matchers. Skip matching paths; strings match substrings, not globs.</td></tr>
+              <tr><th scope="row"><code>forceSync</code></th><td><code>null</code></td><td>Same matcher types as <code>exclude</code>. Wins when both filters run, but chokidar can ignore a watched path before this is evaluated.</td></tr>
+              <tr><th scope="row"><code>nodeep</code></th><td><code>false</code></td><td>Boolean. Scan only first-level entries initially. A watched new-directory event can still copy descendants.</td></tr>
+              <tr><th scope="row"><code>stayHardlink</code></th><td><code>true</code></td><td>Boolean, used in hardlink mode. <code>false</code> replaces a target link with a copy on watched changes. <a href="#implementation-notes">See limitations</a>.</td></tr>
+              <tr><th scope="row"><code>staySymlink</code></th><td><code>false</code></td><td>Boolean. Handle symlinks during initial hardlink sync; does not provide preservation across all modes.</td></tr>
+              <tr><th scope="row"><code>afterEachSync</code></th><td>No-op</td><td>Function receiving <code>{ eventType, nodeType, relativePath, srcPath, targetPath }</code>. Awaited by initial async sync and per watch event.</td></tr>
+              <tr><th scope="row"><code>onError</code></th><td>Throws an Error</td><td>Function handling surfaced errors. Initial handlers are not awaited; some filesystem failures are caught internally.</td></tr>
+            </tbody>
+          </table>
         </div>
-      </details>
+      </section>
+    </section>
+
+    <section id="faq" class="doc-section faq" aria-labelledby="faq-title">
+      <div class="section-heading"><span class="step" aria-hidden="true">3</span><h2 id="faq-title">FAQ</h2></div>
       <details open id="copy-vs-hardlink">
         <summary>Copy vs hardlink: which should I use?</summary>
         <div class="details-body">
@@ -211,30 +204,6 @@ await watcher.close();</code></pre>
           <p>Use copy for reliable watching of newly created or replaced files. Hardlink watch handlers do not always create or restore links.</p>
         </div>
       </details>
-      <details open>
-        <summary>Complete API option reference</summary>
-        <div class="details-body">
-          <dl class="options-list">
-            <div><dt><code>cwd</code><span>process.cwd()</span></dt><dd>Base for relative source and target paths.</dd></div>
-            <div><dt><code>type</code><span>'copy'</span></dt><dd><code>'copy'</code> or <code>'hardlink'</code>.</dd></div>
-            <div><dt><code>watch</code><span>false</span></dt><dd>Start a chokidar watcher after the initial sync.</dd></div>
-            <div><dt><code>chokidarWatchOptions</code><span>{}</span></dt><dd>Chokidar options, e.g. <code>awaitWriteFinish</code>; override watcher defaults.</dd></div>
-            <div><dt><code>skipInitialSync</code><span>false</span></dt><dd>Skip initial sync. Without <code>watch</code>, no sync runs.</dd></div>
-            <div><dt><code>deleteOrphaned</code><span>false</span></dt><dd>Initial cleanup within the scanned, non-excluded target set. Excluded target entries are not reliably removed.</dd></div>
-            <div><dt><code>exclude</code><span>null</span></dt><dd>Skip paths using strings, regexes, predicates, or arrays of matchers.</dd></div>
-            <div><dt><code>forceSync</code><span>null</span></dt><dd>Same matchers as <code>exclude</code>; wins when both filters are evaluated. Chokidar can ignore paths before this runs.</dd></div>
-            <div><dt><code>nodeep</code><span>false</span></dt><dd>First-level initial scan. Watched new-directory events may still copy descendants.</dd></div>
-            <div><dt><code>stayHardlink</code><span>true</span></dt><dd>In hardlink mode, <code>false</code> replaces a target link with a copy on watched changes.</dd></div>
-            <div><dt><code>staySymlink</code><span>false</span></dt><dd>Symlink handling during initial hardlink sync; not general preservation across modes.</dd></div>
-            <div><dt><code>afterEachSync</code><span>() =&gt; {}</span></dt><dd>Callback per processed entry. Awaited by initial async sync and per watch event.</dd></div>
-            <div><dt><code>onError</code><span>throws an Error</span></dt><dd>Errors surfaced by the processor. Initial handlers are not awaited; some filesystem failures are caught internally.</dd></div>
-          </dl>
-        </div>
-      </details>
-    </section>
-
-    <section id="faq" class="doc-section faq" aria-labelledby="faq-title">
-      <div class="section-heading"><span class="step" aria-hidden="true">4</span><h2 id="faq-title">Before you sync</h2></div>
       <details open><summary>Does it sync in both directions?</summary><div class="details-body"><p>No. Changes flow from source to target. It does not merge independent edits. Hardlinks share data, so editing either link can affect both.</p></div></details>
       <details open><summary>When are target files deleted?</summary><div class="details-body"><p>Initial sync keeps extra target entries unless <code>deleteOrphaned: true</code> is set. While watching, source deletions remove matching non-excluded target paths regardless of that option.</p></div></details>
       <details open><summary>Can I watch without copying the folder first?</summary><div class="details-body"><pre><code>syncdir ./src ./mirror --watch --skipInitialSync</code></pre><p>Existing unchanged entries are skipped; subsequent source changes are processed.</p></div></details>
@@ -248,6 +217,7 @@ await watcher.close();</code></pre>
             <li><strong>Hardlink watching:</strong> with <code>stayHardlink: true</code>, handlers do not create or relink files. New files and saves that replace source inodes may not stay linked.</li>
             <li><strong>Filters:</strong> predicates receive paths relative to the scanned source or target; chokidar may also pass absolute paths. Allow watched exceptions and their parents in the exclusion predicate.</li>
             <li><strong>New directories:</strong> watched <code>addDir</code> events may copy descendants recursively without filtering each child, even with <code>nodeep</code>.</li>
+            <li><strong>Async:</strong> the async API awaits initial scanning and callbacks; file copies still use synchronous operations.</li>
             <li><strong>Errors:</strong> initial <code>onError</code> callbacks are not awaited. Some low-level failures are caught internally.</li>
           </ul>
         </div>
