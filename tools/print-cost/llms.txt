@@ -1,0 +1,15 @@
+# Print Cost
+
+Print Cost helps makers estimate the real cost of a 3D print. It makes material, electricity, machine time, hands-on labor and repeat-print risk visible, then calculates a price for a chosen gross margin. All rates are provided by you.
+
+## Pages
+- https://hoperyy.github.io/sync-directory/tools/print-cost/
+- https://hoperyy.github.io/sync-directory/tools/print-cost/filament-cost/
+- https://hoperyy.github.io/sync-directory/tools/print-cost/resin-cost/
+- https://hoperyy.github.io/sync-directory/tools/print-cost/pricing-guide/
+- https://hoperyy.github.io/sync-directory/tools/print-cost/about/
+- https://hoperyy.github.io/sync-directory/tools/print-cost/privacy/
+- https://hoperyy.github.io/sync-directory/tools/print-cost/contact/
+
+## Limits
+The current model describes one item and assumes each item in a quantity costs the same. Failed attempts repeat material, electricity and machine time, but not the hands-on labor or extras entered here. It does not parse STL or G-code, optimize build plates, estimate taxes or fetch current material prices.

@@ -1,0 +1,17 @@
+# Caption Lab
+
+Caption Lab helps video creators, educators and editors convert and inspect text subtitles without installing a desktop editor. We focus on small, practical jobs: changing file formats, extracting text and correcting a constant timing offset.
+
+## Pages
+- https://hoperyy.github.io/sync-directory/tools/caption-lab/
+- https://hoperyy.github.io/sync-directory/tools/caption-lab/srt-to-vtt/
+- https://hoperyy.github.io/sync-directory/tools/caption-lab/vtt-to-srt/
+- https://hoperyy.github.io/sync-directory/tools/caption-lab/subtitle-to-text/
+- https://hoperyy.github.io/sync-directory/tools/caption-lab/shift-subtitles/
+- https://hoperyy.github.io/sync-directory/tools/caption-lab/subtitle-checker/
+- https://hoperyy.github.io/sync-directory/tools/caption-lab/about/
+- https://hoperyy.github.io/sync-directory/tools/caption-lab/privacy/
+- https://hoperyy.github.io/sync-directory/tools/caption-lab/contact/
+
+## Limits
+The current version handles UTF-8 SRT and basic WebVTT files up to 5 MB. It does not transcribe audio, translate captions, burn subtitles into video, or preserve advanced WebVTT layout. Read the notes next to each tool before exporting.

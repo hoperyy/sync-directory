@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://hoperyy.github.io/sync-directory/tools/sitemap.xml
