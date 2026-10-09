@@ -87,3 +87,47 @@ export function inspectSubtitles(cues) {
   });
   return issues;
 }
+
+export function analyzeCues(cues, {maxCps = 20, maxLine = 42} = {}) {
+  if (!Number.isFinite(maxCps) || maxCps < 1 || maxCps > 100 || !Number.isInteger(maxLine) || maxLine < 10 || maxLine > 120) throw new Error('Use a reading speed from 1 to 100 and a line length from 10 to 120.');
+  let latestEnd = -1;
+  return cues.map((cue, index) => {
+    const text = plainText(cue.text);
+    const duration = (cue.end - cue.start) / 1000;
+    const cps = [...text.replace(/\s/g, '')].length / duration;
+    const longestLine = Math.max(...text.split('\n').map((line) => [...line].length));
+    const issues = [];
+    if (index && cue.start < cues[index - 1].start) issues.push('Out of order');
+    if (cue.start < latestEnd) issues.push('Overlap');
+    if (longestLine > maxLine) issues.push('Long line');
+    if (cps > maxCps) issues.push('Fast reading');
+    latestEnd = Math.max(latestEnd, cue.end);
+    return {index, duration, cps, longestLine, issues};
+  });
+}
+
+export function synchronizeSubtitles(cues, {sourceA, targetA, sourceB, targetB}) {
+  const points = [sourceA, targetA, sourceB, targetB];
+  if (points.some((n) => !Number.isFinite(n) || n < 0) || sourceB <= sourceA || targetB <= targetA) throw new Error('Enter two increasing source times and two increasing video times, in seconds.');
+  const scale = (targetB - targetA) / (sourceB - sourceA);
+  if (scale < 0.5 || scale > 2) throw new Error('The timing scale must be between 0.5× and 2×. Check your anchor points.');
+  const map = (ms) => Math.round((targetA + (ms / 1000 - sourceA) * scale) * 1000);
+  const result = cues.map((cue) => ({...cue, start:map(cue.start), end:map(cue.end)}));
+  if (result.some((cue) => cue.start < 0 || cue.end <= cue.start || !Number.isSafeInteger(cue.end))) throw new Error('These anchors create a negative or invalid cue time. Adjust the anchors; no cues were changed.');
+  return {cues:result, scale, offset:targetA - sourceA * scale};
+}
+
+export function suggestLineBreak(text) {
+  if (/<[^>]*>/.test(text)) throw new Error('Line suggestions support plain text. Edit formatted captions manually to keep their tags.');
+  if (/^\s*[-–—]/m.test(text)) throw new Error('Keep dialogue line breaks intact; edit this cue manually.');
+  const words = text.trim().split(/\s+/);
+  if (words.length < 2) return text;
+  let best = text;
+  let score = Infinity;
+  for (let i = 1; i < words.length; i++) {
+    const left = words.slice(0, i).join(' '), right = words.slice(i).join(' ');
+    const candidate = Math.abs([...left].length - [...right].length) - (/[,.!?;:]$/.test(left) ? 4 : 0);
+    if (candidate < score) {score = candidate; best = `${left}\n${right}`;}
+  }
+  return best;
+}

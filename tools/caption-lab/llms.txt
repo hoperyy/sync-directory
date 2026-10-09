@@ -1,6 +1,6 @@
 # Caption Lab
 
-Caption Lab helps video creators, educators and editors convert and inspect text subtitles without installing a desktop editor. We focus on small, practical jobs: changing file formats, extracting text and correcting a constant timing offset.
+Caption Lab helps video creators, educators and editors convert and inspect text subtitles without installing a desktop editor. We focus on small, practical jobs: changing file formats, previewing cues, checking readability and correcting timing with one or two anchor points.
 
 ## Pages
 - https://hoperyy.github.io/sync-directory/tools/caption-lab/
